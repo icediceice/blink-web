@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blink — Privacy Policy</title>
+  <style>
+    :root {
+      --bg:        #0F0F12;
+      --surface:   #16161A;
+      --surface2:  #1C1C22;
+      --amber:     #D4A853;
+      --amber-dim: rgba(212, 168, 83, 0.12);
+      --sage:      #6EE7A0;
+      --sage-dim:  rgba(110, 231, 160, 0.1);
+      --text:      #E4E4E8;
+      --secondary: #9494A0;
+      --border:    #2A2A32;
+      --radius:    10px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-mark {
+      width: 32px;
+      height: 32px;
+      background: #1A1A2E;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo-wordmark {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .logo-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 12px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .logo-context {
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Page layout ─────────────────────────────────────────── */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 32px 80px;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      margin-bottom: 48px;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .hero-meta {
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      margin-bottom: 32px;
+    }
+
+    /* ── Trust callout ───────────────────────────────────────── */
+    .trust-callout {
+      background: var(--amber-dim);
+      border: 1px solid rgba(212, 168, 83, 0.2);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+    }
+
+    .trust-statement {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--amber);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .trust-body {
+      font-size: 0.9375rem;
+      color: var(--secondary);
+      line-height: 1.75;
+      margin-bottom: 0;
+    }
+
+    /* ── Primary sections (01–03) ────────────────────────────── */
+    .section-primary {
+      margin-bottom: 56px;
+    }
+
+    /* ── Secondary sections (04–07) — tighter density ─────────── */
+    .section-secondary {
+      margin-bottom: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-num {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--amber);
+      background: var(--surface2);
+      border-radius: 4px;
+      padding: 3px 6px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      font-size: 0.9375rem;
+      color: var(--secondary);
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    p strong { color: var(--text); font-weight: 600; }
+
+    /* ── Permission grid — 2 columns ─────────────────────────── */
+    .perm-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .perm-card {
+      background: var(--surface2);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .perm-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--amber);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+
+    .perm-desc {
+      font-size: 0.875rem;
+      color: var(--secondary);
+      line-height: 1.6;
+    }
+
+    /* ── Guarantee list ──────────────────────────────────────── */
+    .guarantee-list {
+      background: var(--sage-dim);
+      border-left: 2px solid var(--sage);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 20px 24px;
+      margin-top: 4px;
+      list-style: none;
+    }
+
+    .guarantee-list li {
+      font-size: 0.9375rem;
+      color: var(--secondary);
+      line-height: 1.6;
+      padding: 6px 0 6px 20px;
+      position: relative;
+    }
+
+    .guarantee-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--sage);
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    /* ── Contact ─────────────────────────────────────────────── */
+    .contact-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-top: 16px;
+    }
+
+    .contact-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--secondary);
+      flex-shrink: 0;
+    }
+
+    .contact-row a {
+      color: var(--amber);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .contact-row a:hover {
+      color: var(--text);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.8125rem;
+      color: var(--secondary);
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      header       { padding: 16px 20px; }
+      main         { padding: 40px 20px 64px; }
+      footer       { padding: 20px; flex-direction: column; align-items: flex-start; }
+      .hero-title  { font-size: 1.75rem; }
+      .perm-grid   { grid-template-columns: 1fr; }
+      .contact-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-mark">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="32" height="32">
+        <defs>
+          <radialGradient id="iris" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#C4B5FD"/>
+            <stop offset="100%" stop-color="#4C1D95"/>
+          </radialGradient>
+        </defs>
+        <!-- Sclera -->
+        <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+        <!-- Iris -->
+        <path fill="url(#iris)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+        <!-- Pupil -->
+        <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+        <!-- Catchlight -->
+        <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
+        <!-- Upper eyelid — drooping to mid-blink, blends with bg colour -->
+        <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        <!-- Lash line -->
+        <path fill="none" stroke="#0D0D38" stroke-width="1.8" d="M20,54 Q37,57 54,58 Q71,57 88,54"/>
+      </svg>
+    </div>
+    <div class="logo-wordmark">
+      <span class="logo-name">Blink</span>
+      <div class="logo-divider"></div>
+      <span class="logo-context">Privacy Policy</span>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Hero -->
+    <div class="hero">
+      <p class="hero-eyebrow">Legal</p>
+      <h1 class="hero-title">Privacy Policy</h1>
+      <p class="hero-meta">Effective March 3, 2026 &nbsp;·&nbsp; Last updated March 3, 2026</p>
+      <div class="trust-callout">
+        <p class="trust-statement">Your data never leaves your device.</p>
+        <p class="trust-body">
+          Blink is a local-only app. We collect nothing, store nothing remotely, and share
+          nothing with any third party. The sections below explain exactly which system
+          permissions we use and why — so you know precisely what the app can and cannot see.
+        </p>
+      </div>
+    </div>
+
+    <!-- 01 — Overview -->
+    <section class="section-primary">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <h2>Overview</h2>
+      </div>
+      <p>
+        Blink ("we", "the app") is a personal-privacy and access-management application
+        for Android. It detects when a protected app enters the foreground, displays a
+        lock overlay, and requires fingerprint or PIN authentication to resume access.
+        It runs discreetly in the background to keep your private apps private.
+      </p>
+      <p>
+        This Privacy Policy describes every Android permission Blink requests, why each is
+        necessary, and how the information those permissions expose is used — entirely on
+        your device, with no data ever leaving your phone.
+      </p>
+    </section>
+
+    <!-- 02 — Permissions -->
+    <section class="section-primary">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <h2>Permissions and How We Use Them</h2>
+      </div>
+      <p>
+        Blink requests the following Android permissions. Each is used solely for the
+        stated purpose. No data accessed through these permissions ever leaves your device
+        or is shared with any third party.
+      </p>
+      <div class="perm-grid">
+
+        <div class="perm-card">
+          <div class="perm-name">Accessibility Service</div>
+          <div class="perm-desc">
+            Detects when a protected app enters the foreground (Advanced Mode) so Blink
+            can display a lock overlay instantly. Blink reads window package names only —
+            never on-screen text, keystrokes, or the content of other apps.
+          </div>
+        </div>
+
+        <div class="perm-card">
+          <div class="perm-name">Usage Stats Access</div>
+          <div class="perm-desc">
+            Polls the foreground app name in Standard Mode when the Accessibility Service
+            is not enabled. No usage history, patterns, or session data is recorded or
+            transmitted.
+          </div>
+        </div>
+
+        <div class="perm-card">
+          <div class="perm-name">Display Over Other Apps</div>
+          <div class="perm-desc">
+            Required to show a full-screen lock overlay when a protected app is detected.
+            The overlay is a solid dim — it displays no content from the underlying app.
+          </div>
+        </div>
+
+        <div class="perm-card">
+          <div class="perm-name">Notification Access</div>
+          <div class="perm-desc">
+            Suppresses or replaces heads-up notifications from protected apps while Blink
+            is in an inactive session. Notification content is read briefly in memory and
+            is never written to storage or transmitted.
+          </div>
+        </div>
+
+        <div class="perm-card">
+          <div class="perm-name">Biometrics</div>
+          <div class="perm-desc">
+            Used for optional fingerprint authentication via Android's BiometricPrompt API.
+            Blink never receives raw biometric data — matching happens entirely inside the
+            Android operating system.
+          </div>
+        </div>
+
+        <div class="perm-card">
+          <div class="perm-name">PIN Storage</div>
+          <div class="perm-desc">
+            PINs are hashed on-device using PBKDF2-HMAC-SHA-256 (310,000 iterations) and
+            stored in Android EncryptedSharedPreferences. The plaintext PIN is never
+            stored, logged, or transmitted.
+          </div>
+        </div>
+
+        <div class="perm-card">
+          <div class="perm-name">Device Administrator</div>
+          <div class="perm-desc">
+            Allows Blink to lock the screen via Android's Device Policy API. Blink uses
+            force-lock only — it does not have permission to wipe device data or perform
+            a factory reset.
+          </div>
+        </div>
+
+        <div class="perm-card">
+          <div class="perm-name">Receive Boot Completed</div>
+          <div class="perm-desc">
+            Starts the Blink foreground service at device boot so app protection is active
+            before the user unlocks. No personal data is collected or processed at boot.
+          </div>
+        </div>
+
+        <div class="perm-card">
+          <div class="perm-name">Foreground Service</div>
+          <div class="perm-desc">
+            Keeps Blink running persistently in the background. Android requires a visible
+            notification for foreground services — this notification confirms Blink is
+            active.
+          </div>
+        </div>
+
+        <div class="perm-card">
+          <div class="perm-name">Volume Key Events</div>
+          <div class="perm-desc">
+            Detects the 5-button volume sequence used to open a Blink session. The
+            sequence is processed in memory only and is never logged or stored.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 03 — What we do NOT do -->
+    <section class="section-primary">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <h2>What Blink Does Not Do</h2>
+      </div>
+      <p>These are hard commitments, not aspirations.</p>
+      <ul class="guarantee-list">
+        <li>No data is collected, stored remotely, or transmitted off your device.</li>
+        <li>No analytics, telemetry, crash-reporting, or advertising SDKs are included.</li>
+        <li>No third party ever receives any information about you or your usage.</li>
+        <li>Blink does not read, record, or store the content of your messages or emails.</li>
+        <li>Blink does not access your contacts, call log, or location.</li>
+        <li>Blink does not use your camera or microphone.</li>
+        <li>Blink does not upload your PIN hash, biometric reference, or any credential.</li>
+        <li>Blink does not perform factory resets or wipe device data.</li>
+      </ul>
+    </section>
+
+    <!-- 04 — Local data storage -->
+    <section class="section-secondary">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <h2>Local Data Storage</h2>
+      </div>
+      <p>
+        Blink stores your configuration — protected apps, intercept mode, session timeout,
+        and PIN hash — in <strong>Android EncryptedSharedPreferences</strong>, an on-device
+        encrypted key-value store backed by the Android Keystore hardware module. This data
+        is inaccessible to other apps and is not included in unencrypted Android backups.
+      </p>
+      <p>
+        All encryption keys are generated on your device and are never exported.
+        Uninstalling Blink permanently removes all stored data.
+      </p>
+      <p>
+        A short diagnostic log — up to 20 intercept event timestamps, no app names or
+        personal data — is held in memory during the current session only and discarded
+        when the app is terminated.
+      </p>
+    </section>
+
+    <!-- 05 — Children -->
+    <section class="section-secondary">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <h2>Children's Privacy</h2>
+      </div>
+      <p>
+        Blink is not directed at children under the age of 13 and does not knowingly
+        collect personal information from children. If you believe a child under 13 has
+        used this app, please contact us using the details below.
+      </p>
+    </section>
+
+    <!-- 06 — Changes -->
+    <section class="section-secondary">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <h2>Changes to This Policy</h2>
+      </div>
+      <p>
+        If we make material changes to this Privacy Policy, we will update the effective
+        date above and notify you via the app or Google Play Store listing. Continued use
+        of Blink after any changes constitutes acceptance of the updated policy.
+      </p>
+    </section>
+
+    <!-- 07 — Contact -->
+    <section class="section-secondary">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <h2>Contact</h2>
+      </div>
+      <p>Questions about this policy? We respond to all privacy inquiries within 30 days.</p>
+      <div class="contact-row">
+        <span class="contact-label">Email</span>
+        <a href="mailto:privacy@getblink.app">privacy@getblink.app</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>Blink &copy; 2026</span>
+    <span>Privacy Policy &nbsp;&middot;&nbsp; v1.0</span>
+  </footer>
+
+</body>
+</html>
