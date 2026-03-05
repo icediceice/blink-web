@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── Primary SEO ──────────────────────────────────────────── -->
+  <title>Blink — Your Phone, Your Terms | Android</title>
+  <meta name="description" content="Blink protects your device from the person standing next to you. Five independent layers of defense. Apps that cease to exist. Coercion resistance. Free to start." />
+  <meta name="keywords" content="android privacy app, hide apps android, covert app protection, SOS mode android, duress mode, notification masking, digital sovereignty, app vault android, hide contacts android, app hider" />
+  <meta name="author" content="Blink" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <link rel="canonical" href="https://blink.factor-io.com/" />
+  <meta name="theme-color" content="#0F0F12" />
+
+  <!-- ── hreflang alternate links ─────────────────────────────── -->
+    <link rel="alternate" hreflang="en" href="https://blink.factor-io.com/" />
+  <link rel="alternate" hreflang="id" href="https://blink.factor-io.com/id/" />
+  <link rel="alternate" hreflang="ja" href="https://blink.factor-io.com/ja/" />
+  <link rel="alternate" hreflang="ko" href="https://blink.factor-io.com/ko/" />
+  <link rel="alternate" hreflang="th" href="https://blink.factor-io.com/th/" />
+  <link rel="alternate" hreflang="vi" href="https://blink.factor-io.com/vi/" />
+  <link rel="alternate" hreflang="x-default" href="https://blink.factor-io.com/" />
+
+  <!-- ── Open Graph ───────────────────────────────────────────── -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://blink.factor-io.com/" />
+  <meta property="og:title" content="Blink — Your Phone Tells a Story. You Decide Which One." />
+  <meta property="og:description" content="Five independent layers of protection. Apps that cease to exist on your device. Coercion resistance built in. Under 10MB, zero tracking. Free to start." />
+  <meta property="og:image" content="https://blink.factor-io.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Blink — Digital Sovereignty for Android" />
+  <meta property="og:site_name" content="Blink" />
+  <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="id_ID" />
+  <meta property="og:locale:alternate" content="ja_JP" />
+  <meta property="og:locale:alternate" content="ko_KR" />
+  <meta property="og:locale:alternate" content="th_TH" />
+  <meta property="og:locale:alternate" content="vi_VN" />
+
+  <!-- ── Twitter / X Card ─────────────────────────────────────── -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Blink — Your Phone Tells a Story. You Decide Which One." />
+  <meta name="twitter:description" content="Five independent layers of protection. Apps that cease to exist on your device. Coercion resistance built in. Under 10MB, zero tracking. Free to start." />
+  <meta name="twitter:image" content="https://blink.factor-io.com/og-image.png" />
+  <meta name="twitter:image:alt" content="Blink — Digital Sovereignty for Android" />
+
+  <!-- ── Schema.org (EN only — search engines index EN primarily) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Blink",
+    "operatingSystem": "Android",
+    "applicationCategory": "UtilitiesApplication",
+    "applicationSubCategory": "Privacy",
+    "description": "Blink protects your Android device from the person standing next to you. Five independent layers of defense — disguise, app removal, self-resurrection, coercion resistance, and an encrypted vault. Under 10MB, zero tracking, free to start.",
+    "offers": [
+      { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free" },
+      { "@type": "Offer", "price": "4", "priceCurrency": "USD", "name": "Monthly" },
+      { "@type": "Offer", "price": "30", "priceCurrency": "USD", "name": "Annual" },
+      { "@type": "Offer", "price": "50", "priceCurrency": "USD", "name": "Lifetime" }
+    ],
+    "url": "https://blink.factor-io.com",
+    "screenshot": "https://blink.factor-io.com/og-image.png"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What is Blink?", "acceptedAnswer": { "@type": "Answer", "text": "Blink is an Android privacy platform that protects selected apps from unwanted viewing. It activates via a secret volume button sequence with nothing visible on screen. When active, protected apps are silently blocked and the phone returns to the home screen. Blink includes an SOS duress mode, notification masking, and screen escape. It is designed for situations where someone is directly observing or has physical access to your phone." } },
+      { "@type": "Question", "name": "How is Blink different from app lockers?", "acceptedAnswer": { "@type": "Answer", "text": "App lockers show a PIN or biometric prompt — that prompt is a visible signal. Blink shows nothing: the app silently returns to the home screen. App lockers fail when an app is already open when the phone is handed over. Blink monitors the foreground continuously and fires immediately. Blink's SOS mode is also externally indistinguishable from inactive — no observer can tell protection is active." } },
+      { "@type": "Question", "name": "What is SOS mode?", "acceptedAnswer": { "@type": "Answer", "text": "SOS mode is Blink's duress state. Activated by an alternate volume sequence, it looks identical to Blink being inactive — protected apps remain blocked but nothing indicates any mode is on. Designed for coercive situations: you can appear to cooperate while full protection stays active." } },
+      { "@type": "Question", "name": "Does Blink show a lock screen or PIN prompt?", "acceptedAnswer": { "@type": "Answer", "text": "No. Blink never shows a lock screen, PIN prompt, or biometric challenge. Protected apps silently return to the home screen. There is no visible indicator that any app is protected or that Blink is installed." } },
+      { "@type": "Question", "name": "What is Banking Mode?", "acceptedAnswer": { "@type": "Answer", "text": "Some banking apps detect certain system-level permissions and refuse to open. Banking Mode temporarily pauses those permissions so the banking app opens normally, then automatically re-enables protection when done. A one-time device setup is required." } },
+      { "@type": "Question", "name": "Does Blink work on Samsung, Xiaomi, or other Android devices?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Blink is tested and hardened for Samsung One UI, Xiaomi MIUI, OPPO, Vivo, and Huawei devices — environments known for aggressively managing background apps. Multiple layers of service recovery keep protection running even on the strictest OEM builds." } },
+      { "@type": "Question", "name": "Is Blink detectable on the device?", "acceptedAnswer": { "@type": "Answer", "text": "Blink appears in the launcher as a system utility — System Tools, Device Manager, Cloud Sync, etc. — with no reference to Blink. There are 20+ launcher disguise identities and 150+ notification disguise profiles with premium. Opening the app directly shows a minimal screen; actual protection requires the volume trigger." } },
+      { "@type": "Question", "name": "What apps can Blink protect?", "acceptedAnswer": { "@type": "Answer", "text": "Any app on your device. Common choices include Signal, WhatsApp, Telegram, LINE, banking apps, email, contacts, and gallery. You choose which apps to protect in Blink's settings. There is no limit on the number of protected apps." } }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ── Design tokens ──────────────────────────────────────────── */
+    :root {
+      --bg:           #0F0F12;
+      --surface:      #16161A;
+      --surface2:     #1C1C22;
+      --surface3:     #222228;
+      --amber:        #D4A853;
+      --amber-dim:    rgba(212,168,83,0.10);
+      --amber-border: rgba(212,168,83,0.22);
+      --sage:         #6EE7A0;
+      --sage-dim:     rgba(110,231,160,0.08);
+      --sage-border:  rgba(110,231,160,0.25);
+      --error:        #F87171;
+      --warn:         #FB923C;
+      --text:         #E4E4E8;
+      --secondary:    #9494A0;
+      --border:       #2A2A32;
+      --r:            12px;
+      --rl:           16px;
+      --rs:           8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px; line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── AI translation badge ───────────────────────────────────── */
+    .ai-banner {
+      background: var(--surface2); border-bottom: 1px solid var(--amber-border);
+      padding: 8px 24px; display: flex; align-items: center; justify-content: center;
+      gap: 10px; font-size: 13px; color: var(--secondary);
+    }
+    .ai-banner-icon { font-size: 14px; flex-shrink: 0; }
+    .ai-banner a { color: var(--amber); text-decoration: underline; text-underline-offset: 2px; }
+    .ai-banner-close {
+      margin-left: auto; background: none; border: none; cursor: pointer;
+      color: var(--secondary); font-size: 18px; line-height: 1; padding: 0 4px;
+      font-family: inherit;
+    }
+    .ai-banner-close:hover { color: var(--text); }
+
+    /* ── Skip link ──────────────────────────────────────────────── */
+    .skip-link {
+      position: absolute; top: -40px; left: 16px; z-index: 1000;
+      background: var(--amber); color: #1A1400;
+      padding: 8px 16px; border-radius: 0 0 8px 8px;
+      font-weight: 600; font-size: 14px; transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Buttons ────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      border: none; border-radius: var(--rs);
+      font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: opacity 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap; text-decoration: none;
+    }
+    .btn-amber { background: var(--amber); color: #1A1400; }
+    .btn-amber:hover { opacity: 0.88; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--amber); color: var(--amber); }
+    .btn-surface { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-surface:hover { border-color: var(--amber-border); color: var(--text); }
+    .btn-sm  { padding: 8px 18px; font-size: 14px; }
+    .btn-md  { padding: 10px 22px; font-size: 15px; }
+    .btn-lg  { padding: 13px 28px; font-size: 16px; }
+    .btn-ghost { background: none; border: none; color: var(--secondary); font-size: 15px; font-weight: 500; }
+    .btn-ghost:hover { color: var(--amber); }
+
+    /* ── Nav ────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,15,18,0.88);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; height: 60px; gap: 8px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 9px; flex-shrink: 0;
+      margin-right: 8px;
+    }
+    .nav-logo-mark { width: 28px; height: 28px; background: #1A1A2E; border-radius: 7px; overflow: hidden; flex-shrink: 0; }
+    .nav-logo-name { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+    .nav-links { display: flex; align-items: center; gap: 2px; flex: 1; }
+    .nav-links a { padding: 6px 11px; border-radius: 7px; font-size: 13px; color: var(--secondary); transition: color 0.15s, background 0.15s; }
+    .nav-links a:hover { color: var(--text); background: var(--surface2); }
+    .nav-cta { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+    /* Language switcher */
+    .lang-switcher {
+      display: flex; align-items: center; gap: 4px;
+      margin-right: 4px;
+    }
+    .lang-switcher a {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+      color: var(--secondary); padding: 3px 6px; border-radius: 4px;
+      border: 1px solid transparent; transition: color 0.15s, border-color 0.15s;
+      text-decoration: none;
+    }
+    .lang-switcher a:hover { color: var(--text); border-color: var(--border); }
+    .lang-switcher a.active { color: var(--amber); border-color: var(--amber-border); background: var(--amber-dim); }
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+    .label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--amber); margin-bottom: 12px;
+    }
+    h2 {
+      font-size: clamp(22px, 4vw, 34px); font-weight: 700;
+      line-height: 1.2; letter-spacing: -0.02em; max-width: 640px;
+    }
+    .desc { font-size: 17px; color: var(--secondary); max-width: 560px; margin-top: 12px; line-height: 1.7; }
+
+    /* ── Hero ───────────────────────────────────────────────────── */
+    .hero-section { position: relative; overflow: hidden; }
+    .hero-section::before {
+      content: ''; position: absolute; top: 40%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(212,168,83,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-center {
+      max-width: 760px; margin: 0 auto; padding: 100px 24px 80px;
+      text-align: center; position: relative;
+    }
+    .hero-h1 {
+      font-size: clamp(28px, 5vw, 48px); font-weight: 700;
+      line-height: 1.2; letter-spacing: -0.025em;
+    }
+    .hero-h1 span { display: block; }
+    .hero-h1 .h1-accent { color: var(--amber); }
+    .hero-sub {
+      font-size: 17px; color: var(--secondary); max-width: 540px;
+      margin: 24px auto 0; line-height: 1.7;
+    }
+    .hero-btns {
+      display: flex; justify-content: center; align-items: center;
+      gap: 16px; flex-wrap: wrap; margin-top: 32px;
+    }
+    .hero-note {
+      font-size: 13px; color: var(--secondary); margin-top: 18px;
+    }
+
+    /* ── Problem ────────────────────────────────────────────────── */
+    .problem-text { max-width: 640px; margin-top: 24px; }
+    .problem-text p {
+      font-size: 16px; color: var(--secondary); line-height: 1.8; margin-bottom: 20px;
+    }
+    .problem-text p:last-child { margin-bottom: 0; }
+    .problem-text .prob-highlight {
+      color: var(--text); font-weight: 500;
+    }
+    .problem-close {
+      color: var(--text); font-weight: 500; font-size: 17px;
+      margin-top: 28px;
+    }
+
+    /* ── Layers ─────────────────────────────────────────────────── */
+    .sol-intro { max-width: 640px; margin-top: 16px; }
+    .sol-intro p { font-size: 17px; color: var(--secondary); line-height: 1.7; }
+    .sol-close { color: var(--text); font-weight: 600; font-size: 17px; margin-top: 8px; }
+
+    .layers { margin-top: 56px; }
+    .layer {
+      display: grid; grid-template-columns: 120px 1fr; gap: 40px;
+      padding: 48px 0; border-top: 1px solid var(--border);
+    }
+    .layer:last-child { padding-bottom: 0; }
+    .layer-marker { text-align: right; padding-top: 4px; }
+    .layer-num {
+      font-size: 48px; font-weight: 800; color: var(--border);
+      line-height: 1; letter-spacing: -0.03em;
+    }
+    .layer-tag {
+      display: block; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--amber); margin-top: 8px;
+    }
+    .layer-content h3 {
+      font-size: clamp(17px, 2.5vw, 22px); font-weight: 700;
+      line-height: 1.3; margin-bottom: 16px; display: none;
+    }
+    .layer-content p {
+      font-size: 15px; color: var(--secondary); line-height: 1.75; margin-bottom: 14px;
+    }
+    .layer-content p:last-child { margin-bottom: 0; }
+    .layer-emphasis {
+      color: var(--text); font-weight: 500; font-size: 16px;
+    }
+    .layer-close {
+      color: var(--text); font-weight: 500; font-style: italic;
+      margin-top: 4px;
+    }
+    .layer-levels {
+      list-style: none; margin: 12px 0 16px; padding: 0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .layer-levels li {
+      font-size: 14px; color: var(--secondary); line-height: 1.6;
+      padding-left: 16px; position: relative;
+    }
+    .layer-levels li::before {
+      content: ''; position: absolute; left: 0; top: 9px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--amber); opacity: 0.6;
+    }
+    .layer-content em {
+      font-style: normal; font-size: 12px; color: var(--secondary);
+      opacity: 0.7;
+    }
+
+    /* ── Coherency ─────────────────────────────────────────────── */
+    .coh-bg {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .coh-header { margin-bottom: 32px; }
+    .coh-header h3 {
+      font-size: clamp(18px, 3vw, 24px); font-weight: 700;
+      line-height: 1.3; margin-bottom: 8px;
+    }
+    .coh-header p { font-size: 15px; color: var(--secondary); line-height: 1.7; }
+    .coh-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .coh-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--rl); padding: 22px;
+      transition: border-color 0.18s;
+    }
+    .coh-card:hover { border-color: var(--amber-border); }
+    .coh-card h4 {
+      font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.3;
+    }
+    .coh-card p { font-size: 13px; color: var(--secondary); line-height: 1.65; }
+    .coh-card em {
+      font-style: normal; font-size: 12px; color: var(--secondary); opacity: 0.7;
+    }
+    .coh-close {
+      margin-top: 28px; font-size: 14px; color: var(--secondary);
+      line-height: 1.7; max-width: 640px;
+    }
+
+    /* ── Trust ──────────────────────────────────────────────────── */
+    .trust-bg {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .trust-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 0 32px; margin-top: 36px;
+    }
+    .trust-item {
+      padding: 20px 0; border-top: 1px solid var(--border);
+    }
+    .trust-item h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .trust-item p { font-size: 13px; color: var(--secondary); line-height: 1.6; }
+    .trust-item em {
+      font-style: normal; font-size: 12px; color: var(--secondary); opacity: 0.7;
+    }
+
+    /* ── Steps (How it works) ──────────────────────────────────── */
+    .steps { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 36px; }
+    .step {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--rl); padding: 22px; position: relative;
+    }
+    .step::after {
+      content: attr(data-n); position: absolute; top: 20px; right: 20px;
+      font-size: 28px; font-weight: 800; letter-spacing: -0.03em;
+      color: var(--border); line-height: 1;
+    }
+    .step-ico {
+      width: 38px; height: 38px; border-radius: 9px;
+      background: var(--amber-dim); border: 1px solid var(--amber-border);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .step h3 { font-size: 14px; font-weight: 600; margin-bottom: 7px; line-height: 1.3; }
+    .step p  { font-size: 13px; color: var(--secondary); line-height: 1.6; }
+
+    /* ── Pricing / Free vs Premium ────────────────────────────── */
+    .tier-bg {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .tier-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 36px; }
+    .tier-col {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--rl); padding: 28px;
+    }
+    .tier-col.premium { border-color: var(--amber-border); }
+    .tier-col h3 { font-size: 17px; font-weight: 700; margin-bottom: 14px; }
+    .tier-col p { font-size: 14px; color: var(--secondary); line-height: 1.7; margin-bottom: 12px; }
+    .tier-col p:last-child { margin-bottom: 0; }
+    .tier-price {
+      font-size: 14px; color: var(--amber); font-weight: 600; margin-top: 16px;
+    }
+    .tier-cta { margin-top: 18px; }
+
+    /* ── Comparison table ─────────────────────────────────────── */
+    .compare-table { width: 100%; border-collapse: collapse; margin-top: 48px; }
+    .compare-table thead th {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--secondary);
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    .compare-table thead th:not(:first-child) { text-align: center; width: 100px; }
+    .compare-table td {
+      padding: 10px 16px; font-size: 13px; color: var(--secondary);
+      border-bottom: 1px solid var(--border);
+    }
+    .compare-table td:not(:first-child) { text-align: center; width: 100px; }
+    .cmp-yes { color: var(--sage); font-weight: 600; }
+    .cmp-no { color: var(--secondary); opacity: 0.35; }
+
+    /* ── FAQ ────────────────────────────────────────────────────── */
+    .faq-list { margin-top: 28px; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-btn {
+      width: 100%; text-align: left; background: none; border: none;
+      cursor: pointer; padding: 18px 0; display: flex; align-items: center;
+      justify-content: space-between; gap: 16px; font-size: 15px;
+      font-weight: 500; color: var(--text); font-family: inherit;
+      line-height: 1.4; transition: color 0.15s;
+    }
+    .faq-btn:hover { color: var(--amber); }
+    .faq-item.open .faq-btn { color: var(--amber); }
+    .faq-chev {
+      flex-shrink: 0; width: 18px; height: 18px; color: var(--secondary);
+      transition: transform 0.2s, color 0.15s;
+    }
+    .faq-item.open .faq-chev { transform: rotate(180deg); color: var(--amber); }
+    .faq-btn:hover .faq-chev { color: var(--amber); }
+    .faq-ans {
+      display: none; padding: 0 0 18px; font-size: 14px;
+      color: var(--secondary); line-height: 1.75;
+    }
+    .faq-ans a { color: var(--amber); text-decoration: underline; text-underline-offset: 2px; }
+    .faq-item.open .faq-ans { display: block; }
+
+    /* ── Download CTA ───────────────────────────────────────────── */
+    .dl-inner {
+      max-width: 680px; margin: 0 auto; padding: 80px 24px; text-align: center;
+    }
+    .dl-logo {
+      width: 56px; height: 56px; background: #1A1A2E; border-radius: 14px;
+      overflow: hidden; margin: 0 auto 22px;
+    }
+    .dl-inner h2 { max-width: 100%; text-align: center; font-size: clamp(20px,3.5vw,30px); }
+    .dl-inner p  { font-size: 16px; color: var(--secondary); margin: 12px 0 26px; line-height: 1.6; }
+    .dl-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .dl-secondary { font-size: 13px; color: var(--secondary); margin-top: 16px; }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    footer { background: var(--surface); border-top: 1px solid var(--border); }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto; padding: 28px 24px;
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .ft-logo { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+    .ft-logo-mark { width: 22px; height: 22px; background: #1A1A2E; border-radius: 5px; overflow: hidden; }
+    .ft-logo-name { font-size: 13px; font-weight: 700; }
+    .ft-divider { width: 1px; height: 14px; background: var(--border); }
+    .ft-links { display: flex; gap: 14px; flex-wrap: wrap; }
+    .ft-links a { font-size: 13px; color: var(--secondary); transition: color 0.15s; }
+    .ft-links a:hover { color: var(--text); }
+    .ft-copy { margin-left: auto; font-size: 12px; color: var(--secondary); }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .hero-center { padding-top: 64px; padding-bottom: 56px; }
+      .layer { grid-template-columns: 80px 1fr; gap: 24px; }
+      .layer-num { font-size: 36px; }
+      .steps { grid-template-columns: 1fr; }
+      .coh-grid { grid-template-columns: 1fr; }
+      .trust-grid { grid-template-columns: 1fr 1fr; }
+      .tier-cols { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .nav-links { display: none; }
+      .wrap { padding: 52px 18px; }
+      .hero-center { padding: 48px 18px 40px; }
+      .layer {
+        grid-template-columns: 1fr; gap: 12px;
+        padding: 36px 0;
+      }
+      .layer-marker {
+        text-align: left; display: flex; align-items: baseline; gap: 12px;
+      }
+      .layer-num { font-size: 28px; }
+      .trust-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- SVG sprite -->
+  <svg style="display:none" aria-hidden="true">
+    <symbol id="chev" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
+
+  
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- ── Nav ─────────────────────────────────────────────────────── -->
+  <nav role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Blink home">
+        <div class="nav-logo-mark">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="28" height="28" aria-hidden="true">
+            <defs><radialGradient id="g0" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+            <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+            <path fill="url(#g0)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+            <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+            <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
+            <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+            <path fill="none" stroke="#0D0D38" stroke-width="1.8" d="M20,54 Q37,57 54,58 Q71,57 88,54"/>
+          </svg>
+        </div>
+        <span class="nav-logo-name">Blink</span>
+      </a>
+      <div class="nav-links">
+        <a href="#protection">Protection</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="lang-switcher" aria-label="Language">
+        <a href="/" class="active">EN</a>
+        <a href="/id/">ID</a>
+        <a href="/ja/">JA</a>
+        <a href="/ko/">KO</a>
+        <a href="/th/">TH</a>
+        <a href="/vi/">VI</a>
+      </div>
+      <div class="nav-cta">
+        <a href="https://factor-io.com/ADB" class="btn btn-outline btn-sm" rel="noopener">Setup Guide</a>
+        <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <!-- ── Section 1: Hero ───────────────────────────────────────── -->
+    <section class="hero-section" aria-label="Introduction">
+      <div class="hero-center">
+        <h1 class="hero-h1">
+          <span>Your phone tells a story.</span>
+          <span class="h1-accent">You decide which one.</span>
+        </h1>
+        <p class="hero-sub">Blink protects your device from the person standing next to you — silently, invisibly, and entirely on your terms.</p>
+        <div class="hero-btns">
+          <a href="https://blink.factor-io.com/" class="btn btn-amber btn-lg" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17l17.5 8.5L3 20.5zM5 7.08V12l6-1.25L5 7.08zm0 9.84 6-3.67-6-1.25v4.92z"/></svg>
+            Download Free — Android
+          </a>
+          <a href="#problem" class="btn btn-ghost">See how it works ↓</a>
+        </div>
+        <p class="hero-note">Free tier. No time limit. No account required.</p>
+      </div>
+    </section>
+
+    <!-- ── Section 2: Problem ────────────────────────────────────── -->
+    <section id="problem" aria-labelledby="prob-h">
+      <div class="wrap">
+        <p class="label">The problem</p>
+        <h2 id="prob-h">The threat most security apps ignore.</h2>
+        <div class="problem-text">
+          <p>There are thousands of apps designed to protect you from threats on the internet. Encrypted messages. VPNs. Password managers.</p>
+          <p class="prob-highlight">None of them protect you from the person sitting across from you.</p>
+          <p>The moment someone else holds your phone — a partner, a family member, an authority figure — every app is visible. Every conversation. Every contact. Every call you ever made.</p>
+          <p>Most privacy tools put a single layer between your content and whoever is holding the phone. One PIN screen. One overlay. One gate. When that gate fails — through coercion, through a moment of inattention, through someone watching you type — everything behind it is exposed instantly.</p>
+          <p>The security industry spent two decades building walls against remote threats. It left the room unguarded.</p>
+        </div>
+        <p class="problem-close">Blink was built for the threat that happens in person.</p>
+      </div>
+    </section>
+
+    <!-- ── Section 3: Solution — Five layers ─────────────────────── -->
+    <section id="protection" aria-labelledby="sol-h">
+      <div class="wrap">
+        <p class="label">Protection</p>
+        <h2 id="sol-h">Not one wall. Five.</h2>
+        <div class="sol-intro">
+          <p>Blink is not another lock on the door. It is five independent layers of defense, each sufficient on its own, designed so that multiple systems would need to fail simultaneously before anything is exposed.</p>
+          <p class="sol-close">They won't.</p>
+        </div>
+
+        <div class="layers">
+          <!-- Layer 1: Invisible -->
+          <article class="layer">
+            <div class="layer-marker">
+              <span class="layer-num">01</span>
+              <span class="layer-tag">Invisible</span>
+            </div>
+            <div class="layer-content">
+              <p>Blink does not look like a privacy tool. On your phone, it appears as a system utility — Device Manager, System Tools, Cloud Sync — any of 20+ identities you choose. The icon and name change across your launcher and recent apps. To anyone who picks up your phone, it is indistinguishable from something that came with the device.</p>
+              <p>Sessions start with a volume button sequence. Nothing appears on screen. No app opens. No indicator. From the outside, the phone looks exactly the same as it did a moment ago.</p>
+              <p class="layer-close">There is no visible surface. Nothing to recognize. Nothing to question.</p>
+            </div>
+          </article>
+
+          <!-- Layer 2: Absent -->
+          <article class="layer">
+            <div class="layer-marker">
+              <span class="layer-num">02</span>
+              <span class="layer-tag">Absent</span>
+            </div>
+            <div class="layer-content">
+              <p>Most privacy tools lock an app behind a gate. The app is still visible in the launcher, searchable, present in recents. The gate is the only thing standing between it and whoever is looking.</p>
+              <p class="layer-emphasis">Blink does not lock apps. It removes them.</p>
+              <p>When Blink protects an app, the operating system itself erases its presence — using the same permission tier that enterprise IT departments use to manage corporate device fleets. The app does not appear in the launcher. Not in search. Not in recents. Not anywhere on the device. As far as the phone is concerned, the app does not exist.</p>
+              <p>Even if Blink's own process crashes, the flags hold. Protected apps stay invisible regardless of what happens to Blink itself.</p>
+              <p class="layer-close">You cannot search for what the phone does not know is there.</p>
+            </div>
+          </article>
+
+          <!-- Layer 3: Persistent -->
+          <article class="layer">
+            <div class="layer-marker">
+              <span class="layer-num">03</span>
+              <span class="layer-tag">Persistent</span>
+            </div>
+            <div class="layer-content">
+              <p class="layer-emphasis">A protection system that can be killed is not a protection system.</p>
+              <p>Blink maintains multiple independent survival mechanisms — including a system-level watchdog that the phone's battery management cannot terminate. If the phone's aggressive optimization does manage to stop Blink's services — a common behavior on Samsung and other manufacturers — Blink resurrects the instant the screen unlocks. Every protection is restored in sub-second time. Before any human eye can register what is on the screen.</p>
+              <p class="layer-close">There is no realistic window where someone picks up your phone and sees something Blink was supposed to hide.</p>
+            </div>
+          </article>
+
+          <!-- Layer 4: Coercion-resistant -->
+          <article class="layer">
+            <div class="layer-marker">
+              <span class="layer-num">04</span>
+              <span class="layer-tag">Coercion-resistant</span>
+            </div>
+            <div class="layer-content">
+              <p class="layer-emphasis">Someone tells you to unlock your phone. You comply.</p>
+              <p>A different volume sequence activates SOS mode. From the outside, the phone looks exactly like a normal unlocked session. You appear to be cooperating fully. Every protected app remains hidden. Every vault item stays sealed. The person watching sees nothing unusual.</p>
+              <p>Every protected app and every vault item has two protection levels, assigned by you:</p>
+              <ul class="layer-levels">
+                <li><strong>24/7</strong> — always protected, accessible only during a real authenticated session</li>
+                <li><strong>SOS-only</strong> — visible normally, hidden the moment SOS activates</li>
+              </ul>
+              <p class="layer-close">You decide what stays hidden at all times versus what disappears only under pressure. The granularity is per item.</p>
+            </div>
+          </article>
+
+          <!-- Layer 5: The vault -->
+          <article class="layer">
+            <div class="layer-marker">
+              <span class="layer-num">05</span>
+              <span class="layer-tag">The vault</span>
+            </div>
+            <div class="layer-content">
+              <p>Hidden contacts live inside Blink's encrypted sandbox — a completely separate database, not filtered Android contacts. Authenticate: they appear in your dialer and messages. End your session: they vanish. No sync artifact. No ghost entry in Google Contacts. No backup that accidentally restores them. <em>(Premium)</em></p>
+              <p>Call Scrubber removes call log entries for contacts you designate — automatically, from the native call log. Your call history shows only what you choose. <em>(Premium)</em></p>
+              <p>A dedicated trigger silently connects to a pre-configured contact. Screen goes dark. Speaker cuts out. Microphone stays live. A second contact can receive your GPS coordinates via SMS. No visible or audible indication that a call is active. <em>(Premium)</em></p>
+              <p>Blink cannot be uninstalled. The permission level that enables app removal also makes Blink's own removal impossible. There is no scenario where someone removes Blink and your protected apps reappear.</p>
+              <p class="layer-close">There is no path to the vault's contents without your active, voluntary cooperation in a live authenticated session.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section 3b: Coherency ─────────────────────────────────── -->
+    <section class="coh-bg" aria-labelledby="coh-h">
+      <div class="wrap">
+        <div class="coh-header">
+          <h3 id="coh-h">Every piece knows every other piece.</h3>
+          <p>This is not a collection of features bolted together. Every component was designed with full knowledge of every other.</p>
+        </div>
+        <div class="coh-grid">
+          <div class="coh-card">
+            <h4>Notifications that actually arrive</h4>
+            <p>Notifications from protected apps are silenced on the free tier. With premium, they are replaced with convincing decoys — a calendar reminder, a work message, a shipping update — across 150+ disguise profiles. The decoy is what your watch receives too. Where most notification managers cause you to miss messages entirely — Android treats suppressed notifications as already delivered and will not ring again — Blink's engineering ensures every notification arrives properly. You never miss a message unless you choose to.</p>
+          </div>
+          <div class="coh-card">
+            <h4>Banking mode</h4>
+            <p>Some financial apps refuse to launch when certain system permissions are active. Blink detects the banking app, temporarily steps aside, and resumes the moment you leave it. <em>(Requires the same one-time setup.)</em></p>
+          </div>
+          <div class="coh-card">
+            <h4>Screen escape</h4>
+            <p>When your session ends — or when you lock the phone — Blink fires a home action before the screen fully lights up. The last app you were using never appears in recents or on the lock screen. The person who picks up the phone next sees nothing.</p>
+          </div>
+          <div class="coh-card">
+            <h4>Discipline, not bloat</h4>
+            <p>Under 10 MB installed. Zero data usage. No ads. No account. No tracking SDKs. No analytics. These are not aspirations. They are properties of the architecture.</p>
+          </div>
+        </div>
+        <p class="coh-close">Blink is engineered for every scenario the team can anticipate. In the rare event you encounter one not yet covered — the team wants to hear about it. This is a product that invites scrutiny because the architecture holds up.</p>
+      </div>
+    </section>
+
+    <!-- ── Section 4: Trust signals ──────────────────────────────── -->
+    <section class="trust-bg" aria-labelledby="trust-h">
+      <div class="wrap">
+        <p class="label">Trust</p>
+        <h2 id="trust-h">Built with nothing to hide.</h2>
+        <div class="trust-grid">
+          <div class="trust-item">
+            <h3>No account required.</h3>
+            <p>Blink has no login, no registration, no email field. There is no Blink account. There is no server to authenticate to.</p>
+          </div>
+          <div class="trust-item">
+            <h3>Nothing is collected.</h3>
+            <p>No analytics. No usage data. No crash reporting to external services. Zero advertising or tracking SDKs. Blink does not collect, transmit, or store anything. What leaves your device is entirely your decision.</p>
+          </div>
+          <div class="trust-item">
+            <h3>Blink cannot be removed without authentication.</h3>
+            <p>Deactivating Blink's system-level permissions requires authentication first. Someone trying to uninstall it without your knowledge will be stopped before they begin.</p>
+          </div>
+          <div class="trust-item">
+            <h3>Free is not a trial.</h3>
+            <p>The free tier has no time limit. App protection, notification silence, SOS mode, screen escape, 20+ disguises, banking mode — available from day one, free indefinitely. Premium adds depth. Not access to the fundamentals.</p>
+          </div>
+          <div class="trust-item">
+            <h3>Your backup is yours.</h3>
+            <p>If you choose to back up your configuration to Google Drive, it is encrypted with your PIN before it leaves the device. Blink cannot read it. Google cannot read it. You restore it with the same PIN. <em>(Premium)</em></p>
+          </div>
+          <div class="trust-item">
+            <h3>Published by Factor IO.</h3>
+            <p>A small product studio. No investors. No acquisition pressure. No roadmap driven by engagement metrics.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section 5: How it works ───────────────────────────────── -->
+    <section id="how-it-works" aria-labelledby="hiw-h">
+      <div class="wrap">
+        <p class="label">How it works</p>
+        <h2 id="hiw-h">Set up once. Running always.</h2>
+        <div class="steps">
+          <article class="step" data-n="01">
+            <div class="step-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4A853" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <h3>Install</h3>
+            <p>Download from Google Play. Blink walks you through choosing your trigger sequence and selecting which apps to protect.</p>
+          </article>
+          <article class="step" data-n="02">
+            <div class="step-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4A853" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M17 12h.01"/><path d="M7 12h.01"/></svg>
+            </div>
+            <h3>One-time device setup</h3>
+            <p>Blink's deeper protections — hiding apps from the OS entirely, notification replacement, banking mode — require a one-time step done through a companion setup page. One computer. One website. One USB cable. About three minutes, done once, permanent.</p>
+          </article>
+          <article class="step" data-n="03">
+            <div class="step-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4A853" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Choose your disguise</h3>
+            <p>Pick how Blink appears on your device. System Tools. Device Manager. Cloud Sync. Smart Switch. Twenty-plus options. The icon and label change across your launcher. You can switch at any time.</p>
+          </article>
+          <article class="step" data-n="04">
+            <div class="step-ico" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4A853" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <h3>In session, out of session</h3>
+            <p>Your volume sequence starts a session. Protected apps return. Hidden contacts appear. When you end the session — or lock the screen — protection resumes instantly. The transition is invisible.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section 6: Free vs Premium ────────────────────────────── -->
+    <section id="pricing" class="tier-bg" aria-labelledby="tier-h">
+      <div class="wrap">
+        <p class="label">Pricing</p>
+        <h2 id="tier-h">Start free. Go deeper when you need to.</h2>
+        <div class="tier-cols">
+          <div class="tier-col">
+            <h3>Free — always.</h3>
+            <p>The core protection model is free and stays free. App protection. Notification silence. Screen escape. SOS mode. Your volume trigger. Twenty-plus disguise identities. Banking mode.</p>
+            <p>These are not trial features. There is no timer. There is no upgrade nag. Blink's fundamental purpose — making your protected apps unreachable and leaving no trace — is available to every user from day one.</p>
+            <div class="tier-cta">
+              <a href="https://blink.factor-io.com/" class="btn btn-outline btn-md" rel="noopener">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17l17.5 8.5L3 20.5zM5 7.08V12l6-1.25L5 7.08zm0 9.84 6-3.67-6-1.25v4.92z"/></svg>
+                Download Free — Android
+              </a>
+            </div>
+          </div>
+          <div class="tier-col premium">
+            <h3>Premium — for when you need everything.</h3>
+            <p>Premium adds the layers that require deeper integration: notifications that look like the real thing, contacts that exist only inside Blink, a call that connects without a sound, a history that cleans itself, and an encrypted backup that only you can read.</p>
+            <p class="tier-price">$4 per month · $30 per year · $50 for life</p>
+          </div>
+        </div>
+
+        <!-- Comparison table -->
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Free</th>
+              <th>Premium</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>App protection</td><td><span class="cmp-yes">&#10003;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Notification silence</td><td><span class="cmp-yes">&#10003;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Screen escape</td><td><span class="cmp-yes">&#10003;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>SOS mode</td><td><span class="cmp-yes">&#10003;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>20+ disguise identities</td><td><span class="cmp-yes">&#10003;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Banking mode</td><td><span class="cmp-yes">&#10003;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Quick Settings tile</td><td><span class="cmp-yes">&#10003;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>App Vault — apps hidden from the OS entirely</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Notification replacement (150+ profiles)</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Hidden contacts</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Call scrubber</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Hidden call with GPS</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Encrypted Drive Backup</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Shake-to-lock</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Inactivity auto-lock</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Configurable session timeout</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+            <tr><td>Paranoia mode</td><td><span class="cmp-no">&mdash;</span></td><td><span class="cmp-yes">&#10003;</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── FAQ ─────────────────────────────────────────────────────── -->
+    <section id="faq" aria-labelledby="faq-h">
+      <div class="wrap">
+        <p class="label">Questions</p>
+        <h2 id="faq-h">Common questions</h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa1">What is Blink?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa1">Blink is an Android privacy platform that protects selected apps from unwanted viewing. It activates via a secret volume button sequence — nothing visible on screen. When active, protected apps are silently blocked and the phone returns to the home screen. Blink includes an SOS duress mode, notification masking, and screen escape. Designed for situations where someone is directly observing or has physical access to your phone.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa2">How is Blink different from app lockers?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa2">App lockers show a PIN or biometric prompt — that prompt is a visible signal that something is hidden. Blink shows nothing: the app silently returns to the home screen. App lockers also fail when a protected app is already open when the phone is handed over. Blink monitors the foreground continuously and fires immediately. Additionally, Blink's SOS mode is externally indistinguishable from the inactive state — no observer can tell protection is on.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa3">What is SOS mode?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa3">SOS mode is Blink's duress state. It is activated by an alternate volume sequence and looks completely identical to Blink being inactive — protected apps remain blocked, but nothing indicates any protective mode is on. Designed for coercive situations: you appear to cooperate, the observer sees a normal phone, and all protection remains active.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa4">Does Blink show a lock screen or PIN prompt?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa4">No. Blink never shows a lock screen, PIN prompt, or biometric challenge when a protected app is accessed. The app silently returns to the home screen. There is no visible indicator that any app is protected, or that Blink is installed at all.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa5">What is Banking Mode?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa5">Some banking apps detect certain system-level permissions and refuse to open. Banking Mode temporarily pauses those permissions so the banking app opens normally, then automatically re-enables protection when done. A one-time device setup is required — guided step-by-step at <a href="https://factor-io.com/ADB">our setup page</a>.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa6">Does Blink work on Samsung, Xiaomi, or other Android devices?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa6">Yes. Blink is tested and hardened for Samsung One UI, Xiaomi MIUI, OPPO, Vivo, and Huawei devices — environments known for aggressively managing background apps. Multiple layers of service recovery keep protection running even on the strictest OEM builds.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa7">Is Blink detectable on the device?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa7">Blink is designed to be inconspicuous. It appears in the launcher as a system utility — System Tools, Device Manager, Cloud Sync, Smart Switch, or any of 20+ identities — with no reference to Blink. 150+ notification disguise profiles are available with premium. Opening the app directly shows a minimal informational screen; actual protection requires the volume trigger sequence.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa8">What apps can Blink protect?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa8">Any app installed on your device. Common choices include messaging apps (Signal, WhatsApp, Telegram, LINE), banking apps, email, contacts, gallery, and social media. You choose which apps to protect in Blink's settings. There is no limit on the number of protected apps.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa9">What is App Vault and how is it different from app protection?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa9">App protection blocks a protected app when someone tries to open it — it silently redirects back to the home screen. App Vault goes further: a vaulted app is completely invisible. It doesn't appear in your launcher, your recent apps, or your settings. As far as anyone looking at the phone can tell, the app isn't installed. Unlock Blink and it comes straight back. Protection is about blocking. Vault is about not being seen.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-btn" aria-expanded="false" aria-controls="fa10">Does App Vault require any special setup?<svg class="faq-chev" aria-hidden="true"><use href="#chev"/></svg></button>
+            <div class="faq-ans" id="fa10">Yes — App Vault needs a one-time setup that takes a few minutes. We built a step-by-step browser guide that walks you through everything. No developer tools or technical knowledge required — just follow the steps on screen. <a href="https://factor-io.com/ADB">Start the setup guide →</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Section 7: Closing CTA ────────────────────────────────── -->
+    <section aria-label="Download Blink">
+      <div class="dl-inner">
+        <div class="dl-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="56" height="56" aria-hidden="true">
+            <defs><radialGradient id="g5" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+            <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+            <path fill="url(#g5)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+            <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+            <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
+            <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+            <path fill="none" stroke="#0D0D38" stroke-width="1.8" d="M20,54 Q37,57 54,58 Q71,57 88,54"/>
+          </svg>
+        </div>
+        <h2>It was always supposed to work this way.</h2>
+        <p>Blink is free to download. The protection starts the moment you finish setup. No account. No data collected. Nothing stored outside your device unless you choose it.</p>
+        <div class="dl-btns">
+          <a href="https://blink.factor-io.com/" class="btn btn-amber btn-lg" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20.5v-17l17.5 8.5L3 20.5zM5 7.08V12l6-1.25L5 7.08zm0 9.84 6-3.67-6-1.25v4.92z"/></svg>
+            Download Free — Android
+          </a>
+        </div>
+        <p class="dl-secondary">Free tier. No time limit. No account required.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="ft-logo">
+        <div class="ft-logo-mark">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="22" height="22" aria-hidden="true">
+            <defs><radialGradient id="g6" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+            <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+            <path fill="url(#g6)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+            <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+            <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+          </svg>
+        </div>
+        <span class="ft-logo-name">Blink</span>
+      </div>
+      <div class="ft-divider" aria-hidden="true"></div>
+      <nav class="ft-links" aria-label="Footer links">
+        <a href="https://factor-io.com/ADB" rel="noopener">Setup Guide</a>
+        <a href="https://blink.factor-io.com/privacy-policy.html">Privacy Policy</a>
+      </nav>
+      <div class="ft-copy">Android only &nbsp;&middot;&nbsp; Not available for iOS</div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.faq-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var item = btn.closest('.faq-item');
+        var open = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(function(el) {
+          el.classList.remove('open');
+          el.querySelector('.faq-btn').setAttribute('aria-expanded', 'false');
+        });
+        if (!open) { item.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+      });
+    });
+    var first = document.querySelector('.faq-item');
+    if (first) { first.classList.add('open'); first.querySelector('.faq-btn').setAttribute('aria-expanded','true'); }
+    var banner = document.getElementById('ai-banner');
+    if (banner) {
+      document.getElementById('ai-banner-close').addEventListener('click', function() {
+        banner.style.display = 'none';
+      });
+    }
+  </script>
+</body>
+</html>

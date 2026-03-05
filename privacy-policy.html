@@ -13,6 +13,8 @@
       --amber-dim: rgba(212, 168, 83, 0.12);
       --sage:      #6EE7A0;
       --sage-dim:  rgba(110, 231, 160, 0.1);
+      --blue:      #60A5FA;
+      --blue-dim:  rgba(96, 165, 250, 0.1);
       --text:      #E4E4E8;
       --secondary: #9494A0;
       --border:    #2A2A32;
@@ -138,7 +140,7 @@
       margin-bottom: 56px;
     }
 
-    /* ── Secondary sections (04–07) — tighter density ─────────── */
+    /* ── Secondary sections (04–08) — tighter density ─────────── */
     .section-secondary {
       margin-bottom: 40px;
     }
@@ -182,28 +184,83 @@
 
     p strong { color: var(--text); font-weight: 600; }
 
+    /* ── Permission group label ───────────────────────────────── */
+    .perm-group-label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin: 24px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .perm-group-label.mandatory { color: var(--amber); }
+    .perm-group-label.optional  { color: var(--blue); }
+
+    .perm-group-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
     /* ── Permission grid — 2 columns ─────────────────────────── */
     .perm-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
-      margin-top: 20px;
     }
 
     .perm-card {
       background: var(--surface2);
       border-radius: var(--radius);
       padding: 20px;
+      position: relative;
+    }
+
+    .perm-card.mandatory {
+      border-left: 2px solid rgba(212, 168, 83, 0.4);
+    }
+
+    .perm-card.optional {
+      border-left: 2px solid rgba(96, 165, 250, 0.4);
     }
 
     .perm-name {
       font-size: 0.75rem;
       font-weight: 700;
-      color: var(--amber);
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 8px;
       line-height: 1;
+    }
+
+    .perm-card.mandatory .perm-name { color: var(--amber); }
+    .perm-card.optional  .perm-name { color: var(--blue); }
+
+    .perm-badge {
+      display: inline-block;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 3px;
+      padding: 2px 5px;
+      margin-left: 6px;
+      vertical-align: middle;
+      line-height: 1.4;
+    }
+
+    .perm-badge.mandatory {
+      background: rgba(212, 168, 83, 0.15);
+      color: var(--amber);
+    }
+
+    .perm-badge.optional {
+      background: rgba(96, 165, 250, 0.12);
+      color: var(--blue);
     }
 
     .perm-desc {
@@ -237,6 +294,23 @@
       color: var(--sage);
       font-weight: 700;
       font-size: 0.875rem;
+    }
+
+    /* ── Drive callout ───────────────────────────────────────── */
+    .drive-callout {
+      background: var(--blue-dim);
+      border: 1px solid rgba(96, 165, 250, 0.2);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-top: 16px;
+    }
+
+    .drive-callout p {
+      margin-bottom: 8px;
+    }
+
+    .drive-callout p:last-child {
+      margin-bottom: 0;
     }
 
     /* ── Contact ─────────────────────────────────────────────── */
@@ -317,7 +391,7 @@
         <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
         <!-- Catchlight -->
         <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
-        <!-- Upper eyelid — drooping to mid-blink, blends with bg colour -->
+        <!-- Upper eyelid -->
         <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
         <!-- Lash line -->
         <path fill="none" stroke="#0D0D38" stroke-width="1.8" d="M20,54 Q37,57 54,58 Q71,57 88,54"/>
@@ -336,13 +410,15 @@
     <div class="hero">
       <p class="hero-eyebrow">Legal</p>
       <h1 class="hero-title">Privacy Policy</h1>
-      <p class="hero-meta">Effective March 3, 2026 &nbsp;·&nbsp; Last updated March 3, 2026</p>
+      <p class="hero-meta">Effective March 4, 2026 &nbsp;·&nbsp; Last updated March 4, 2026</p>
       <div class="trust-callout">
-        <p class="trust-statement">Your data never leaves your device.</p>
+        <p class="trust-statement">Privacy by default. Cloud only when you choose it.</p>
         <p class="trust-body">
-          Blink is a local-only app. We collect nothing, store nothing remotely, and share
-          nothing with any third party. The sections below explain exactly which system
-          permissions we use and why — so you know precisely what the app can and cannot see.
+          Blink is designed around local-first privacy. Core protection works entirely
+          on your device — nothing is collected, stored remotely, or shared with any third
+          party. The only exception is the optional Google Drive backup, which you must
+          explicitly enable and which stores an encrypted copy of your settings in
+          <strong>your own</strong> Google Drive — inaccessible to us.
         </p>
       </div>
     </div>
@@ -360,9 +436,9 @@
         It runs discreetly in the background to keep your private apps private.
       </p>
       <p>
-        This Privacy Policy describes every Android permission Blink requests, why each is
-        necessary, and how the information those permissions expose is used — entirely on
-        your device, with no data ever leaving your phone.
+        This Privacy Policy describes every Android permission Blink requests, whether
+        each permission is required for core functionality or granted only when you opt in
+        to a specific feature, and how the information those permissions expose is used.
       </p>
     </section>
 
@@ -373,96 +449,110 @@
         <h2>Permissions and How We Use Them</h2>
       </div>
       <p>
-        Blink requests the following Android permissions. Each is used solely for the
-        stated purpose. No data accessed through these permissions ever leaves your device
-        or is shared with any third party.
+        Permissions are split into two tiers. <strong>Mandatory</strong> permissions are
+        required for Blink's core protection layer and are requested during initial setup.
+        <strong>Optional</strong> permissions are only requested when you explicitly enable
+        the corresponding feature — you can use Blink without ever granting them.
+        No data accessed through any permission ever leaves your device except where
+        explicitly noted.
       </p>
+
+      <p class="perm-group-label mandatory">Mandatory — Core Protection</p>
       <div class="perm-grid">
 
-        <div class="perm-card">
-          <div class="perm-name">Accessibility Service</div>
-          <div class="perm-desc">
-            Detects when a protected app enters the foreground (Advanced Mode) so Blink
-            can display a lock overlay instantly. Blink reads window package names only —
-            never on-screen text, keystrokes, or the content of other apps.
-          </div>
-        </div>
-
-        <div class="perm-card">
-          <div class="perm-name">Usage Stats Access</div>
-          <div class="perm-desc">
-            Polls the foreground app name in Standard Mode when the Accessibility Service
-            is not enabled. No usage history, patterns, or session data is recorded or
-            transmitted.
-          </div>
-        </div>
-
-        <div class="perm-card">
-          <div class="perm-name">Display Over Other Apps</div>
+        <div class="perm-card mandatory">
+          <div class="perm-name">Display Over Other Apps <span class="perm-badge mandatory">Required</span></div>
           <div class="perm-desc">
             Required to show a full-screen lock overlay when a protected app is detected.
             The overlay is a solid dim — it displays no content from the underlying app.
           </div>
         </div>
 
-        <div class="perm-card">
-          <div class="perm-name">Notification Access</div>
-          <div class="perm-desc">
-            Suppresses or replaces heads-up notifications from protected apps while Blink
-            is in an inactive session. Notification content is read briefly in memory and
-            is never written to storage or transmitted.
-          </div>
-        </div>
-
-        <div class="perm-card">
-          <div class="perm-name">Biometrics</div>
-          <div class="perm-desc">
-            Used for optional fingerprint authentication via Android's BiometricPrompt API.
-            Blink never receives raw biometric data — matching happens entirely inside the
-            Android operating system.
-          </div>
-        </div>
-
-        <div class="perm-card">
-          <div class="perm-name">PIN Storage</div>
-          <div class="perm-desc">
-            PINs are hashed on-device using PBKDF2-HMAC-SHA-256 (310,000 iterations) and
-            stored in Android EncryptedSharedPreferences. The plaintext PIN is never
-            stored, logged, or transmitted.
-          </div>
-        </div>
-
-        <div class="perm-card">
-          <div class="perm-name">Device Administrator</div>
-          <div class="perm-desc">
-            Allows Blink to lock the screen via Android's Device Policy API. Blink uses
-            force-lock only — it does not have permission to wipe device data or perform
-            a factory reset.
-          </div>
-        </div>
-
-        <div class="perm-card">
-          <div class="perm-name">Receive Boot Completed</div>
-          <div class="perm-desc">
-            Starts the Blink foreground service at device boot so app protection is active
-            before the user unlocks. No personal data is collected or processed at boot.
-          </div>
-        </div>
-
-        <div class="perm-card">
-          <div class="perm-name">Foreground Service</div>
+        <div class="perm-card mandatory">
+          <div class="perm-name">Foreground Service <span class="perm-badge mandatory">Required</span></div>
           <div class="perm-desc">
             Keeps Blink running persistently in the background. Android requires a visible
-            notification for foreground services — this notification confirms Blink is
-            active.
+            notification for foreground services — this notification confirms Blink is active.
           </div>
         </div>
 
-        <div class="perm-card">
-          <div class="perm-name">Volume Key Events</div>
+        <div class="perm-card mandatory">
+          <div class="perm-name">Receive Boot Completed <span class="perm-badge mandatory">Required</span></div>
+          <div class="perm-desc">
+            Starts the Blink service at device boot so app protection is active before
+            the user unlocks. No personal data is collected or processed at boot.
+          </div>
+        </div>
+
+        <div class="perm-card mandatory">
+          <div class="perm-name">Volume Key Events <span class="perm-badge mandatory">Required</span></div>
           <div class="perm-desc">
             Detects the 5-button volume sequence used to open a Blink session. The
             sequence is processed in memory only and is never logged or stored.
+          </div>
+        </div>
+
+        <div class="perm-card mandatory">
+          <div class="perm-name">Biometrics &amp; PIN <span class="perm-badge mandatory">Required</span></div>
+          <div class="perm-desc">
+            Used for fingerprint authentication via Android's BiometricPrompt API.
+            Blink never receives raw biometric data. PINs are hashed on-device using
+            PBKDF2-HMAC-SHA-256 (310,000 iterations) and stored in EncryptedSharedPreferences
+            — the plaintext PIN is never stored, logged, or transmitted.
+          </div>
+        </div>
+
+        <div class="perm-card mandatory">
+          <div class="perm-name">Usage Stats Access <span class="perm-badge mandatory">Required</span></div>
+          <div class="perm-desc">
+            Required for Standard Mode — the core protection layer that polls the foreground
+            app name to trigger the lock overlay. No usage history, patterns, or session
+            data is recorded or transmitted.
+          </div>
+        </div>
+
+      </div>
+
+      <p class="perm-group-label optional">Optional — Feature-Specific</p>
+      <div class="perm-grid">
+
+        <div class="perm-card optional">
+          <div class="perm-name">Accessibility Service <span class="perm-badge optional">Opt-in</span></div>
+          <div class="perm-desc">
+            Enables Advanced Mode — instant overlay and recents clearing when a protected
+            app enters the foreground. Blink reads window package names only — never
+            on-screen text, keystrokes, or the content of other apps. Granted only if you
+            choose Advanced Mode during setup.
+          </div>
+        </div>
+
+        <div class="perm-card optional">
+          <div class="perm-name">Notification Access <span class="perm-badge optional">Opt-in</span></div>
+          <div class="perm-desc">
+            Suppresses or replaces heads-up notifications from protected apps during an
+            inactive session. Notification content is read briefly in memory and is never
+            written to storage or transmitted. Enabled only if you turn on notification
+            masking in settings.
+          </div>
+        </div>
+
+        <div class="perm-card optional">
+          <div class="perm-name">Device Administrator <span class="perm-badge optional">Opt-in</span></div>
+          <div class="perm-desc">
+            Allows Blink to lock the screen via Android's Device Policy API as a
+            deterrent against repeated unauthorised access attempts. Blink uses
+            force-lock only — it cannot wipe device data or perform a factory reset.
+            Enabled only if you activate the lock deterrent in settings.
+          </div>
+        </div>
+
+        <div class="perm-card optional">
+          <div class="perm-name">Google Drive Backup <span class="perm-badge optional">Opt-in</span></div>
+          <div class="perm-desc">
+            Stores an encrypted backup of your Blink settings in your own Google Drive
+            appDataFolder. The backup is encrypted with AES-256-GCM using a key derived
+            from your PIN — we cannot read it. Enabled only if you sign in to Google and
+            initiate a backup. See Section 04 for full details.
           </div>
         </div>
 
@@ -477,7 +567,6 @@
       </div>
       <p>These are hard commitments, not aspirations.</p>
       <ul class="guarantee-list">
-        <li>No data is collected, stored remotely, or transmitted off your device.</li>
         <li>No analytics, telemetry, crash-reporting, or advertising SDKs are included.</li>
         <li>No third party ever receives any information about you or your usage.</li>
         <li>Blink does not read, record, or store the content of your messages or emails.</li>
@@ -485,6 +574,7 @@
         <li>Blink does not use your camera or microphone.</li>
         <li>Blink does not upload your PIN hash, biometric reference, or any credential.</li>
         <li>Blink does not perform factory resets or wipe device data.</li>
+        <li>We cannot read your Drive backup — it is encrypted with your PIN before upload.</li>
       </ul>
     </section>
 
@@ -492,16 +582,13 @@
     <section class="section-secondary">
       <div class="section-header">
         <span class="section-num">04</span>
-        <h2>Local Data Storage</h2>
+        <h2>Data Storage</h2>
       </div>
       <p>
         Blink stores your configuration — protected apps, intercept mode, session timeout,
         and PIN hash — in <strong>Android EncryptedSharedPreferences</strong>, an on-device
         encrypted key-value store backed by the Android Keystore hardware module. This data
         is inaccessible to other apps and is not included in unencrypted Android backups.
-      </p>
-      <p>
-        All encryption keys are generated on your device and are never exported.
         Uninstalling Blink permanently removes all stored data.
       </p>
       <p>
@@ -509,6 +596,23 @@
         personal data — is held in memory during the current session only and discarded
         when the app is terminated.
       </p>
+
+      <div class="drive-callout">
+        <p><strong>Google Drive Backup (optional)</strong></p>
+        <p>
+          If you enable Drive backup, your Blink configuration is encrypted on-device with
+          AES-256-GCM before upload. The encryption key is derived from your PIN using
+          PBKDF2-HMAC-SHA-256 — we never hold the key, and Google cannot read the content.
+          The backup is stored in your personal Google Drive appDataFolder, which is
+          accessible only by Blink and by you. You can delete it at any time from
+          Google Drive settings. Disabling backup or signing out does not automatically
+          delete the file from Drive — you must remove it manually if desired.
+        </p>
+        <p>
+          Google's handling of your Google account and Drive storage is governed by
+          <a href="https://policies.google.com/privacy" style="color:var(--blue);text-decoration:none;">Google's Privacy Policy</a>.
+        </p>
+      </div>
     </section>
 
     <!-- 05 — Children -->
@@ -546,7 +650,7 @@
       <p>Questions about this policy? We respond to all privacy inquiries within 30 days.</p>
       <div class="contact-row">
         <span class="contact-label">Email</span>
-        <a href="mailto:privacy@getblink.app">privacy@getblink.app</a>
+        <a href="mailto:admin@factor-io.com">admin@factor-io.com</a>
       </div>
     </section>
 
@@ -554,7 +658,7 @@
 
   <footer>
     <span>Blink &copy; 2026</span>
-    <span>Privacy Policy &nbsp;&middot;&nbsp; v1.0</span>
+    <span>Privacy Policy &nbsp;&middot;&nbsp; v1.1</span>
   </footer>
 
 </body>
