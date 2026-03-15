@@ -90,13 +90,13 @@
 
       <h2>What Real App Hiding Looks Like</h2>
       <p>Real app hiding does not move files around. It does not rename them. It operates at a different level entirely.</p>
-      <p>Android provides a permission tier used by enterprise IT departments to manage corporate device fleets. At this level, an app can instruct the operating system to hide specific applications from its own view — not from a particular launcher or file manager, but from the OS itself. An app hidden at this level does not appear in the launcher. Not in settings. Not in search. Not in the list of installed apps. The OS reports it as absent because, from the OS's perspective, it is.</p>
-      <p>This is not a trick that renaming files or using a dot-prefix folder. It is an OS-level flag that changes how the system answers the question "is this app installed?" The answer becomes "no" — even though the app and all its data remain intact on the device.</p>
+      <p>Android provides a permission tier used by enterprise IT departments to manage corporate device fleets. At this level, an app can instruct the operating system to remove specific applications from every user-facing surface — not just a particular launcher or file manager, but from search, recents, and the app drawer simultaneously. An app hidden at this level does not appear in the launcher. Not in search. Not in recents. Not in any surface a person casually inspecting the phone would reach.</p>
+      <p>This is an OS-level flag that strips the app from every visible surface — even though the app and all its data remain intact on the device. And if someone navigates somewhere they ordinarily wouldn't, the protection layer is already watching: any attempt to open the app is intercepted before it reaches the screen.</p>
 
       <h2>The Key Difference in Practice</h2>
       <p>A calculator vault app, if someone knows to look for it, is findable. Its data directory is searchable. Its file modifications leave traces. Its existence in the app list confirms something was hidden there.</p>
       <p>An app hidden at the OS level is not findable by looking at the app list — because it does not appear there. Forensic tools that search for installed apps will not find it. The apps it protects similarly become unreachable: they do not appear anywhere on the device's visible surface.</p>
-      <p>When the user wants to access a hidden app, they authenticate privately and it reappears immediately. When they end their session, it disappears again — not into a folder, but from the OS's awareness entirely.</p>
+      <p>When the user wants to access a hidden app, they authenticate privately and it reappears immediately. When they end their session, it disappears again — not into a folder, but from every visible surface on the device.</p>
 
       <h2>Who Should Use Each</h2>
       <p>Calculator vault apps are appropriate when:</p>
