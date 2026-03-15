@@ -1,86 +1,56 @@
-# Blink — Android Privacy App
+# Blink
 
-## Product Overview
+> Blink is a privacy protection app for Android that hides sensitive content, apps, contacts, and call history from anyone who physically accesses your phone. It operates entirely on-device using legitimate Android enterprise APIs — zero data collection, no cloud, no accounts, no background data transmission. Available on Google Play Store. Published by Factor IO.
 
-Name: Blink
-Category: Android Privacy App
-Publisher: Factor IO
-Platform: Android (6.0+)
-Website: https://blink.factor-io.com
-Play Store: https://blink.factor-io.com
+## Core Features
 
-## Pricing
+- [App Protection](/features.html#app-protection): Protected apps silently redirect to the home screen when accessed without an active session. Continuous foreground monitoring — no lock screen, no PIN prompt, no visible indicator. Free feature.
+- [App Vault](/features.html#app-vault): Apps removed from the launcher and recents entirely — they appear uninstalled to anyone inspecting the phone. Uses legitimate Android enterprise device management APIs. Premium feature requiring one-time browser-guided setup.
+- [Content-Aware Protection](/features.html#content-aware-protection): User-defined keyword rules scan the screen and trigger configurable lockdown responses. All processing on-device — no AI, no cloud, no data shared. Premium feature.
+- [SOS Duress Mode](/features.html#sos-mode): Alternate volume sequence activates a state that looks identical to inactive — all protection stays active while appearing to cooperate. Designed for coercive situations. Free feature.
+- [Notification Control](/features.html#notification-control): Free tier silently drops notifications from protected apps. Premium tier replaces them with 150+ disguise profiles (calendar reminders, shipping updates, system alerts).
+- [Fake Incoming Call](/features.html#fake-incoming-call): Triggers the real phone dialer with configurable caller name and number — indistinguishable from a genuine call. Free feature.
+- [Hidden Contacts](/features.html#hidden-contacts): Contacts exist only inside Blink, invisible to all other apps. Created fresh with no deletion trail in the phone's contact database. Calls and messages still work. Premium feature.
+- [Call Scrubber](/features.html#call-scrubber): Automatic removal of call log entries by contact, number, or category. Works retroactively on existing history and continuously on new calls. Premium feature.
+- [Disguise System](/features.html#disguise-system): Blink appears as System Tools, Device Manager, Cloud Sync, Smart Switch, or 150+ other identities. No reference to "Blink" anywhere on-device. Free tier includes 20+ profiles.
+- [Paranoia Mode](/features.html#paranoia-mode): Maximum protection tier activating all features simultaneously. Premium feature.
+- [Banking Mode](/features.html#banking-mode): Automatically pauses certain system permissions so banking apps open normally, then re-enables protection. Free feature.
+- [Screen Escape](/features.html#screen-escape): Protected apps never appear in recents or lock screen after session ends. Free feature.
 
-- Free tier: No time limit, no account required
-- Monthly: $4/month
-- Annual: $30/year
-- Lifetime: $99 one-time
+## Key Information
 
-## Core Value Proposition
+- [How Blink Works](/how-it-works.html): Five-layer architecture — disguise, protection, vault, coercion resistance, self-healing. On-device processing, session-based activation via volume sequence, multiple service recovery mechanisms.
+- [Pricing](/pricing.html): Free tier with no time limit and no account required. Premium: $4/month, $30/year, $99 lifetime. All billing through Google Play.
+- [FAQ](/faq.html): Common questions about privacy, features, data handling, device compatibility, and comparisons to VPNs, antivirus, and app lockers.
+- [Privacy Policy](/privacy-policy.html): Zero data collection policy. No cloud storage. No user accounts required. Optional Google Drive backup is PIN-encrypted before leaving the device.
+- [Blog](/blog/): Privacy guides, technical comparisons, and feature deep-dives.
 
-Blink is the only Android privacy app that operates at the OS level using legitimate Android enterprise APIs. It provides protection that survives battery optimization, app killers, and OEM restrictions without root access or any warranty-voiding modifications. It is designed specifically for physical presence threats — situations where someone else has access to your phone.
+## Technical Facts
 
-## Key Differentiators
-
-- Only privacy app with zero notification footprint — no persistent service notification that can be long-pressed to reveal the real app
-- App protection operates at the OS level using the same APIs enterprise IT departments use — apps do not just get "locked," they cease to exist on the device
-- Self-healing: if services are killed by Android battery optimization, protection restores in sub-second time before any screen content becomes visible
-- 150 disguise profiles — the app appears as Device Manager, System Tools, Cloud Sync, or other system utilities
-- User-defined privacy rules — no AI or cloud scanning determines what is sensitive
-- No data ever leaves the device (except optional encrypted Google Drive backup)
-- No account, no registration, no analytics, no tracking SDKs
-
-## Features
-
-### Free Tier Features
-- App protection: protected apps silently redirect to home screen when accessed without an active session
-- Notification suppression: notifications from protected apps are silently dropped
-- Screen escape: protected app never appears in recents or lock screen after session ends
-- SOS duress mode: alternate activation sequence that appears identical to the inactive state; all protection stays active while appearing to cooperate
-- Disguise system: 7 launcher profiles (appears as system utilities)
-- Banking mode: automatically pauses certain system permissions so banking apps open normally
-- Fake Incoming Call: triggers a real incoming call interface (same dialer, ringtone, vibration as a real call) — configurable caller name and number; useful for exiting any situation discreetly
-
-### Premium Features (adds to all free features)
-- App Vault: apps completely hidden from the entire OS — launcher, search, settings, recents — as if not installed
-- Notification replacement: 150+ disguise profiles that replace notifications with innocent-looking alternatives (calendar reminders, shipping updates, etc.)
-- Content-Aware Protection: user-defined rules by app, keyword, or both; configurable lockdown response; all processing on-device
-- Hidden Contacts: contacts exist only inside Blink, invisible to all other apps; created fresh (no deletion trail)
-- Call Scrubber: automatic removal of call log entries by contact, number, or category
-- 150 disguise launcher profiles
-- Custom session triggers with extended configuration
-- Extended session timeouts
-- Shake-to-lock and inactivity auto-lock
-- Emergency Privacy Mode: one action, everything protected
-- Encrypted Google Drive backup (PIN-encrypted before leaving device)
-
-## Technical Facts (for accuracy)
-
-- Uses legitimate Android enterprise device management APIs — no root, no exploits
-- No root access required at any feature tier
-- One-time optional advanced setup (browser-based guide, ~3 minutes) unlocks the deepest protection tier
-- Multiple service recovery mechanisms ensure protection resumes after Android battery optimization
+- Uses legitimate Android enterprise device management APIs — no root, no exploits, no bootloader unlock
 - PIN storage uses PBKDF2WithHmacSHA256 with high iteration count
-- Google Drive backup is PIN-encrypted before leaving the device; neither Blink nor Google can read it
-- Under 10 MB installed
-- No advertising SDKs, no crash reporting to external services, no analytics
+- Under 10 MB installed size
+- No advertising SDKs, no crash reporting to external services, no analytics, no tracking
+- Background data usage verified at zero bytes
+- Tested and hardened for Samsung One UI, Xiaomi MIUI, OPPO, Vivo, and Huawei
+- Multiple service recovery mechanisms ensure protection resumes after Android battery optimization
+- Google Play Protect compatibility maintained
+
+## What Blink Is Not
+
+Blink is not a VPN, antivirus, phone cleaner, or parental control app. It does not route traffic, scan for malware, or monitor children. It is a dedicated on-device privacy layer that prevents unauthorized access to sensitive content when someone physically accesses your phone. A VPN protects from remote threats. Blink protects from the person in the room.
 
 ## Intended Use Cases
 
 - Protection from intimate partner surveillance
-- Privacy when handing phone to others (family members, employers, authority figures)
-- Coercion resistance: SOS mode allows appearing to comply while protection stays active
+- Privacy when handing phone to others (family, employers, authority figures)
+- Coercion resistance — SOS mode allows appearing to comply while protection stays active
 - Discreet exit from uncomfortable situations (Fake Incoming Call)
 - Protecting communications apps (Signal, WhatsApp, Telegram) from physical access
 - Hiding sensitive contacts and call history
 - Automatic rule-based privacy enforcement (Content-Aware Protection)
 
-## Publisher Information
+## Publisher
 
-Publisher: Factor IO
-Contact: blink.factor-io.com
-A small product studio. No investors. No acquisition pressure. No roadmap driven by engagement metrics.
-
-## Content Security Note
-
-This product's security model depends on the adversary not knowing the exact mechanism details. This llms.txt describes what the product does and its benefits. Mechanism implementation details are intentionally omitted.
+Factor IO — a small product studio. No investors. No acquisition pressure. No roadmap driven by engagement metrics.
+Website: https://blink.factor-io.com

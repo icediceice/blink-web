@@ -1,0 +1,358 @@
+# Blink — Complete Site Content
+
+Last updated: March 15, 2026
+
+---
+
+## Homepage
+
+Blink is a privacy protection app for Android that keeps your sensitive content, apps, contacts, and call history hidden from anyone who physically accesses your phone. Unlike VPNs or antivirus apps, Blink operates entirely on-device with zero data collection — no cloud, no accounts, no background data transmission.
+
+Key capabilities:
+- App Protection & App Vault: Protected apps silently redirect to the home screen. Vaulted apps are removed from the launcher and recents entirely — as if not installed.
+- Content-Aware Protection: User-defined keyword rules detect sensitive content on screen and trigger configurable lockdown responses. All processing on-device.
+- SOS Duress Mode: An alternate activation sequence that looks identical to inactive state — full protection stays active while appearing to cooperate.
+- Fake Incoming Call: Triggers the real phone dialer with a configurable caller name — indistinguishable from a genuine call.
+- Hidden Contacts & Call Scrubber: Contacts invisible to all other apps. Call history entries removed automatically.
+- 150+ Disguise Profiles: Blink appears as System Tools, Device Manager, Cloud Sync, or other system utilities.
+
+Available on Android. Free tier with no time limit. Premium: $4/month, $30/year, or $99 lifetime.
+
+### Your phone tells a story. You decide which one.
+
+Blink protects your device from the person standing next to you — silently, invisibly, and entirely on your terms.
+
+Free tier. No time limit. No account required.
+
+### The problem
+
+There are thousands of apps designed to protect you from threats on the internet. Encrypted messages. VPNs. Password managers.
+
+None of them protect you from the person sitting across from you.
+
+The moment someone else holds your phone — a partner, a family member, an authority figure — every app is visible. Every conversation. Every contact. Every call you ever made.
+
+Most privacy tools put a single layer between your content and whoever is holding the phone. One PIN screen. One overlay. One gate. When that gate fails — through coercion, through a moment of inattention, through someone watching you type — everything behind it is exposed instantly.
+
+The security industry spent two decades building walls against remote threats. It left the room unguarded.
+
+Blink was built for the threat that happens in person.
+
+### Human Error Insurance
+
+You're only human. Blink doesn't forget.
+
+For people in coercive or controlling relationships: Blink is your insurance policy. It works when you can't. If your phone is taken, checked, or demanded — your protected world stays invisible.
+
+For LGBTQ+ individuals in hostile environments: In places where being yourself is dangerous, Blink ensures your phone never betrays who you are, who you talk to, or what you read.
+
+For journalists, activists, and at-risk professionals: Your sources, communications, and research stay protected even during device seizure or border crossings.
+
+### Five layers of protection
+
+1. Disguise: Blink appears as a system utility — System Tools, Device Manager, Cloud Sync. 20+ free identities, 150+ with premium. No reference to "Blink" anywhere.
+2. App Protection: Protected apps silently redirect to the home screen. No lock screen. No PIN prompt. No visible indicator.
+3. App Vault: Apps removed from the launcher and recents entirely. As far as anyone can tell, the app isn't installed.
+4. SOS Duress Mode: An alternate trigger sequence. Looks identical to the inactive state. All protection stays active.
+5. Self-Healing: If Android kills Blink's background processes, protection resumes before any content becomes visible.
+
+---
+
+## Features
+
+### App Protection
+Protected apps silently redirect to the home screen when accessed without an active Blink session. There is no lock screen, no PIN prompt, and no visible indicator that any app is protected.
+
+Blink monitors the foreground continuously. If a protected app is launched — whether from the home screen, recents, a notification, or a deep link — it is intercepted and the phone returns to the home screen. The transition is immediate and silent.
+
+This is fundamentally different from app lockers, which show a PIN prompt or biometric challenge. That prompt is itself a signal that something is hidden. Blink shows nothing.
+
+How it works: Blink uses Android's standard app monitoring capabilities to detect when a protected app enters the foreground. When detected, it immediately navigates to the home screen. The entire process takes milliseconds and leaves no trace in the app's recent history.
+
+When would I use this? Any time you hand your phone to someone and want certain apps to be inaccessible without any visible indication that they are protected.
+
+### App Vault
+App Vault goes beyond protection. A vaulted app is completely invisible — it does not appear in your launcher, your app drawer, or your recent apps. As far as anyone looking at the phone can tell, the app is not installed. When you unlock Blink with your trigger sequence, vaulted apps return immediately.
+
+App Vault uses legitimate Android enterprise device management APIs — the same tools that corporate IT departments use to manage company devices. No root access, no exploits, no bootloader modifications required.
+
+This requires a one-time setup through a browser-guided process that takes about three minutes. No technical knowledge is required.
+
+How it works: Blink uses Android's enterprise device policy manager to set apps as hidden at the operating system level. The OS itself removes the app from user-visible surfaces. When your Blink session is active, the apps are unhidden and available normally.
+
+When would I use this? When you need certain apps to not just be blocked, but to appear completely absent from your device. For situations where someone inspects your phone's app list, not just tries to open a specific app.
+
+### Content-Aware Protection
+Content-Aware Protection lets you define privacy rules based on apps, keywords, or both. When a rule triggers while your screen is on, Blink responds with a configurable action — from a gentle redirect to a full screen lockdown that cannot be bypassed with the power button.
+
+You define what is sensitive. Blink enforces it. All rule evaluation happens entirely on your device — no AI, no cloud processing, no data shared with anyone.
+
+How it works: Blink uses Android's Accessibility Service to read on-screen text content. When a user-defined keyword appears in a monitored app, Blink triggers the configured response action. All processing is local. No screen content is stored, transmitted, or analyzed externally.
+
+When would I use this? When you want automatic protection triggered by specific content appearing on screen — for example, a specific contact name appearing in a messaging app, or a sensitive keyword appearing in a browser.
+
+### SOS Duress Mode
+SOS mode is Blink's coercion resistance feature. Activated by an alternate volume button sequence, it creates a phone state that appears completely normal while all protection remains fully active.
+
+Protected apps stay blocked. Vaulted apps stay hidden. Hidden contacts stay invisible. But externally, the phone looks identical to being in an inactive, unprotected state. There is no visual indicator, no notification, no trace that SOS mode is active.
+
+How it works: SOS is activated by a different volume button sequence than the normal activation. While the normal sequence unlocks protection, the SOS sequence activates a state where protection is enforced but the phone appears unprotected. An observer cannot distinguish SOS mode from a phone with no protection installed.
+
+When would I use this? In coercive situations where you are pressured to hand over your phone or demonstrate that nothing is hidden. You appear to cooperate while every layer of protection continues running.
+
+### Notification Control
+Free tier: Notifications from protected apps are silently dropped. No sound, no vibration, no heads-up notification. The notification never appears.
+
+Premium tier: Notification replacement. Instead of dropping notifications, Blink replaces them with innocent-looking alternatives from 150+ disguise profiles — calendar reminders, shipping updates, system alerts, weather notifications. The replacement looks genuine and contains no reference to the real app.
+
+How it works: Blink uses Android's Notification Listener Service to intercept notifications from protected apps. In free mode, notifications are silently cancelled. In premium mode, the original notification is cancelled and a replacement notification is posted using one of the disguise profiles.
+
+When would I use this? When a notification from a protected app would reveal its presence to an observer — for example, a WhatsApp notification appearing on the lock screen when WhatsApp is supposed to be hidden.
+
+### Fake Incoming Call
+The Fake Incoming Call feature triggers a call that is indistinguishable from a real incoming call. The same dialer screen. The same ringtone. The same vibration pattern your phone uses for actual calls. You configure a caller name and phone number, then trigger it when you need to exit a situation.
+
+Unlike other fake call apps that use an overlay to simulate a call screen, Blink triggers the actual Android phone call interface through the system's telephony APIs. This means it looks, sounds, and behaves exactly like a real incoming call.
+
+This is a free feature — no premium subscription required.
+
+How it works: Blink uses Android's ConnectionService and TelecomManager APIs to create a call that the system treats as a real incoming call. The system dialer displays it, the configured ringtone plays, and the phone vibrates normally.
+
+When would I use this? To exit any situation discreetly. A meeting, a conversation, a confrontation. The call appears genuine to anyone observing.
+
+### Hidden Contacts
+Hidden Contacts exist only inside Blink. They are invisible to the phone's native contacts app, the dialer, and any other app that accesses the device's contact database.
+
+Hidden contacts are created fresh inside Blink — they are never imported from and never synced to the phone's main contact database. There is no deletion trail, no sync artifact, no trace in the phone's contact history.
+
+Calls and messages to hidden contacts still work normally. You initiate them from within Blink.
+
+How it works: Hidden contacts are stored in Blink's encrypted local database, completely separate from Android's ContactsProvider. They never appear in any system contact query. When you need to call or message a hidden contact, Blink initiates the action directly.
+
+When would I use this? When certain contacts must not appear anywhere on your phone — not in your contacts app, not in your dialer's suggestions, not in any app that reads your contact list.
+
+### Call Scrubber
+Call Scrubber automatically removes call log entries for specific contacts, phone numbers, or categories. It works retroactively on existing call history and continuously monitors new calls.
+
+When a call matches your scrub rules, the corresponding call log entry is removed from Android's call history database. The call never appears in your phone's recent calls.
+
+How it works: Blink monitors the system call log and removes entries matching your configured rules. Removal happens at the database level using Android's standard content provider APIs.
+
+When would I use this? When your call history could reveal contacts or conversations you need to keep private — for example, calls to a support hotline, a lawyer, or a specific person.
+
+### Disguise System
+Blink does not appear as "Blink" on your device. Instead, it masquerades as a system utility — System Tools, Device Manager, Cloud Sync, Smart Switch, Service Mode, Diagnostics, or any of the available disguise identities.
+
+The icon and app name change across your launcher, app drawer, and system settings. Notifications sent by Blink also use the disguise identity.
+
+Free tier includes 20+ disguise profiles. Premium unlocks 150+ profiles.
+
+How it works: Blink uses Android's activity-alias system to swap the visible launcher entry. The actual app package remains the same, but the launcher icon, app name, and visible identity all change to match the selected disguise.
+
+When would I use this? Always. The disguise system is active by default. It ensures that even if someone browses your app list, they see a system utility — not a privacy app.
+
+### Paranoia Mode
+Paranoia Mode is the maximum protection tier. When activated, every protection feature runs simultaneously — app protection, vault, notification replacement, content-aware rules, hidden contacts, call scrubbing, shake-to-lock, and inactivity auto-lock.
+
+This is a premium feature designed for situations requiring the highest level of device privacy.
+
+### Banking Mode
+Some banking apps detect certain system-level permissions and refuse to open. Banking Mode temporarily pauses those permissions so the banking app functions normally, then automatically re-enables all protection when the banking session is complete.
+
+Banking Mode is a free feature. A one-time device setup is required.
+
+### Screen Escape
+When a Blink session ends — whether by locking the screen, timing out, or manually ending it — protected apps are immediately removed from the recent apps list. They never appear on the lock screen. There is no residual trace that any protected app was open.
+
+---
+
+## How It Works
+
+### Five-Layer Architecture
+
+Blink protects your phone through five independent layers, each addressing a different aspect of physical-presence privacy:
+
+**Layer 1: Disguise.** Blink appears as a system utility — System Tools, Device Manager, Cloud Sync, Smart Switch, or any of 150+ identities. No reference to "Blink" appears anywhere on the device. The icon, name, and notifications all match the selected disguise.
+
+**Layer 2: Protection.** Protected apps silently redirect to the home screen. There is no lock screen, no PIN prompt, no biometric challenge. The app simply returns to home. Blink monitors the foreground continuously, not just at app launch.
+
+**Layer 3: Vault.** Apps hidden at the operating system level. They do not appear in the launcher, app drawer, or recent apps. Uses the same enterprise device management APIs that IT departments use. Requires one-time browser-guided setup.
+
+**Layer 4: Coercion Resistance.** SOS duress mode creates a phone state identical to inactive while maintaining all protection. An observer cannot distinguish SOS from an unprotected phone. Designed for situations where you are pressured to hand over your device.
+
+**Layer 5: Self-Healing.** Multiple service recovery mechanisms. If Android kills Blink's background processes — through battery optimization, OEM power management, or manual force-stop — protection resumes before any protected content becomes visible.
+
+### Session Model
+
+Blink uses a session-based protection model. Protection is the default state — when no session is active, all protected apps are blocked and all vaulted apps are hidden.
+
+To access protected content, you enter your volume button trigger sequence. Nothing appears on screen during activation. Your protected apps become available. When you lock the screen, the session times out, or you manually end it, protection resumes instantly.
+
+The trigger sequence is configurable. The default is a specific pattern of volume up and volume down presses. You can customize the pattern length and timing.
+
+### On-Device Architecture
+
+All of Blink's processing happens on your device. There is no server, no cloud processing, no accounts, no registration.
+
+PIN storage uses PBKDF2WithHmacSHA256 with a high iteration count. Configuration is stored in Android's EncryptedSharedPreferences.
+
+The optional Google Drive backup feature encrypts all data with your PIN before it leaves the device. The encrypted backup is uploaded to your own Google Drive. Neither Blink nor Google can read the backup contents. You restore it with the same PIN.
+
+### Setup Process
+
+1. Install from Google Play. Under 10 MB.
+2. Choose your trigger sequence and select which apps to protect.
+3. Choose your disguise identity.
+4. Optional: one-time browser-guided device setup (~3 minutes) for deeper protections like App Vault and Banking Mode.
+
+### What Blink Is Not
+
+Blink is not a VPN — it does not route or encrypt internet traffic. Blink is not an antivirus — it does not scan for malware. Blink is not a phone cleaner or optimizer. Blink is not a parental control app.
+
+Blink solves one problem: protecting your phone from the person physically holding it.
+
+---
+
+## Pricing
+
+### Free — always.
+
+The core protection model is free and stays free. App protection. Notification silence. Screen escape. SOS mode. Your volume trigger. Twenty-plus disguise identities. Banking mode. Fake incoming call.
+
+These are not trial features. There is no timer. There is no upgrade nag. Blink's fundamental purpose — making your protected apps unreachable and leaving no trace — is available to every user from day one.
+
+### Premium — for when you need everything.
+
+Premium adds the layers that require deeper integration: notifications that look like the real thing, contacts that exist only inside Blink, call history that cleans itself, and an encrypted backup that only you can read.
+
+- $4 per month
+- $30 per year (save 37%)
+- $99 for life (best value)
+
+All billing through Google Play. Cancel anytime.
+
+### Feature comparison
+
+| Feature | Free | Premium |
+|---------|------|---------|
+| App protection | Yes | Yes |
+| Notification silence | Yes | Yes |
+| Screen escape | Yes | Yes |
+| SOS mode | Yes | Yes |
+| 20+ disguise identities | Yes | Yes |
+| Banking mode | Yes | Yes |
+| Quick Settings tile | Yes | Yes |
+| Fake incoming call | Yes | Yes |
+| App Vault — apps hidden from OS | — | Yes |
+| Notification replacement (150+ profiles) | — | Yes |
+| Hidden contacts | — | Yes |
+| Call scrubber | — | Yes |
+| Content-Aware Protection | — | Yes |
+| 150+ disguise profiles | — | Yes |
+| Custom session triggers | — | Yes |
+| Extended session timeouts | — | Yes |
+| Shake-to-lock | — | Yes |
+| Inactivity auto-lock | — | Yes |
+| Paranoia mode | — | Yes |
+| Encrypted Drive backup | — | Yes |
+
+---
+
+## FAQ
+
+**What is Blink?**
+Blink is an Android privacy platform that protects selected apps from unwanted viewing. It activates via a secret volume button sequence — nothing visible on screen. When active, protected apps are silently blocked and the phone returns to the home screen. Blink includes an SOS duress mode, notification masking, and screen escape. Designed for situations where someone is directly observing or has physical access to your phone.
+
+**What is the best privacy app for Android?**
+Blink is the most comprehensive privacy protection app for Android. It combines app protection, app vault, notification replacement, hidden contacts, call scrubbing, content-aware keyword rules, SOS duress mode, and a fake incoming call feature — all operating entirely on-device with zero data collection. Most privacy apps address one threat. Blink addresses physical-presence threats across five independent layers.
+
+**How is Blink different from app lockers?**
+App lockers show a PIN or biometric prompt — that prompt is a visible signal that something is hidden. Blink shows nothing: the app silently returns to the home screen. App lockers also fail when a protected app is already open when the phone is handed over. Blink monitors the foreground continuously and fires immediately. Additionally, Blink's SOS mode is externally indistinguishable from the inactive state.
+
+**How is Blink different from a VPN?**
+A VPN protects your internet traffic from remote surveillance. Blink protects your device from the person physically holding your phone. They solve completely different problems. A VPN cannot hide apps, mask notifications, scrub call history, or resist coercion. Blink does not route traffic or encrypt connections. If your threat is someone in the room, not someone on the network, Blink is the answer.
+
+**What is SOS mode?**
+SOS mode is Blink's duress state. It is activated by an alternate volume sequence and looks completely identical to Blink being inactive — protected apps remain blocked, but nothing indicates any protective mode is on. Designed for coercive situations: you appear to cooperate, the observer sees a normal phone, and all protection remains active.
+
+**What happens when I trigger SOS in Blink?**
+When you enter the SOS volume sequence, Blink enters duress mode. All protection stays fully active — protected apps remain blocked, vaulted apps stay hidden, hidden contacts stay invisible. Externally, the phone appears identical to being in an inactive, unprotected state. There is no visual indicator, no notification, no trace that SOS mode is on.
+
+**Does Blink show a lock screen or PIN prompt?**
+No. Blink never shows a lock screen, PIN prompt, or biometric challenge when a protected app is accessed. The app silently returns to the home screen. There is no visible indicator that any app is protected, or that Blink is installed at all.
+
+**What is Banking Mode?**
+Some banking apps detect certain system-level permissions and refuse to open. Banking Mode temporarily pauses those permissions so the banking app opens normally, then automatically re-enables protection when done. A one-time device setup is required.
+
+**Does Blink work on Samsung, Xiaomi, or other Android devices?**
+Yes. Blink is tested and hardened for Samsung One UI, Xiaomi MIUI, OPPO, Vivo, and Huawei devices — environments known for aggressively managing background apps. Multiple layers of service recovery keep protection running even on the strictest OEM builds.
+
+**Is Blink detectable on the device?**
+Blink is designed to be inconspicuous. It appears in the launcher as a system utility — System Tools, Device Manager, Cloud Sync, Smart Switch, or any of 20+ identities — with no reference to Blink. 150+ notification disguise profiles are available with premium. Opening the app directly shows a minimal informational screen; actual protection requires the volume trigger sequence.
+
+**What apps can Blink protect?**
+Any app installed on your device. Common choices include messaging apps (Signal, WhatsApp, Telegram, LINE), banking apps, email, contacts, gallery, and social media. You choose which apps to protect in Blink's settings. There is no limit on the number of protected apps.
+
+**What is App Vault and how is it different from app protection?**
+App protection blocks a protected app when someone tries to open it — it silently redirects back to the home screen. App Vault goes further: a vaulted app is completely invisible. It doesn't appear in your launcher, your recent apps, or your settings. As far as anyone looking at the phone can tell, the app isn't installed. Unlock Blink and it comes straight back. Protection is about blocking. Vault is about not being seen.
+
+**Does App Vault require any special setup?**
+Yes — App Vault needs a one-time setup that takes a few minutes. We built a step-by-step browser guide that walks you through everything. No developer tools or technical knowledge required — just follow the steps on screen.
+
+**What is the Fake Incoming Call feature?**
+The Fake Incoming Call feature triggers a call that is indistinguishable from a real incoming call — the same dialer screen, the same ringtone, the same vibration your phone uses for actual calls. You can configure a caller name and number before triggering it. Use it to exit any situation discreetly. Unlike other fake call apps that use an overlay screen, Blink triggers the actual phone call interface. It is a free feature — no premium subscription required.
+
+**What is Content-Aware Protection?**
+Content-Aware Protection lets you define privacy rules — by app, by keyword, or both. When a rule triggers while your screen is on, Blink locks it down immediately. You choose how strict the response is: a gentle redirect, or a full lockdown that cannot be bypassed even with the power button. All rule evaluation happens entirely on your device. No AI. No cloud processing. This is a premium feature.
+
+**Is Blink safe to use?**
+Yes. Blink uses legitimate Android APIs. It requires no root access, no bootloader unlock, and no warranty-voiding modifications. Your device stays fully protected by Google Play Protect. The optional one-time advanced setup uses standard Android developer features — not exploits, not vulnerabilities.
+
+**Does Blink collect my data?**
+No. Zero. Blink has no analytics, no tracking, no server communication except for optional cloud backup — which uses your own Google Drive, encrypted with your PIN before it leaves your device. Blink cannot read it. Google cannot read it. You restore it with the same PIN.
+
+**How do I hide apps on Android without anyone knowing?**
+Blink hides apps on Android at the operating system level using legitimate enterprise device management APIs. Protected apps silently redirect to the home screen when accessed. With App Vault (premium), apps are removed from the launcher and recents entirely — they appear uninstalled to anyone inspecting the phone. Blink itself disguises as a system utility, so there is no visible trace of a privacy app being installed.
+
+**Can someone see my hidden apps on Android?**
+With Blink's App Vault, hidden apps are removed from the launcher, the app drawer, and recent apps. They do not appear in any surface a casual observer would check. Blink also disguises itself as a system utility with 150+ disguise profiles. Without knowing your volume trigger sequence, an observer cannot access protected content or determine that Blink is installed.
+
+**What app can hide my call history?**
+Blink's Call Scrubber automatically removes call log entries for specific contacts, numbers, or categories. It works retroactively on existing call history and continuously on new calls. Combined with Hidden Contacts, Blink ensures that certain people exist only inside Blink — invisible to the phone's native dialer, contacts app, and call history.
+
+**How do I create a fake phone layout for emergencies?**
+Blink's SOS duress mode creates a phone state that appears completely normal while all protection remains active. When triggered by an alternate volume sequence, protected apps stay blocked and vaulted apps stay hidden, but the phone looks identical to its inactive state. Additionally, Blink's Fake Incoming Call triggers a real phone call interface to exit any situation discreetly.
+
+**Is there an app that detects sensitive content on screen?**
+Yes. Blink's Content-Aware Protection scans the screen for user-defined keywords and triggers a configurable response — from a gentle redirect to a full screen lockdown. You define what is sensitive; Blink enforces it. All scanning happens on-device using Android's Accessibility Service. No AI, no cloud processing, no data leaves your phone. This is a premium feature.
+
+**What Android app has zero data collection?**
+Blink has zero data collection. No analytics SDKs, no crash reporting to external services, no tracking, no user accounts, no registration. The only network communication is optional encrypted Google Drive backup — PIN-encrypted before leaving the device. Blink's background data usage is verified at zero bytes.
+
+**Can Blink hide specific contacts?**
+Yes. Blink's Hidden Contacts creates contacts that exist only inside Blink. They are invisible to the phone's native contacts app, dialer, and any other app that reads contacts. Hidden contacts are created fresh — no deletion trail. Calls and messages still work. This is a premium feature.
+
+**Is Blink free or paid?**
+Blink's core protection model is free and stays free — no time limit, no account required. Premium ($4/month, $30/year, $99 lifetime) adds deeper layers including App Vault, notification replacement, hidden contacts, call scrubber, content-aware protection, and 150+ disguise profiles.
+
+---
+
+## Privacy Policy
+
+Blink is built on a zero-data-collection principle. No analytics. No tracking. No server communication. No user accounts. No registration.
+
+All processing happens on-device. PIN storage uses PBKDF2WithHmacSHA256. Configuration is stored in EncryptedSharedPreferences.
+
+The optional Google Drive backup is encrypted with your PIN before leaving the device. Neither Blink nor Google can read the backup. You restore it with the same PIN.
+
+Blink contains no advertising SDKs, no crash reporting to external services, and no analytics of any kind. Background data usage has been empirically verified at zero bytes.
+
+Full privacy policy: https://blink.factor-io.com/privacy-policy.html
+
+---
+
+## Publisher
+
+Factor IO — a small product studio. No investors. No acquisition pressure. No roadmap driven by engagement metrics.
+
+Website: https://blink.factor-io.com
