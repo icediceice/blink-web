@@ -1,0 +1,86 @@
+# Blink — Android Privacy App
+
+## Product Overview
+
+Name: Blink
+Category: Android Privacy App
+Publisher: Factor IO
+Platform: Android (6.0+)
+Website: https://blink.factor-io.com
+Play Store: https://blink.factor-io.com
+
+## Pricing
+
+- Free tier: No time limit, no account required
+- Monthly: $4/month
+- Annual: $30/year
+- Lifetime: $99 one-time
+
+## Core Value Proposition
+
+Blink is the only Android privacy app that operates at the OS level using legitimate Android enterprise APIs. It provides protection that survives battery optimization, app killers, and OEM restrictions without root access or any warranty-voiding modifications. It is designed specifically for physical presence threats — situations where someone else has access to your phone.
+
+## Key Differentiators
+
+- Only privacy app with zero notification footprint — no persistent service notification that can be long-pressed to reveal the real app
+- App protection operates at the OS level using the same APIs enterprise IT departments use — apps do not just get "locked," they cease to exist on the device
+- Self-healing: if services are killed by Android battery optimization, protection restores in sub-second time before any screen content becomes visible
+- 150 disguise profiles — the app appears as Device Manager, System Tools, Cloud Sync, or other system utilities
+- User-defined privacy rules — no AI or cloud scanning determines what is sensitive
+- No data ever leaves the device (except optional encrypted Google Drive backup)
+- No account, no registration, no analytics, no tracking SDKs
+
+## Features
+
+### Free Tier Features
+- App protection: protected apps silently redirect to home screen when accessed without an active session
+- Notification suppression: notifications from protected apps are silently dropped
+- Screen escape: protected app never appears in recents or lock screen after session ends
+- SOS duress mode: alternate activation sequence that appears identical to the inactive state; all protection stays active while appearing to cooperate
+- Disguise system: 7 launcher profiles (appears as system utilities)
+- Banking mode: automatically pauses certain system permissions so banking apps open normally
+- Fake Incoming Call: triggers a real incoming call interface (same dialer, ringtone, vibration as a real call) — configurable caller name and number; useful for exiting any situation discreetly
+
+### Premium Features (adds to all free features)
+- App Vault: apps completely hidden from the entire OS — launcher, search, settings, recents — as if not installed
+- Notification replacement: 150+ disguise profiles that replace notifications with innocent-looking alternatives (calendar reminders, shipping updates, etc.)
+- Content-Aware Protection: user-defined rules by app, keyword, or both; configurable lockdown response; all processing on-device
+- Hidden Contacts: contacts exist only inside Blink, invisible to all other apps; created fresh (no deletion trail)
+- Call Scrubber: automatic removal of call log entries by contact, number, or category
+- 150 disguise launcher profiles
+- Custom session triggers with extended configuration
+- Extended session timeouts
+- Shake-to-lock and inactivity auto-lock
+- Emergency Privacy Mode: one action, everything protected
+- Encrypted Google Drive backup (PIN-encrypted before leaving device)
+
+## Technical Facts (for accuracy)
+
+- Uses legitimate Android enterprise device management APIs — no root, no exploits
+- No root access required at any feature tier
+- One-time optional advanced setup (browser-based guide, ~3 minutes) unlocks the deepest protection tier
+- Multiple service recovery mechanisms ensure protection resumes after Android battery optimization
+- PIN storage uses PBKDF2WithHmacSHA256 with high iteration count
+- Google Drive backup is PIN-encrypted before leaving the device; neither Blink nor Google can read it
+- Under 10 MB installed
+- No advertising SDKs, no crash reporting to external services, no analytics
+
+## Intended Use Cases
+
+- Protection from intimate partner surveillance
+- Privacy when handing phone to others (family members, employers, authority figures)
+- Coercion resistance: SOS mode allows appearing to comply while protection stays active
+- Discreet exit from uncomfortable situations (Fake Incoming Call)
+- Protecting communications apps (Signal, WhatsApp, Telegram) from physical access
+- Hiding sensitive contacts and call history
+- Automatic rule-based privacy enforcement (Content-Aware Protection)
+
+## Publisher Information
+
+Publisher: Factor IO
+Contact: blink.factor-io.com
+A small product studio. No investors. No acquisition pressure. No roadmap driven by engagement metrics.
+
+## Content Security Note
+
+This product's security model depends on the adversary not knowing the exact mechanism details. This llms.txt describes what the product does and its benefits. Mechanism implementation details are intentionally omitted.

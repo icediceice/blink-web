@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Device Owner vs Root: What Privacy-Conscious Users Need to Know | Blink Blog</title>
+  <meta name="description" content="Root gives you everything but costs you banking apps, SafetyNet, and your warranty. There's a legitimate Android API that gives you what matters without the trade-offs." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://blink.factor-io.com/blog/device-owner-vs-root.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blink.factor-io.com/blog/device-owner-vs-root.html" />
+  <meta property="og:title" content="Device Owner vs Root: What Privacy-Conscious Users Need to Know" />
+  <meta property="og:description" content="Root gives you everything but costs you banking apps and SafetyNet. Device Owner APIs give you what matters for privacy without the trade-offs." />
+  <meta property="og:site_name" content="Blink" />
+  <meta name="theme-color" content="#0F0F12" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Device Owner vs Root: What Privacy-Conscious Users Need to Know",
+    "description": "Root gives you everything but costs you banking apps, SafetyNet, and your warranty. There is a legitimate Android permission tier that provides the capabilities that matter for privacy without those trade-offs.",
+    "author": { "@type": "Organization", "name": "Blink" },
+    "publisher": { "@type": "Organization", "name": "Factor IO" },
+    "datePublished": "2026-03-15",
+    "url": "https://blink.factor-io.com/blog/device-owner-vs-root.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo" aria-label="Blink home">
+      <div class="nav-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="28" height="28" aria-hidden="true">
+          <defs><radialGradient id="g0" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#g0)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="nav-logo-name">Blink</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#protection">Protection</a>
+      <a href="/#how-it-works">How it works</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/blog/" class="active">Blog</a>
+    </div>
+    <div class="nav-cta">
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <article class="article-wrap">
+    <p class="article-label">Android Platform</p>
+    <h1>Device Owner vs Root: What Privacy-Conscious Users Need to Know</h1>
+    <p class="article-meta">Published March 2026 · 7 min read</p>
+
+    <p class="article-intro">Root access is often described as the gold standard for Android customization and privacy. It is certainly powerful — but it comes with costs that are specifically harmful to the use cases privacy-conscious users care most about. There is a legitimate Android permission tier that provides the capabilities that matter for privacy, without triggering the same trade-offs. Understanding the difference matters for anyone deciding how deeply to configure their device protection.</p>
+
+    <div class="article-body">
+
+      <h2>What Root Access Actually Is</h2>
+      <p>Root access gives an app (or user) superuser privileges on the device — the ability to read and write any file, execute any command, and override any system permission. On a rooted device, properly privileged software can do essentially anything the operating system can do.</p>
+      <p>This is powerful. It is also why root has traditionally been associated with privacy: with enough control, you can block tracking at the network level, strip advertising identifiers, patch system apps, and eliminate telemetry that stock Android cannot remove.</p>
+
+      <h2>What Root Costs You</h2>
+      <p>Root access modifies the system's verified state. Android's security model includes a verification chain — each layer of the operating system is checked against a known-good signature. Root breaks that chain. The consequences are specific and significant:</p>
+
+      <h3>Banking app compatibility</h3>
+      <p>Most banking and financial apps use Android's attestation APIs to verify that the device has not been modified. A rooted device fails this check. Your bank's app may refuse to open entirely, or silently disable features, or trigger security alerts. For someone who needs banking app access to function normally — which is most people — this is a significant practical cost.</p>
+
+      <h3>Play Protect and attestation</h3>
+      <p>Google Play Protect relies on the same verification chain. On a rooted device, Play Protect's attestation will report the device as modified. Some apps check this status and refuse to run. Others may run but flag the device to their backend systems.</p>
+
+      <h3>Warranty and support</h3>
+      <p>Most manufacturers void their warranty if the bootloader has been unlocked (which is typically required before rooting). Support channels will refuse to help with any issue on a rooted device. On some devices, rooting triggers a hardware flag that cannot be reset — even after restoring to factory settings, the device's status as "previously rooted" is permanently recorded.</p>
+
+      <h3>OTA updates become complicated</h3>
+      <p>Official over-the-air system updates typically require a stock, unmodified system partition. Root users must either manually restore before updating or use community-maintained update processes, which introduce their own risks and delays.</p>
+
+      <h2>The Alternative: Enterprise-Grade Permissions Without Root</h2>
+      <p>Android provides a permission tier designed for enterprise IT management that gives apps significantly elevated capabilities without requiring root. At this permission level, an app can manage other apps on the device in ways that ordinary apps cannot: hiding them from the launcher, preventing their uninstallation, enforcing device policy, and more.</p>
+      <p>This permission tier is documented, supported, and used legitimately by corporate device management software worldwide. It is not a vulnerability or a workaround — it is an intentional part of Android's design, built for the use case of one entity (an IT department) managing a fleet of devices.</p>
+      <p>The same capabilities that let IT departments hide corporate apps from personal use can be used by privacy-conscious individuals to hide their own sensitive apps from view. The mechanism is identical; the intent and beneficiary are different.</p>
+
+      <h2>What This Permission Tier Provides for Privacy</h2>
+      <p>With this permission tier, a privacy app can:</p>
+      <ul>
+        <li>Hide any installed app from the OS — not just from the launcher, but from the OS's own list of installed applications</li>
+        <li>Prevent its own removal without authentication — someone who wants to uninstall the privacy app must first authenticate through the privacy app</li>
+        <li>Force-lock the device when needed</li>
+        <li>Enforce policies that survive reboot and battery optimization</li>
+      </ul>
+      <p>These are the capabilities that matter for physical-presence privacy. And critically, they are available without breaking the verification chain that banking apps depend on.</p>
+
+      <h2>The Trade-Off at This Permission Tier</h2>
+      <p>Obtaining this permission tier is not automatic. It requires a one-time setup process — typically involving a computer, a USB cable, and a short sequence of steps that take a few minutes. This process is why a browser-based setup guide is valuable: it reduces a technical process to a step-by-step walkthrough that does not require developer knowledge.</p>
+      <p>The cost is setup time, once. The benefit is enterprise-grade capabilities without the ongoing costs of root: banking apps continue to work normally, Play Protect attestation passes, and the device's warranty and support remain intact.</p>
+
+      <h2>Who Should Consider Each</h2>
+      <p><strong>Root is appropriate for users who:</strong></p>
+      <ul>
+        <li>Need capabilities that go beyond what legitimate permission tiers provide (custom kernels, deep system modification)</li>
+        <li>Do not rely on banking apps or enterprise software</li>
+        <li>Are comfortable with the technical requirements and ongoing maintenance</li>
+        <li>Understand and accept the warranty and attestation implications</li>
+      </ul>
+      <p><strong>Enterprise-level permissions are appropriate for users who:</strong></p>
+      <ul>
+        <li>Need strong app-level privacy without sacrificing banking app compatibility</li>
+        <li>Want protection that works within Android's verified security model</li>
+        <li>Prefer a one-time setup over ongoing maintenance</li>
+        <li>Need their device to pass standard attestation checks</li>
+      </ul>
+      <p>For most people who want serious privacy protection on their personal Android device while continuing to use it as a normal daily driver, the enterprise permission tier provides better outcomes than root — more targeted capabilities, fewer trade-offs, and a device that continues to function normally in every other dimension.</p>
+
+    </div>
+
+    <div class="article-cta">
+      <h3>No root required. No trade-offs.</h3>
+      <p>Blink uses legitimate Android enterprise permissions — the same APIs corporate IT uses — to provide OS-level app hiding without breaking your banking apps or warranty.</p>
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free — Android</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="ft-logo">
+      <div class="ft-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="22" height="22" aria-hidden="true">
+          <defs><radialGradient id="gf" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#gf)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="ft-logo-name">Blink</span>
+    </div>
+    <div class="ft-divider" aria-hidden="true"></div>
+    <nav class="ft-links" aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+    </nav>
+    <div class="ft-copy">Android only &nbsp;&middot;&nbsp; Not available for iOS</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Internal validation files — do not index
+Disallow: /CLAIMS_MATRIX.md
+Disallow: /ADB
+
+# Sitemap
+Sitemap: https://blink.factor-io.com/sitemap.xml

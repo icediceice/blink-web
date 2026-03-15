@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Android Privacy in 2026: What Changed and What Still Doesn't Work | Blink Blog</title>
+  <meta name="description" content="Android has improved privacy dramatically over the past few years. The threat model for physical-presence attacks, however, remains almost entirely unaddressed by the platform." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://blink.factor-io.com/blog/android-privacy-2026.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blink.factor-io.com/blog/android-privacy-2026.html" />
+  <meta property="og:title" content="Android Privacy in 2026: What Changed and What Still Doesn't Work" />
+  <meta property="og:description" content="Android has improved privacy dramatically. Physical-presence threats remain almost entirely unaddressed. Here's the current state." />
+  <meta property="og:site_name" content="Blink" />
+  <meta name="theme-color" content="#0F0F12" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Android Privacy in 2026: What Changed and What Still Doesn't Work",
+    "description": "Android has improved privacy dramatically over the past few years. The threat model for physical-presence attacks, however, remains almost entirely unaddressed by the platform.",
+    "author": { "@type": "Organization", "name": "Blink" },
+    "publisher": { "@type": "Organization", "name": "Factor IO" },
+    "datePublished": "2026-03-15",
+    "url": "https://blink.factor-io.com/blog/android-privacy-2026.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo" aria-label="Blink home">
+      <div class="nav-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="28" height="28" aria-hidden="true">
+          <defs><radialGradient id="g0" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#g0)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="nav-logo-name">Blink</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#protection">Protection</a>
+      <a href="/#how-it-works">How it works</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/blog/" class="active">Blog</a>
+    </div>
+    <div class="nav-cta">
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <article class="article-wrap">
+    <p class="article-label">Industry</p>
+    <h1>Android Privacy in 2026: What Changed and What Still Doesn't Work</h1>
+    <p class="article-meta">Published March 2026 · 8 min read</p>
+
+    <p class="article-intro">Android has improved privacy dramatically over the past five years. Permission controls are more granular. Location sharing is more transparent. Data access is more auditable. The security industry deserves credit for progress that is real. The threat model for physical-presence attacks, however, remains almost entirely unaddressed by the platform — and that gap is growing more consequential, not less.</p>
+
+    <div class="article-body">
+
+      <h2>What Android Got Right</h2>
+      <p>The improvements to Android privacy since Android 10 are substantial and worth acknowledging:</p>
+
+      <h3>Scoped storage</h3>
+      <p>Apps can no longer read arbitrary files from your storage. Every app is confined to its own sandbox by default, with explicit user permission required to access shared media. This closes an enormous category of data-harvesting vulnerabilities that were the norm as recently as Android 9.</p>
+
+      <h3>Granular location permissions</h3>
+      <p>Apps must now choose between precise and approximate location, and must request background location separately from foreground location. Users can grant "while using the app" access that automatically expires. This dramatically limits what apps can harvest passively.</p>
+
+      <h3>Permission auto-reset</h3>
+      <p>Apps you have not used in a while have their permissions automatically revoked. This addresses the long-tail problem of apps granted permissions during installation that continue using them years later.</p>
+
+      <h3>Privacy dashboard</h3>
+      <p>Android now provides a timeline view of which apps accessed sensitive permissions — camera, microphone, location — and when. This makes passive surveillance by installed apps significantly more auditable.</p>
+
+      <h2>What Android Did Not Address</h2>
+      <p>All of the above improvements share a common assumption: the privacy threat comes from an app running on your device, not from a person holding your device.</p>
+      <p>Scoped storage does not help when someone can see your screen. Granular location permissions do not matter when someone opens your messaging app. The privacy dashboard audits background access, not foreground visibility.</p>
+      <p>The threat model that Android's privacy improvements target is: software that extracts your data without your knowledge. The threat model they do not address is: someone physically looking at your phone, with or without your cooperation.</p>
+
+      <h3>App access is not granular for physical presence</h3>
+      <p>Once your phone is unlocked, every app in your launcher is accessible to whoever is holding it. Android has no native mechanism to hide specific apps from view or require a secondary authentication to open them. App locking is left entirely to third-party apps, with all the limitations that implies.</p>
+
+      <h3>Notification content is visible without unlocking</h3>
+      <p>By default, notification content appears on the lock screen. Even with lock screen notifications disabled, notifications are accessible the moment the phone is unlocked — which is exactly when physical access risk is highest. Android provides notification sensitivity controls, but they apply at a channel level and are difficult to manage in practice.</p>
+
+      <h3>Recents reveals what you were doing</h3>
+      <p>The recent apps screen is a timeline of your last activities. Any app you were using when the phone was handed over is visible there. Android provides no native way to automatically clear recents when a specific condition is met.</p>
+
+      <h3>There is no coercion-resistance model</h3>
+      <p>Android's security model assumes the authenticated user is cooperative. There is no platform-level concept of a "duress" state — a mode where the authenticated session appears normal but protection remains active. This is a fundamental gap for anyone in a situation where cooperation is demanded.</p>
+
+      <h2>Why This Gap Is Growing</h2>
+      <p>Two trends are making the physical-presence threat model more important, not less.</p>
+      <p><strong>Device checks are becoming more common.</strong> In various contexts — border crossings, domestic situations, employment screening — individuals are increasingly asked to hand over their phones. The assumption that your device is entirely private from anyone who physically holds it is no longer reliable.</p>
+      <p><strong>Everything is on the phone now.</strong> The consolidation of communications, finances, social life, and work onto a single device means the stakes of physical access are dramatically higher than they were five years ago. The phone is not just a phone — it is the key to almost every dimension of a person's life.</p>
+
+      <h2>What the App Layer Can and Cannot Do</h2>
+      <p>Third-party privacy apps address real gaps that the platform does not. They can hide apps from the launcher, suppress notifications, control what appears in recents, and provide coercion-resistant modes. These are meaningful capabilities.</p>
+      <p>They are also constrained by what the platform permits. An app cannot simply make itself invisible — it needs platform-level permissions to do so, granted through a specific setup process. An app cannot replace Android's built-in recovery mechanisms — it must use the ones the platform provides.</p>
+      <p>The best outcomes come from privacy apps that work with the platform's legitimate permission tiers rather than trying to work around them. Using the same mechanisms that enterprise IT departments use to manage device fleets — legitimate, documented, supported — produces protection that is architecturally sound rather than a cat-and-mouse game with Android's security model.</p>
+
+      <h2>The Honest Assessment of Where We Are</h2>
+      <p>Android in 2026 is significantly more private from software threats than Android in 2019. It is not meaningfully more private from physical presence threats. The platform's roadmap does not suggest this will change — these are use cases that exist in tension with Android's usability goals and enterprise-device requirements.</p>
+      <p>The gap will continue to be filled by third-party apps. The quality of that protection depends almost entirely on the architecture of the specific app: whether it uses legitimate platform mechanisms or workarounds, whether it leaves a footprint or runs without evidence, and whether its protection holds under scenarios that go beyond casual privacy.</p>
+
+    </div>
+
+    <div class="article-cta">
+      <h3>Built for the threat Android doesn't address.</h3>
+      <p>Blink is designed specifically for the physical-presence threat model — the scenario where someone holds your phone and you need protection that holds up to scrutiny.</p>
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free — Android</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="ft-logo">
+      <div class="ft-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="22" height="22" aria-hidden="true">
+          <defs><radialGradient id="gf" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#gf)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="ft-logo-name">Blink</span>
+    </div>
+    <div class="ft-divider" aria-hidden="true"></div>
+    <nav class="ft-links" aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+    </nav>
+    <div class="ft-copy">Android only &nbsp;&middot;&nbsp; Not available for iOS</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Your Privacy App's Notification Gives It Away | Blink Blog</title>
+  <meta name="description" content="Long-press any notification on Android and it shows the real app name. If your privacy app needs a persistent notification to survive, it's already compromised." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://blink.factor-io.com/blog/notification-gives-it-away.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blink.factor-io.com/blog/notification-gives-it-away.html" />
+  <meta property="og:title" content="Why Your Privacy App's Notification Gives It Away" />
+  <meta property="og:description" content="Long-press any notification and Android reveals the real app name. A privacy app that needs a persistent notification to survive has already disclosed itself." />
+  <meta property="og:site_name" content="Blink" />
+  <meta name="theme-color" content="#0F0F12" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Why Your Privacy App's Notification Gives It Away",
+    "description": "Long-press any notification on Android and it shows the real app name. If your privacy app needs a persistent notification to survive, it is already compromised. This is not a configuration problem — it is architectural.",
+    "author": { "@type": "Organization", "name": "Blink" },
+    "publisher": { "@type": "Organization", "name": "Factor IO" },
+    "datePublished": "2026-03-15",
+    "url": "https://blink.factor-io.com/blog/notification-gives-it-away.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo" aria-label="Blink home">
+      <div class="nav-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="28" height="28" aria-hidden="true">
+          <defs><radialGradient id="g0" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#g0)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="nav-logo-name">Blink</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#protection">Protection</a>
+      <a href="/#how-it-works">How it works</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/blog/" class="active">Blog</a>
+    </div>
+    <div class="nav-cta">
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <article class="article-wrap">
+    <p class="article-label">Notifications</p>
+    <h1>Why Your Privacy App's Notification Gives It Away</h1>
+    <p class="article-meta">Published March 2026 · 5 min read</p>
+
+    <p class="article-intro">Long-press any notification on Android and a small panel appears showing the name of the app that sent it. This is a feature, not a bug — Android wants you to be able to manage your notifications. For privacy apps that rely on a persistent notification to stay alive, it is also a fatal disclosure. If your privacy app shows a notification, everything it is supposed to hide is potentially revealed in two seconds.</p>
+
+    <div class="article-body">
+
+      <h2>The Notification Is Not Optional</h2>
+      <p>Many people assume the persistent notification shown by their privacy app is a design choice — something that could be disabled in settings or hidden through some configuration. This is almost never true.</p>
+      <p>Android requires any app running a persistent background service to show a notification. This is a platform policy designed for transparency: if something is running continuously on your device, you should be able to see it and stop it. The policy is good for users in general. For a privacy app specifically, it creates an unavoidable conflict.</p>
+      <p>The notification cannot be removed without also removing the service. The service cannot be removed without also removing the protection. The protection cannot exist without the service. The notification is not cosmetic — it is structural.</p>
+
+      <h2>What Long-Press Reveals</h2>
+      <p>When someone holds a finger on any notification, Android displays:</p>
+      <ul>
+        <li>The real name of the app that sent the notification</li>
+        <li>The app's icon</li>
+        <li>Options to manage or disable notifications from that app</li>
+        <li>A shortcut to the app's notification settings</li>
+      </ul>
+      <p>If the privacy app used a neutral-sounding name — "System Service," "Device Manager," "Background Task" — that name still appears. If someone recognizes it as a privacy app, or searches for it, the protection is disclosed.</p>
+      <p>More critically: the notification being there at all is evidence that something is running. Even without recognizing the specific app, the presence of a persistent notification from an unfamiliar app is a signal that something is being hidden.</p>
+
+      <h2>The Escalating Scenario</h2>
+      <p>Consider how this plays out in practice:</p>
+      <ol>
+        <li>Someone picks up your phone. They see an unfamiliar notification.</li>
+        <li>They long-press it. The real app name appears.</li>
+        <li>They search for that app name. They find it is a privacy or vault app.</li>
+        <li>They know something is hidden, even if they cannot immediately access it.</li>
+        <li>They may try to disable the notification, or stop the service, or demand you open the app.</li>
+      </ol>
+      <p>The notification does not just disclose the app's existence. It creates a starting point for a deliberate investigation. It transforms "I don't know what's on this phone" into "I know there's a privacy app and I'm going to find out what's in it."</p>
+
+      <h2>Notification Replacement Does Not Fix the Architecture</h2>
+      <p>Some privacy apps attempt to replace their notification with something innocuous — a fake "Charging" indicator, a calendar entry, a music player card. This addresses the disclosure problem more directly, but it does not address the architectural problem.</p>
+      <p>A replaced notification is still a notification. It can still be long-pressed. A sophisticated observer who notices that a notification persists regardless of what they do — or who checks the notification's originating app — will still find the real source.</p>
+      <p>More importantly: if the app is killed (by battery optimization, by a force-stop, by the system), the replacement notification disappears too. When the app restarts, the original notification briefly appears before any replacement takes effect. This window, however short, is a disclosure opportunity.</p>
+
+      <h2>Zero Footprint as a Design Principle</h2>
+      <p>The alternative is to not have a notification at all. No persistent service. No notification shade entry. Nothing to long-press.</p>
+      <p>This is architecturally possible when a privacy app is built on system-level infrastructure rather than on foreground services. The system components that run at this level do not require user-visible notifications — they are part of the operating system's own service layer, not the application layer where the notification requirement applies.</p>
+      <p>The result: someone swipes down the notification shade and sees nothing from the privacy app. Not a neutral-looking replacement. Not an innocuous name. Nothing at all. The app does not exist in that surface.</p>
+
+      <h2>The Honest Trade-Off</h2>
+      <p>Building on system-level infrastructure requires a different setup process and a higher permission tier. It is not available immediately on install — it requires a one-time configuration step. This is the real trade-off: a few minutes of setup once, in exchange for zero ongoing footprint.</p>
+      <p>For someone whose threat model includes physical access to their device, that trade-off is obvious. A few minutes of setup is worth more than an indefinitely visible notification that announces what you are trying to hide.</p>
+
+    </div>
+
+    <div class="article-cta">
+      <h3>Zero notification footprint.</h3>
+      <p>Blink shows nothing in your notification shade. There is no notification to long-press, no app name to discover, no running service to disable. The protection runs without announcing itself.</p>
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free — Android</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="ft-logo">
+      <div class="ft-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="22" height="22" aria-hidden="true">
+          <defs><radialGradient id="gf" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#gf)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="ft-logo-name">Blink</span>
+    </div>
+    <div class="ft-divider" aria-hidden="true"></div>
+    <nav class="ft-links" aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+    </nav>
+    <div class="ft-copy">Android only &nbsp;&middot;&nbsp; Not available for iOS</div>
+  </div>
+</footer>
+
+</body>
+</html>

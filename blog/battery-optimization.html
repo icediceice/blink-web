@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Battery Optimization Kills Your Privacy App | Blink Blog</title>
+  <meta name="description" content="Every privacy app on the Play Store relies on a trick to stay alive that also makes it visible. Here's why that's a fundamental design flaw, and what the alternative looks like." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://blink.factor-io.com/blog/battery-optimization.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blink.factor-io.com/blog/battery-optimization.html" />
+  <meta property="og:title" content="Why Battery Optimization Kills Your Privacy App" />
+  <meta property="og:description" content="Every privacy app on the Play Store relies on a trick to stay alive that also makes it visible. Here's the fundamental design flaw — and the alternative." />
+  <meta property="og:site_name" content="Blink" />
+  <meta name="theme-color" content="#0F0F12" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Why Battery Optimization Kills Your Privacy App",
+    "description": "Every privacy app on the Play Store relies on a trick to stay alive that also makes it visible. Here's why that's a fundamental design flaw, and what the alternative looks like.",
+    "author": { "@type": "Organization", "name": "Blink" },
+    "publisher": { "@type": "Organization", "name": "Factor IO" },
+    "datePublished": "2026-03-15",
+    "url": "https://blink.factor-io.com/blog/battery-optimization.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo" aria-label="Blink home">
+      <div class="nav-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="28" height="28" aria-hidden="true">
+          <defs><radialGradient id="g0" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#g0)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="nav-logo-name">Blink</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#protection">Protection</a>
+      <a href="/#how-it-works">How it works</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/blog/" class="active">Blog</a>
+    </div>
+    <div class="nav-cta">
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <article class="article-wrap">
+    <p class="article-label">Android Platform</p>
+    <h1>Why Battery Optimization Kills Your Privacy App</h1>
+    <p class="article-meta">Published March 2026 · 6 min read</p>
+
+    <p class="article-intro">Every privacy app on the Play Store relies on a trick to stay alive that also makes it visible. This is not a bug in any specific app — it is a fundamental conflict built into how Android manages background processes. Here's why it matters, and what a different architectural choice looks like.</p>
+
+    <div class="article-body">
+
+      <h2>The Problem: Android Kills Background Apps</h2>
+      <p>Android is aggressively designed to conserve battery. Any app running in the background is a target for termination — and the newer the Android version, the more aggressive the system has become. Samsung One UI, Xiaomi MIUI, and most other OEM skins add another layer on top, killing background processes faster than stock Android does.</p>
+      <p>For a privacy app, this is catastrophic. The moment your privacy app is killed, protection stops. The next time someone picks up your phone, whatever you were trying to hide is visible.</p>
+
+      <h2>The Standard Workaround: Foreground Services</h2>
+      <p>The conventional solution is a <strong>foreground service</strong> — a type of Android process that the system is not allowed to kill without user action. To be a foreground service, an app must show a persistent notification. Android requires this by design: if something is running continuously, the user must be able to see it.</p>
+      <p>This is where the fundamental conflict emerges. A privacy app that must show a persistent notification is advertising its own existence. Anyone who picks up the phone sees "App Name is running." Anyone who long-presses that notification sees the real app label. The protection mechanism is simultaneously a disclosure mechanism.</p>
+
+      <blockquote>"A privacy app that must be visible to survive cannot truly be invisible."</blockquote>
+
+      <h2>Why This Matters in Practice</h2>
+      <p>Consider a realistic scenario: you hand your phone to someone. They see the notification shade. They notice a running app they don't recognize. They press and hold. Android shows them the app's real name and gives them a button to stop it.</p>
+      <p>Even if you chose a neutral-sounding name, the notification itself is evidence that something is running. The structure of the notification — persistent, always visible, tied to a service — is a recognizable pattern to anyone who knows what to look for.</p>
+
+      <h2>What a Different Architecture Looks Like</h2>
+      <p>The alternative is to not use a foreground service at all. Instead, rely on system-level mechanisms that Android keeps alive by design — not as a workaround, but as intended behavior.</p>
+      <p>Android provides certain system services that persist without a visible notification, because they are designed to run continuously as infrastructure. When a privacy app is built on top of these instead of on foreground services, the notification requirement disappears. There is nothing in the notification shade. Nothing to long-press. Nothing to disable with a single tap.</p>
+      <p>The trade-off is that building on these mechanisms requires a different set of permissions — granted once during setup, not continuously visible. The setup takes a few minutes. After that, there is no persistent evidence the app exists.</p>
+
+      <h2>The Recovery Problem</h2>
+      <p>Even with the best architecture, edge cases exist. An aggressive OEM, an unusual device state, a system update — some scenarios can interrupt any service. The question is what happens next.</p>
+      <p>With a foreground service, recovery is slow. The app must be relaunched, the service must restart, and there is typically a visible window between the interruption and restoration where protection is absent.</p>
+      <p>With multiple recovery mechanisms layered in, a well-built app can restore protection before a human eye registers anything on screen — in under a second in most cases. The window where something could be seen does not need to be a real vulnerability.</p>
+
+      <h2>The Bottom Line</h2>
+      <p>If your current privacy app shows a persistent notification, that notification is not incidental — it is structural. Removing it would require a different architecture, not a settings toggle.</p>
+      <p>The notification is not a minor inconvenience. It is the single most visible signal that protection is running, and the easiest thing for someone to disable. If you need privacy from someone who has your phone in their hands, a persistent notification is working against you.</p>
+
+    </div>
+
+    <div class="article-cta">
+      <h3>Built differently, by design.</h3>
+      <p>Blink has no persistent notification. Nothing in your notification shade. Nothing to long-press or disable. Protection that runs without evidence it exists.</p>
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free — Android</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="ft-logo">
+      <div class="ft-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="22" height="22" aria-hidden="true">
+          <defs><radialGradient id="gf" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#gf)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="ft-logo-name">Blink</span>
+    </div>
+    <div class="ft-divider" aria-hidden="true"></div>
+    <nav class="ft-links" aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+    </nav>
+    <div class="ft-copy">Android only &nbsp;&middot;&nbsp; Not available for iOS</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator Vaults vs Real App Hiding: A Technical Comparison | Blink Blog</title>
+  <meta name="description" content="Popular calculator vault apps rename your files and tuck them in folders. Forensic recovery tools find them in seconds. Here's what real app hiding looks like." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://blink.factor-io.com/blog/calculator-vaults-vs-hiding.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://blink.factor-io.com/blog/calculator-vaults-vs-hiding.html" />
+  <meta property="og:title" content="Calculator Vaults vs Real App Hiding: A Technical Comparison" />
+  <meta property="og:description" content="Calculator vault apps move files to hidden folders. Forensic tools find them in seconds. Real hiding is architecturally different." />
+  <meta property="og:site_name" content="Blink" />
+  <meta name="theme-color" content="#0F0F12" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Calculator Vaults vs Real App Hiding: A Technical Comparison",
+    "description": "Popular calculator vault apps rename your files and tuck them in folders. Forensic recovery tools find them in seconds. Here is what real app hiding looks like and why the architecture matters.",
+    "author": { "@type": "Organization", "name": "Blink" },
+    "publisher": { "@type": "Organization", "name": "Factor IO" },
+    "datePublished": "2026-03-15",
+    "url": "https://blink.factor-io.com/blog/calculator-vaults-vs-hiding.html"
+  }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo" aria-label="Blink home">
+      <div class="nav-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="28" height="28" aria-hidden="true">
+          <defs><radialGradient id="g0" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#g0)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="nav-logo-name">Blink</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#protection">Protection</a>
+      <a href="/#how-it-works">How it works</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/blog/" class="active">Blog</a>
+    </div>
+    <div class="nav-cta">
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+  <article class="article-wrap">
+    <p class="article-label">App Privacy</p>
+    <h1>Calculator Vaults vs Real App Hiding: A Technical Comparison</h1>
+    <p class="article-meta">Published March 2026 · 7 min read</p>
+
+    <p class="article-intro">Calculator vault apps — apps disguised as calculators that secretly store photos and files — are among the most downloaded privacy apps on Android. They are also among the most easily defeated. Here is why, and what a structurally different approach looks like.</p>
+
+    <div class="article-body">
+
+      <h2>How Calculator Vaults Work</h2>
+      <p>Calculator vault apps typically do one or more of the following:</p>
+      <ul>
+        <li>Copy your photos and videos into a hidden folder, often prefixed with a dot (`.`) to suppress them from basic file browsers</li>
+        <li>Rename files with unfamiliar extensions to prevent gallery apps from displaying them</li>
+        <li>Store files inside the app's private data directory, where other apps cannot access them directly</li>
+        <li>Apply basic encryption to files stored within the app</li>
+      </ul>
+      <p>These approaches work against casual browsing. If someone opens your gallery app or file manager, the hidden content will not appear. For many use cases, this is enough.</p>
+
+      <h2>Why This Fails Against a Motivated Search</h2>
+      <p>Calculator vault apps protect against accidental discovery. They do not protect against a deliberate search.</p>
+
+      <h3>The app itself is findable</h3>
+      <p>The calculator vault app must appear somewhere on your phone — in the launcher, in Settings under installed apps, in Google Play's list of installed applications. Any of these surfaces reveals that a vault app is installed. The vault's contents may be hidden, but the vault itself is not. A search of "installed apps" for anything matching known vault names takes seconds.</p>
+
+      <h3>File-level approaches leave traces</h3>
+      <p>Moving files into a hidden folder modifies file metadata — creation timestamps, access logs, the folder structure itself. On many Android versions, cloud sync services (Google Photos, backup services) may have already uploaded the originals before they were moved. The originals may exist in a backup that the vault app never touched.</p>
+
+      <h3>The app's data directory is accessible</h3>
+      <p>If a phone is connected to a computer and analyzed with forensic software — or if device storage is examined directly — files stored in an app's private directory are not meaningfully protected. The directory structure reveals which app stored what, and extraction tools designed for Android recovery can find and decrypt common vault formats.</p>
+
+      <h2>What Real App Hiding Looks Like</h2>
+      <p>Real app hiding does not move files around. It does not rename them. It operates at a different level entirely.</p>
+      <p>Android provides a permission tier used by enterprise IT departments to manage corporate device fleets. At this level, an app can instruct the operating system to hide specific applications from its own view — not from a particular launcher or file manager, but from the OS itself. An app hidden at this level does not appear in the launcher. Not in settings. Not in search. Not in the list of installed apps. The OS reports it as absent because, from the OS's perspective, it is.</p>
+      <p>This is not a trick that renaming files or using a dot-prefix folder. It is an OS-level flag that changes how the system answers the question "is this app installed?" The answer becomes "no" — even though the app and all its data remain intact on the device.</p>
+
+      <h2>The Key Difference in Practice</h2>
+      <p>A calculator vault app, if someone knows to look for it, is findable. Its data directory is searchable. Its file modifications leave traces. Its existence in the app list confirms something was hidden there.</p>
+      <p>An app hidden at the OS level is not findable by looking at the app list — because it does not appear there. Forensic tools that search for installed apps will not find it. The apps it protects similarly become unreachable: they do not appear anywhere on the device's visible surface.</p>
+      <p>When the user wants to access a hidden app, they authenticate privately and it reappears immediately. When they end their session, it disappears again — not into a folder, but from the OS's awareness entirely.</p>
+
+      <h2>Who Should Use Each</h2>
+      <p>Calculator vault apps are appropriate when:</p>
+      <ul>
+        <li>You want to quickly hide specific photos from casual viewers</li>
+        <li>Your threat model is accidental discovery, not deliberate search</li>
+        <li>You do not need the vault app itself to be hidden</li>
+      </ul>
+      <p>OS-level app hiding is appropriate when:</p>
+      <ul>
+        <li>You need the hidden apps to be completely undetectable</li>
+        <li>Your threat includes someone deliberately looking for hidden content</li>
+        <li>You need the protection mechanism itself to be invisible</li>
+        <li>You want protection that survives someone searching your installed apps</li>
+      </ul>
+
+      <h2>The Honest Assessment</h2>
+      <p>Calculator vaults are not bad apps. They solve a real problem at a certain threat level. The issue is that their marketing often implies they solve a harder problem than they do. "Military-grade encryption" in the file vault does not matter if the vault app itself appears in your installed apps list and a search of that list takes 30 seconds.</p>
+      <p>Understanding what is actually hidden — and from whom — is the right starting question for any privacy tool.</p>
+
+    </div>
+
+    <div class="article-cta">
+      <h3>App hiding at the OS level.</h3>
+      <p>Blink's App Vault hides apps from the OS itself — not from a launcher, not into a folder. They cease to exist from the phone's perspective until you authenticate.</p>
+      <a href="https://blink.factor-io.com/" class="btn btn-amber btn-sm" rel="noopener">Download Free — Android</a>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="ft-logo">
+      <div class="ft-logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="22" height="22" aria-hidden="true">
+          <defs><radialGradient id="gf" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#4C1D95"/></radialGradient></defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#gf)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+        </svg>
+      </div>
+      <span class="ft-logo-name">Blink</span>
+    </div>
+    <div class="ft-divider" aria-hidden="true"></div>
+    <nav class="ft-links" aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+    </nav>
+    <div class="ft-copy">Android only &nbsp;&middot;&nbsp; Not available for iOS</div>
+  </div>
+</footer>
+
+</body>
+</html>
