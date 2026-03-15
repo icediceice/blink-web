@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blink — App Vault Setup</title>
+  <style>
+    :root {
+      --bg:           #0F0F12;
+      --surface:      #16161A;
+      --surface2:     #1C1C22;
+      --surface3:     #222228;
+      --amber:        #D4A853;
+      --amber-dim:    rgba(212, 168, 83, 0.1);
+      --amber-border: rgba(212, 168, 83, 0.22);
+      --sage:         #6EE7A0;
+      --sage-dim:     rgba(110, 231, 160, 0.08);
+      --sage-border:  rgba(110, 231, 160, 0.25);
+      --error:        #F87171;
+      --error-dim:    rgba(248, 113, 113, 0.08);
+      --warn:         #FB923C;
+      --warn-dim:     rgba(251, 146, 60, 0.08);
+      --text:         #E4E4E8;
+      --secondary:    #9494A0;
+      --border:       #2A2A32;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 16px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 680px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    /* ── Card header ─────────────────────────────────────────── */
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    .logo-mark {
+      width: 28px; height: 28px;
+      background: #1A1A2E; border-radius: 7px; overflow: hidden; flex-shrink: 0;
+    }
+
+    .logo-wordmark { display: flex; align-items: center; gap: 8px; }
+    .logo-name  { font-size: 0.9375rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+    .logo-divider { width: 1px; height: 10px; background: var(--border); }
+    .logo-context { font-size: 0.8125rem; color: var(--secondary); }
+
+    /* ── Step dots ───────────────────────────────────────────── */
+    .step-indicator {
+      display: flex; align-items: center; gap: 0;
+      position: relative; min-width: 88px;
+    }
+
+    .step-indicator::before {
+      content: ''; position: absolute; left: 5px; right: 5px; top: 50%;
+      height: 1px; background: var(--border); transform: translateY(-50%);
+    }
+
+    .step-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--surface); border: 1.5px solid var(--border);
+      flex: 1; position: relative; z-index: 1;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+
+    .step-dot.active { background: var(--amber); border-color: var(--amber); transform: scale(1.25); }
+    .step-dot.done   { background: var(--sage);  border-color: var(--sage); }
+
+    /* ── Card body ───────────────────────────────────────────── */
+    .card-body { padding: 28px; }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    h2 {
+      font-size: 1.1875rem; font-weight: 700;
+      color: var(--text); letter-spacing: -0.02em; margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 0.9375rem; color: var(--secondary);
+      line-height: 1.7; margin-bottom: 12px;
+    }
+
+    p:last-of-type { margin-bottom: 0; }
+    p strong { color: var(--text); font-weight: 600; }
+
+    ol, ul { padding-left: 20px; color: var(--secondary); font-size: 0.9375rem; }
+    ol li, ul li { line-height: 1.6; padding: 3px 0; }
+    ol li strong, ul li strong { color: var(--text); font-weight: 600; }
+
+    /* ── Buttons ─────────────────────────────────────────────── */
+    .btn {
+      display: block; width: 100%; padding: 12px 20px;
+      border: none; border-radius: 8px;
+      font-size: 0.9375rem; font-weight: 600; cursor: pointer;
+      margin-top: 12px; transition: opacity 0.15s;
+    }
+
+    .btn:hover   { opacity: 0.88; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-primary { background: var(--amber); color: #0A0A0E; }
+    .btn-success { background: var(--sage);  color: #0A0A0E; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-danger  { background: transparent; color: var(--error); border: 1px solid rgba(248,113,113,0.3); }
+
+    .btn-sm {
+      display: inline-block; width: auto;
+      padding: 6px 12px; font-size: 0.8125rem; margin-top: 0; border-radius: 6px;
+    }
+
+    /* ── Status ──────────────────────────────────────────────── */
+    .status {
+      padding: 12px 16px; border-radius: 8px;
+      font-size: 0.9375rem; line-height: 1.6;
+      border-left: 3px solid transparent;
+      margin-top: 12px; margin-bottom: 0;
+    }
+
+    .status.info    { background: var(--surface2); border-left-color: var(--secondary); color: var(--secondary); }
+    .status.success { background: var(--sage-dim);  border-left-color: var(--sage);  color: var(--sage); }
+    .status.warn    { background: var(--warn-dim);  border-left-color: var(--warn);  color: var(--warn); }
+    .status.error   { background: var(--error-dim); border-left-color: var(--error); color: var(--error); }
+
+    .status strong { color: inherit; font-weight: 700; }
+
+    /* ── Spinner ─────────────────────────────────────────────── */
+    .spinner-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 16px; padding: 40px 0;
+    }
+
+    .spinner {
+      width: 32px; height: 32px;
+      border: 3px solid var(--border); border-top-color: var(--amber);
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .spinner-label { font-size: 0.9375rem; color: var(--secondary); }
+
+    /* ── Device strip ────────────────────────────────────────── */
+    .device-strip {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; margin-bottom: 16px;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      font-size: 0.875rem;
+    }
+
+    .device-strip .d-model { color: var(--text); font-weight: 600; }
+    .device-strip .d-ver   { color: var(--secondary); }
+    .device-strip .d-pkg   {
+      margin-left: auto; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px;
+      background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border);
+    }
+
+    /* ── Account cards ───────────────────────────────────────── */
+    .accounts-hdr {
+      font-size: 0.875rem; color: var(--secondary); margin-bottom: 12px;
+    }
+
+    .accounts-hdr strong { color: var(--text); }
+
+    .acc-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 16px; margin-bottom: 10px;
+      transition: opacity 0.3s;
+    }
+
+    .acc-card.busy { opacity: 0.4; pointer-events: none; }
+
+    .acc-hdr { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+
+    .acc-icon { font-size: 1.25rem; flex-shrink: 0; line-height: 1.4; }
+
+    .acc-info  { flex: 1; min-width: 0; }
+    .acc-name  { font-size: 0.9375rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .acc-app   { font-size: 0.8125rem; color: var(--secondary); margin-top: 1px; }
+
+    .acc-steps ol { font-size: 0.875rem; padding-left: 18px; margin-bottom: 0; }
+    .acc-steps li { padding: 2px 0; }
+
+    .acc-note {
+      font-size: 0.8125rem; color: var(--warn); background: var(--warn-dim);
+      border-left: 3px solid var(--warn); padding: 8px 10px;
+      border-radius: 0 6px 6px 0; margin: 8px 0 0;
+    }
+
+    .acc-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+    /* ── Re-add reminder ─────────────────────────────────────── */
+    .readd-box {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 16px; margin-top: 16px;
+    }
+
+    .readd-title {
+      font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 4px;
+    }
+
+    .readd-subtitle {
+      font-size: 0.8125rem; color: var(--secondary); margin-bottom: 10px;
+    }
+
+    .readd-box ul { font-size: 0.875rem; color: var(--secondary); padding-left: 16px; }
+    .readd-box li { padding: 2px 0; }
+
+    /* ── Compat error ────────────────────────────────────────── */
+    .compat-error {
+      display: none; background: var(--error-dim);
+      border: 1px solid rgba(248,113,113,0.3); border-radius: 8px;
+      padding: 16px; color: var(--error); font-size: 0.9375rem;
+      line-height: 1.6; margin-bottom: 16px;
+    }
+
+    /* ── Site nav ─────────────────────────────────────────────── */
+    .site-nav {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .site-link {
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      transition: color 0.15s;
+      white-space: nowrap;
+    }
+
+    .site-link:hover { color: var(--amber); }
+
+    /* ── YouTube embed placeholder ────────────────────────────── */
+    .yt-embed {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      margin: 20px 0 0;
+    }
+
+    .yt-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .yt-caption {
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      text-align: center;
+      margin: 8px 0 16px;
+      line-height: 1.5;
+    }
+
+    /* ── Pill row ─────────────────────────────────────────────── */
+    .pill-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 0 0 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .pill.free   { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+    .pill.ok     { background: var(--sage-dim);  color: var(--sage);  border: 1px solid var(--sage-border); }
+    .pill.danger { background: var(--error-dim); color: var(--error); border: 1px solid rgba(248,113,113,0.3); }
+
+    /* ── Back link banner ─────────────────────────────────────── */
+    .back-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      margin-top: 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .back-banner:hover {
+      border-color: var(--amber-border);
+      background: var(--surface3);
+    }
+
+    .back-banner-body { flex: 1; min-width: 0; }
+    .back-banner-label { font-size: 0.9375rem; font-weight: 600; display: block; margin-bottom: 2px; }
+    .back-banner-sub   { font-size: 0.8125rem; color: var(--secondary); display: block; line-height: 1.5; }
+
+    @media (max-width: 560px) {
+      body         { padding: 16px; align-items: flex-start; padding-top: 32px; }
+      .card-header { padding: 14px 20px; }
+      .card-body   { padding: 20px; }
+      .logo-context { display: none; }
+      .site-link.back-link { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Card header -->
+  <div class="card-header">
+    <div class="logo-area">
+      <div class="logo-mark">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="28" height="28">
+          <defs>
+            <radialGradient id="iris" cx="54" cy="60" r="12" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#C4B5FD"/>
+              <stop offset="100%" stop-color="#4C1D95"/>
+            </radialGradient>
+          </defs>
+          <path fill="#EEF0FF" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,68 54,69 Q37,68 20,54 Z"/>
+          <path fill="url(#iris)" d="M42,60 A12,12 0,1,0 66,60 A12,12 0,1,0 42,60 Z"/>
+          <circle fill="#08081A" cx="54" cy="60" r="5.5"/>
+          <circle fill="rgba(255,255,255,0.44)" cx="60" cy="56.5" r="2.5"/>
+          <path fill="#1A1A2E" d="M20,54 Q37,40 54,39 Q71,40 88,54 Q71,57 54,58 Q37,57 20,54 Z"/>
+          <path fill="none" stroke="#0D0D38" stroke-width="1.8" d="M20,54 Q37,57 54,58 Q71,57 88,54"/>
+        </svg>
+      </div>
+      <div class="logo-wordmark">
+        <span class="logo-name">Blink</span>
+        <div class="logo-divider"></div>
+        <span class="logo-context">App Vault Setup</span>
+      </div>
+    </div>
+    <div class="site-nav">
+      <a href="https://blink.factor-io.com/" class="site-link back-link">← blink.factor-io.com</a>
+      <div class="step-indicator" id="step-dots">
+        <div class="step-dot" id="dot-0"></div>
+        <div class="step-dot" id="dot-1"></div>
+        <div class="step-dot" id="dot-2"></div>
+        <div class="step-dot" id="dot-3"></div>
+        <div class="step-dot" id="dot-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div id="compat-error" class="compat-error">
+      WebUSB is not supported in this browser. Open this page in
+      <strong>Chrome</strong> or <strong>Edge</strong> on a desktop computer.
+    </div>
+
+    <!-- Screen 0: Connect -->
+    <div class="step active" id="screen-connect">
+      <h2>App Vault — Advanced Setup</h2>
+      <p>
+        This one-time setup gives Blink the ability to completely remove apps from
+        existence in SOS mode — not just cover them, but hide them from the launcher,
+        app list, and Settings entirely. No trace left behind.
+      </p>
+
+      <!-- YouTube guide — replace YOUTUBE_ID_HERE with real video ID when available -->
+      <div class="yt-embed">
+        <iframe
+          src="https://www.youtube.com/embed/YOUTUBE_ID_HERE?rel=0&modestbranding=1"
+          title="Blink App Vault Setup — full walkthrough"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+      <p class="yt-caption">Video walkthrough — watch before you start · approx. 8 min</p>
+
+      <div class="pill-row">
+        <span class="pill free">Requires Permission Setup first</span>
+        <span class="pill danger">Accounts temporarily removed</span>
+        <span class="pill ok">Data unaffected</span>
+      </div>
+
+      <div class="status warn" style="margin-top:0">
+        <strong>Accounts must be temporarily removed.</strong> Android requires all
+        accounts (Google, Samsung, Microsoft, etc.) to be signed out before this level
+        of system access can be granted. This page detects your accounts and guides you
+        through each removal — you re-add them immediately when done. Your apps and data
+        are not affected.
+      </div>
+
+      <div class="status info" style="margin-top:12px">
+        <strong>Before you start:</strong> You need <strong>Developer Options</strong> and
+        <strong>USB Debugging</strong> enabled. If you haven't done the standard permission
+        setup yet, complete that first — it takes 3 minutes.
+      </div>
+
+      <p style="margin-top:12px">
+        <strong>Requirements:</strong> Chrome or Edge on desktop, USB cable, USB Debugging already on.
+      </p>
+      <button class="btn btn-primary" id="btn-connect">Connect via USB</button>
+      <button class="btn btn-outline"  id="btn-retry" style="display:none">Retry Connection</button>
+      <div id="connect-status" style="display:none"></div>
+
+      <a class="back-banner" href="index.html">
+        <div class="back-banner-body">
+          <span class="back-banner-label">← Standard Permission Setup</span>
+          <span class="back-banner-sub">Screen Protection Service, Auto-Recovery, Banking Mode — start here if you haven't done this yet</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Screen 1: Scanning (transient) -->
+    <div class="step" id="screen-scanning">
+      <div class="spinner-wrap">
+        <div class="spinner"></div>
+        <div class="spinner-label" id="scan-label">Checking device…</div>
+      </div>
+    </div>
+
+    <!-- Screen: Already Device Owner -->
+    <div class="step" id="screen-already-owner">
+      <h2>Already Configured ✓</h2>
+      <div class="status success" style="margin-bottom:16px">
+        Blink is already set up for maximum protection. App Vault is available.
+      </div>
+      <p>
+        Open Blink and go to <strong>Settings → App Vault</strong> to choose
+        which apps to hide in SOS mode.
+      </p>
+      <button class="btn btn-success" id="btn-ao-done">Done</button>
+    </div>
+
+    <!-- Screen: Other Device Owner -->
+    <div class="step" id="screen-other-owner">
+      <h2>Another App Has System-Level Access</h2>
+      <div class="status error" style="margin-bottom:16px" id="other-owner-msg"></div>
+      <p>
+        Only one app can hold this system-level permission at a time. The existing
+        app must be removed before Blink can be set up. If this device is enrolled
+        in corporate management, contact your IT administrator.
+      </p>
+      <button class="btn btn-outline" id="btn-oo-back">← Back</button>
+    </div>
+
+    <!-- Screen: Blink Not Installed -->
+    <div class="step" id="screen-no-blink">
+      <h2>Blink Not Found</h2>
+      <p>
+        Blink does not appear to be installed on this device. Install it from
+        the Play Store, then return to this page.
+      </p>
+      <button class="btn btn-outline" id="btn-nb-back">← Back</button>
+    </div>
+
+    <!-- Screen 2: Accounts -->
+    <div class="step" id="screen-accounts">
+      <div class="device-strip" id="device-strip" style="display:none">
+        <span class="d-model" id="d-model"></span>
+        <span class="d-ver"   id="d-ver"></span>
+        <span class="d-pkg"   id="d-pkg"></span>
+      </div>
+      <div class="accounts-hdr" id="accounts-hdr">Scanning…</div>
+      <div id="accounts-list"></div>
+      <button class="btn btn-outline" id="btn-rescan" style="margin-top:16px">↻ Re-scan Accounts</button>
+    </div>
+
+    <!-- Screen 3: Provision -->
+    <div class="step" id="screen-provision">
+      <h2>All Accounts Removed</h2>
+      <div class="status success" style="margin-bottom:16px">
+        No accounts found on this device — ready to complete setup.
+      </div>
+      <p>
+        Clicking <strong>Complete Setup</strong> grants Blink administrator-level
+        system access. This is what allows it to fully hide apps in SOS mode —
+        not just cover them, but remove them from the launcher and app list entirely.
+        Your installed apps and personal data are not affected.
+      </p>
+      <p>After setup, add your accounts back in <strong>Settings → Accounts</strong>.</p>
+      <button class="btn btn-primary" id="btn-provision">Complete Setup</button>
+      <div id="provision-status" style="display:none"></div>
+      <button class="btn btn-outline" id="btn-back-scan" style="margin-top:8px">← Back</button>
+    </div>
+
+    <!-- Screen 4: Success -->
+    <div class="step" id="screen-success">
+      <h2>Setup Complete!</h2>
+      <div class="status success" style="margin-bottom:16px">
+        Maximum protection is now active. App Vault is available.
+      </div>
+      <p>
+        Open Blink → <strong>Settings → App Vault</strong> to configure
+        which apps are hidden in SOS mode.
+      </p>
+      <div id="readd-section" style="display:none">
+        <div class="readd-box">
+          <div class="readd-title">Add your accounts back</div>
+          <div class="readd-subtitle">Settings → Accounts and backup → Add account</div>
+          <ul id="readd-list"></ul>
+        </div>
+      </div>
+      <button class="btn btn-success" id="btn-done" style="margin-top:16px">Done</button>
+    </div>
+
+  </div><!-- /.card-body -->
+</div><!-- /.card -->
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+let adb = null;
+let pkg = 'com.factor.blink';
+let currentAccounts = [];
+let initialAccounts = null;   // first non-empty scan — for re-add reminder
+let deviceBrand     = '';     // ro.product.brand — set on connect, drives path text
+
+// Module bridges
+let _connectDevice      = null;
+let _detectPackageName  = null;
+let _getDeviceInfo      = null;
+let _checkDeviceOwner   = null;
+let _scanAccounts       = null;
+let _clearAppData       = null;
+let _forceStopApp       = null;
+let _runShellCommand    = null;
+let _buildAdminComponent = null;
+let _setDeviceOwner     = null;
+let _disconnect         = null;
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function showScreen(id, dotIndex) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  updateDots(dotIndex != null ? dotIndex : -1);
+}
+
+function updateDots(active) {
+  for (let i = 0; i < 5; i++) {
+    const dot = document.getElementById('dot-' + i);
+    if (!dot) continue;
+    dot.className = 'step-dot' + (i < active ? ' done' : i === active ? ' active' : '');
+  }
+}
+
+// ── Compat check ──────────────────────────────────────────────────────────────
+if (!navigator.usb) {
+  document.getElementById('compat-error').style.display = 'block';
+}
+updateDots(0);
+
+// ── Connect ───────────────────────────────────────────────────────────────────
+async function doConnect() {
+  const statusEl = document.getElementById('connect-status');
+  const retryBtn = document.getElementById('btn-retry');
+  retryBtn.style.display = 'none';
+  statusEl.style.display = 'block';
+  statusEl.className = 'status info';
+  statusEl.textContent = 'Requesting device access…';
+
+  if (!_connectDevice) {
+    statusEl.className = 'status error';
+    statusEl.textContent = 'ADB library failed to load. Check browser console (F12).';
+    retryBtn.style.display = 'block';
+    return;
+  }
+
+  try {
+    adb = await _connectDevice();
+    pkg = await _detectPackageName(adb);
+    statusEl.style.display = 'none';
+    await doInitialCheck();
+  } catch (err) {
+    statusEl.className = 'status error';
+    statusEl.textContent = 'Connection failed: ' + err.message;
+    retryBtn.style.display = 'block';
+  }
+}
+
+document.getElementById('btn-connect').onclick = doConnect;
+document.getElementById('btn-retry').onclick   = doConnect;
+
+document.getElementById('btn-ao-done').onclick = () => {
+  if (adb) { _disconnect && _disconnect(adb); adb = null; }
+  showScreen('connect', 0);
+};
+
+document.getElementById('btn-oo-back').onclick = () => showScreen('connect', 0);
+document.getElementById('btn-nb-back').onclick = () => showScreen('connect', 0);
+document.getElementById('btn-back-scan').onclick = () => showScreen('accounts', 2);
+
+document.getElementById('btn-done').onclick = () => {
+  if (adb) { _disconnect && _disconnect(adb); adb = null; }
+  showScreen('connect', 0);
+};
+
+// ── Initial device check ──────────────────────────────────────────────────────
+async function doInitialCheck() {
+  document.getElementById('scan-label').textContent = 'Checking device…';
+  showScreen('scanning', 1);
+
+  try {
+    const [info, ownerStatus] = await Promise.all([
+      _getDeviceInfo(adb),
+      _checkDeviceOwner(adb),
+    ]);
+
+    if (ownerStatus.isBlink) {
+      showScreen('already-owner', 4);
+      return;
+    }
+
+    if (ownerStatus.hasOwner) {
+      document.getElementById('other-owner-msg').textContent =
+        'Currently held by: ' + ownerStatus.ownerRaw;
+      showScreen('other-owner', 0);
+      return;
+    }
+
+    // Verify Blink is actually installed (debug already confirmed; check release)
+    if (pkg === 'com.factor.blink') {
+      const out = await adb.subprocess.noneProtocol.spawnWaitText('pm list packages com.factor.blink');
+      if (!out.includes('com.factor.blink')) {
+        showScreen('no-blink', 0);
+        return;
+      }
+    }
+
+    // Show device strip and proceed to account scan
+    deviceBrand = info.brand || '';
+    document.getElementById('d-model').textContent = info.model;
+    document.getElementById('d-ver').textContent   = 'Android ' + info.version;
+    document.getElementById('d-pkg').textContent   = pkg.endsWith('.debug') ? 'debug' : 'release';
+    document.getElementById('device-strip').style.display = 'flex';
+
+    showScreen('accounts', 2);
+    await doScan();
+  } catch (err) {
+    showScreen('connect', 0);
+    const statusEl = document.getElementById('connect-status');
+    statusEl.className = 'status error';
+    statusEl.style.display = 'block';
+    statusEl.textContent = 'Device check failed: ' + err.message;
+    document.getElementById('btn-retry').style.display = 'block';
+  }
+}
+
+// ── Account scan ──────────────────────────────────────────────────────────────
+async function doScan() {
+  document.getElementById('accounts-hdr').textContent = 'Scanning accounts…';
+  document.getElementById('accounts-list').innerHTML =
+    '<div class="spinner-wrap" style="padding:16px 0"><div class="spinner"></div></div>';
+  document.getElementById('btn-rescan').disabled = true;
+
+  try {
+    const dump    = await _scanAccounts(adb);
+    const accounts = parseAccounts(dump);
+
+    if (accounts.length === 0) {
+      showScreen('provision', 3);
+      return;
+    }
+
+    if (initialAccounts === null) initialAccounts = accounts.slice();
+    currentAccounts = accounts;
+    renderAccountList(accounts);
+    document.getElementById('btn-rescan').disabled = false;
+  } catch (err) {
+    document.getElementById('accounts-hdr').textContent = 'Scan failed';
+    document.getElementById('accounts-list').innerHTML =
+      `<div class="status error">${escHtml(err.message)}</div>`;
+    document.getElementById('btn-rescan').disabled = false;
+  }
+}
+
+document.getElementById('btn-rescan').onclick = doScan;
+
+// ── Account parser ────────────────────────────────────────────────────────────
+function parseAccounts(dump) {
+  const accounts = [];
+  const accRe = /Account\s*\{name=([^,}\n]+),\s*type=([^}\n]+)\}/g;
+  let m;
+  while ((m = accRe.exec(dump)) !== null) {
+    accounts.push({ name: m[1].trim(), type: m[2].trim() });
+  }
+
+  // Build type → package map from ComponentInfo in the dump
+  const typeToPkg = {};
+  const compRe = /AuthenticatorDescription\s*\{type=([^}]+)\}[^{]*ComponentInfo\{([^/]+)\/[^}]+\}/g;
+  while ((m = compRe.exec(dump)) !== null) {
+    typeToPkg[m[1].trim()] = m[2].trim();
+  }
+
+  return accounts.map(acc => ({
+    ...acc,
+    ownerPkg: typeToPkg[acc.type] || guessOwnerPkg(acc.type),
+  }));
+}
+
+function guessOwnerPkg(type) {
+  const map = {
+    'com.google':                      'com.google.android.gms',
+    'com.samsung.android.authservice': null,
+    'com.blink.contacts':              null,
+    'com.microsoft.office':            'com.microsoft.office.officehub',
+    'com.microsoft.teams':             'com.microsoft.teams',
+    'com.microsoft.emmx':              'com.microsoft.emmx',
+    'com.instagram.auth':              'com.instagram.android',
+    'com.facebook.auth.login':         'com.facebook.katana',
+    'com.whatsapp':                    'com.whatsapp',
+    'com.spotify.mobile':              'com.spotify.music',
+    'com.twitter.android.auth.login':  'com.twitter.android',
+  };
+  if (map[type] !== undefined) return map[type];
+  if (type.startsWith('com.google.'))    return 'com.google.android.gms';
+  if (type.startsWith('com.samsung.'))   return null;
+  if (type.startsWith('com.microsoft.')) return type;
+  return null;
+}
+
+// ── Removal guides ────────────────────────────────────────────────────────────
+// Returns the OEM-specific Settings path to the accounts list.
+function getAccountsPath() {
+  const b = deviceBrand;
+  if (b === 'samsung')                              return 'Settings → Accounts and backup → Manage accounts';
+  if (b === 'google')                               return 'Settings → Passwords &amp; accounts';
+  if (b === 'xiaomi' || b === 'redmi' || b === 'poco') return 'Settings → Accounts &amp; sync';
+  if (b === 'oppo' || b === 'realme' || b === 'oneplus') return 'Settings → Passwords &amp; accounts';
+  if (b === 'huawei' || b === 'honor')              return 'Settings → Users &amp; accounts';
+  if (b === 'vivo')                                 return 'Settings → Accounts &amp; sync';
+  if (b === 'motorola' || b === 'moto')             return 'Settings → Passwords &amp; accounts';
+  return 'Settings → Accounts'; // generic fallback
+}
+
+const GUIDES = {
+  'com.google': {
+    name: 'Google', icon: '📧',
+    steps: [
+      '', // replaced dynamically by getGuide() with OEM-specific path
+      'Tap your <strong>Google account</strong>',
+      'Tap <strong>Remove account</strong> and confirm',
+    ],
+    clearPkg: null,
+    openSettingsIntent: 'android.settings.ACCOUNTS_SETTINGS',
+  },
+  'com.samsung.android.authservice': {
+    name: 'Samsung Account', icon: '🏢',
+    steps: [
+      '', // replaced dynamically by getGuide() with OEM-specific path
+      'Tap <strong>Samsung account → Remove account</strong>',
+    ],
+    clearPkg: 'com.samsung.android.samsungaccount.b2c',
+    openSettingsIntent: 'android.settings.ACCOUNTS_SETTINGS',
+    note: 'Clear Data signs you out of Samsung account instantly — your Samsung cloud data is not affected.',
+  },
+  'com.blink.contacts': {
+    name: 'Blink (Hidden Contacts)', icon: '🔵',
+    steps: [
+      'Open the <strong>Blink</strong> app',
+      'Go to <strong>Settings → Hidden Contacts</strong>',
+      'Toggle off <strong>Pause contact account</strong>',
+      'The account will be unregistered automatically',
+    ],
+    clearPkg: null,
+  },
+  'com.microsoft.office': {
+    name: 'Microsoft Office', icon: '📊',
+    steps: [
+      'Open any Microsoft Office app (Word, Excel, Outlook)',
+      'Tap your <strong>profile icon → Sign out</strong>',
+    ],
+    clearPkg: 'com.microsoft.office.officehub',
+  },
+  'com.microsoft.teams': {
+    name: 'Microsoft Teams', icon: '💼',
+    steps: ['Open <strong>Teams</strong>', 'Tap your <strong>profile icon → Sign out</strong>'],
+    clearPkg: 'com.microsoft.teams',
+  },
+  'com.microsoft.emmx': {
+    name: 'Microsoft Edge', icon: '🌐',
+    steps: ['Open <strong>Edge</strong>', 'Tap <strong>profile photo → Sign out</strong>'],
+    clearPkg: 'com.microsoft.emmx',
+  },
+  'com.instagram.auth': {
+    name: 'Instagram', icon: '📷',
+    steps: [
+      'Use <strong>Force Stop</strong> below first (prevents background re-registration)',
+      'Open <strong>Instagram</strong> → Profile → Menu → <strong>Settings → Log out</strong>',
+    ],
+    clearPkg: 'com.instagram.android',
+    forceStopPkg: 'com.instagram.android',
+    note: 'Instagram re-registers its account while running in the background.',
+  },
+  'com.facebook.auth.login': {
+    name: 'Facebook', icon: '👥',
+    steps: ['Open <strong>Facebook</strong>', 'Menu → <strong>Settings → Log out of all sessions</strong>'],
+    clearPkg: 'com.facebook.katana',
+  },
+  'com.whatsapp': {
+    name: 'WhatsApp', icon: '💬',
+    steps: ['Use <strong>Clear Data</strong> below — fastest option', 'Or: More options → Settings → Account → Delete account'],
+    clearPkg: 'com.whatsapp',
+    note: 'WhatsApp accounts cannot be removed from Android account settings directly.',
+  },
+  'com.spotify.mobile': {
+    name: 'Spotify', icon: '🎵',
+    steps: ['Open <strong>Spotify</strong>', 'Tap your name at top → <strong>Log out</strong>'],
+    clearPkg: 'com.spotify.music',
+  },
+  'com.twitter.android.auth.login': {
+    name: 'X (Twitter)', icon: '🐦',
+    steps: ['Open <strong>X</strong>', 'Profile → <strong>Settings and privacy → Log out</strong>'],
+    clearPkg: 'com.twitter.android',
+  },
+};
+
+const APP_LABELS = {
+  'com.google.android.gms':            'Google',
+  'com.samsung.android.samsungaccount.b2c': 'Samsung',
+  'com.microsoft.office.officehub':    'Microsoft Office',
+  'com.microsoft.teams':               'Teams',
+  'com.microsoft.emmx':                'Edge',
+  'com.instagram.android':             'Instagram',
+  'com.facebook.katana':               'Facebook',
+  'com.whatsapp':                      'WhatsApp',
+  'com.spotify.music':                 'Spotify',
+  'com.twitter.android':               'X (Twitter)',
+};
+
+function getGuide(type, ownerPkg) {
+  let guide;
+  if      (GUIDES[type])                guide = { ...GUIDES[type], steps: [...GUIDES[type].steps] };
+  else if (type.startsWith('com.google.'))  guide = { ...GUIDES['com.google'],  steps: [...GUIDES['com.google'].steps] };
+  else if (type.startsWith('com.samsung.')) guide = { ...GUIDES['com.samsung.android.authservice'], steps: [...GUIDES['com.samsung.android.authservice'].steps] };
+  else {
+    const name = APP_LABELS[ownerPkg] || appLabelFromPkg(ownerPkg || type);
+    return {
+      name, icon: '📱',
+      steps: [
+        `Open <strong>${escHtml(name)}</strong>`,
+        'Find the account or profile section',
+        'Sign out or remove account',
+      ],
+      clearPkg: ownerPkg || null,
+    };
+  }
+  // Patch step 0 with the live OEM-specific path for guides that have an Open Settings button.
+  if (guide.openSettingsIntent) {
+    guide.steps[0] = `Tap <strong>Open Account Settings</strong> below, or go to:<br><strong>${getAccountsPath()}</strong>`;
+  }
+  return guide;
+}
+
+function appLabelFromPkg(pkg) {
+  if (!pkg) return 'Unknown App';
+  const last = pkg.split('.').pop();
+  return last.charAt(0).toUpperCase() + last.slice(1);
+}
+
+// ── Render account list ───────────────────────────────────────────────────────
+function renderAccountList(accounts) {
+  const n = accounts.length;
+  document.getElementById('accounts-hdr').innerHTML =
+    `<strong>${n} account${n !== 1 ? 's' : ''} found</strong> — remove all to continue`;
+
+  document.getElementById('accounts-list').innerHTML =
+    accounts.map((acc, i) => renderCard(acc, i)).join('');
+}
+
+function renderCard(acc, i) {
+  const g = getGuide(acc.type, acc.ownerPkg);
+  const stepsHtml    = g.steps.filter(s => s).map(s => `<li>${s}</li>`).join('');
+  const noteHtml     = g.note ? `<div class="acc-note">${g.note}</div>` : '';
+  const settingsBtn  = g.openSettingsIntent
+    ? `<button class="btn btn-sm btn-outline" onclick="doOpenSettings(${i})">Open Account Settings →</button>` : '';
+  const forceBtn     = g.forceStopPkg
+    ? `<button class="btn btn-sm btn-outline" onclick="doForceStop(${i})">Force Stop</button>` : '';
+  const clearBtn     = g.clearPkg
+    ? `<button class="btn btn-sm btn-danger" onclick="doClearData(${i})">Clear Data</button>` : '';
+  const actions      = (settingsBtn || forceBtn || clearBtn)
+    ? `<div class="acc-actions">${settingsBtn}${forceBtn}${clearBtn}</div>` : '';
+
+  return `
+    <div class="acc-card" id="acc-${i}">
+      <div class="acc-hdr">
+        <span class="acc-icon">${g.icon}</span>
+        <div class="acc-info">
+          <div class="acc-name">${escHtml(acc.name)}</div>
+          <div class="acc-app">${escHtml(g.name)}</div>
+        </div>
+      </div>
+      <div class="acc-steps"><ol>${stepsHtml}</ol></div>
+      ${noteHtml}${actions}
+    </div>`;
+}
+
+// ── Open account settings ─────────────────────────────────────────────────────
+async function doOpenSettings(i) {
+  const g = getGuide(currentAccounts[i].type, currentAccounts[i].ownerPkg);
+  if (!g.openSettingsIntent || !_runShellCommand) return;
+  await _runShellCommand(adb, `am start -a ${g.openSettingsIntent}`);
+}
+
+// ── Force stop ────────────────────────────────────────────────────────────────
+async function doForceStop(i) {
+  const g = getGuide(currentAccounts[i].type, currentAccounts[i].ownerPkg);
+  if (!g.forceStopPkg || !_forceStopApp) return;
+  const card = document.getElementById('acc-' + i);
+  if (card) card.classList.add('busy');
+  try { await _forceStopApp(adb, g.forceStopPkg); } catch (_) {}
+  if (card) card.classList.remove('busy');
+}
+
+// ── Clear data ────────────────────────────────────────────────────────────────
+async function doClearData(i) {
+  const acc = currentAccounts[i];
+  const g   = getGuide(acc.type, acc.ownerPkg);
+  if (!g.clearPkg || !_clearAppData) return;
+  if (!confirm(`Clear all data for ${g.name}?\n\nThis signs you out and removes local app data. Your cloud data is safe.`)) return;
+  const card = document.getElementById('acc-' + i);
+  if (card) card.classList.add('busy');
+  try { await _clearAppData(adb, g.clearPkg); } catch (_) {}
+  setTimeout(doScan, 800);
+}
+
+// ── Provision ─────────────────────────────────────────────────────────────────
+document.getElementById('btn-provision').onclick = async () => {
+  const btn      = document.getElementById('btn-provision');
+  const statusEl = document.getElementById('provision-status');
+  btn.disabled = true;
+  statusEl.className = 'status info';
+  statusEl.style.display = 'block';
+  statusEl.textContent   = 'Completing setup — this may take a few seconds…';
+
+  try {
+    const component = _buildAdminComponent(pkg);
+    const result    = await _setDeviceOwner(adb, component);
+    const out       = (result.stdout || '').toLowerCase();
+
+    if (out.includes('success') || out.includes('device owner')) {
+      // Build re-add list from initial scan
+      if (initialAccounts && initialAccounts.length > 0) {
+        document.getElementById('readd-list').innerHTML =
+          initialAccounts.map(a => {
+            const g = getGuide(a.type, a.ownerPkg);
+            return `<li>${escHtml(a.name)} <span style="color:var(--secondary)">(${escHtml(g.name)})</span></li>`;
+          }).join('');
+        document.getElementById('readd-section').style.display = 'block';
+      }
+      showScreen('success', 4);
+    } else if (out.includes('account') || out.includes('not allowed')) {
+      statusEl.className   = 'status error';
+      statusEl.textContent = 'Failed: accounts are still present. Go back and remove all accounts, then try again.';
+      btn.disabled = false;
+    } else {
+      statusEl.className   = 'status warn';
+      statusEl.textContent = 'Unexpected response: ' + (result.stdout || '(none)').substring(0, 200);
+      btn.disabled = false;
+    }
+  } catch (err) {
+    statusEl.className   = 'status error';
+    statusEl.textContent = 'Failed: ' + err.message;
+    btn.disabled = false;
+  }
+};
+
+// ── HTML escape ───────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+
+<script type="module">const _0xa5ca61=_0x1ffc;(function(_0x253699,_0x317270){const _0x7f0f79=_0x1ffc,_0x1ec84c=_0x253699();while(!![]){try{const _0x464ef3=parseInt(_0x7f0f79(0x300))/0x1*(parseInt(_0x7f0f79(0x208))/0x2)+-parseInt(_0x7f0f79(0x1f4))/0x3*(-parseInt(_0x7f0f79(0x273))/0x4)+parseInt(_0x7f0f79(0x266))/0x5*(parseInt(_0x7f0f79(0x20b))/0x6)+parseInt(_0x7f0f79(0x2bc))/0x7+-parseInt(_0x7f0f79(0x284))/0x8+-parseInt(_0x7f0f79(0x2e0))/0x9*(-parseInt(_0x7f0f79(0x2a7))/0xa)+-parseInt(_0x7f0f79(0x2a6))/0xb*(parseInt(_0x7f0f79(0x34a))/0xc);if(_0x464ef3===_0x317270)break;else _0x1ec84c['push'](_0x1ec84c['shift']());}catch(_0x518bec){_0x1ec84c['push'](_0x1ec84c['shift']());}}}(_0x25c1,0x77245));var __defProp=Object[_0xa5ca61(0x310)],__export=(_0x82ff9c,_0x598e32)=>{for(var _0x2c914e in _0x598e32)__defProp(_0x82ff9c,_0x2c914e,{'get':_0x598e32[_0x2c914e],'enumerable':!0x0});},PromiseResolver=class{#promise;get[_0xa5ca61(0x1f0)](){return this.#promise;}#resolve;#reject;#state=_0xa5ca61(0x1e5);get['state'](){return this.#state;}constructor(){this.#promise=new Promise((_0x2e17a7,_0xca0c45)=>{this.#resolve=_0x2e17a7,this.#reject=_0xca0c45;});}[_0xa5ca61(0x2ac)]=_0x433d72=>{const _0x3a553f=_0xa5ca61;this.#resolve(_0x433d72),this.#state=_0x3a553f(0x294);};['reject']=_0x7bc13a=>{this.#reject(_0x7bc13a),this.#state='rejected';};},AsyncOperationManager=class{[_0xa5ca61(0x2cc)];[_0xa5ca61(0x224)]=new Map();constructor(_0x440ba3=0x0){this['nextId']=_0x440ba3;}['add'](){const _0x2c1411=_0xa5ca61;let _0x352428=this[_0x2c1411(0x2cc)]++,_0x1d5b09=new PromiseResolver();return this[_0x2c1411(0x224)][_0x2c1411(0x2f6)](_0x352428,_0x1d5b09),[_0x352428,_0x1d5b09[_0x2c1411(0x1f0)]];}[_0xa5ca61(0x31e)](_0x168807){const _0x3995b0=_0xa5ca61;if(!this['pendingResolvers'][_0x3995b0(0x1ec)](_0x168807))return null;let _0x120e58=this[_0x3995b0(0x224)][_0x3995b0(0x37e)](_0x168807);return this[_0x3995b0(0x224)][_0x3995b0(0x234)](_0x168807),_0x120e58;}['resolve'](_0x5da67f,_0x2c759d){const _0x345523=_0xa5ca61;let _0x52b759=this[_0x345523(0x31e)](_0x5da67f);return _0x52b759!==null?(_0x52b759[_0x345523(0x2ac)](_0x2c759d),!0x0):!0x1;}['reject'](_0x2e796c,_0x59ed54){const _0x530593=_0xa5ca61;let _0x48e75a=this['getResolver'](_0x2e796c);return _0x48e75a!==null?(_0x48e75a[_0x530593(0x21a)](_0x59ed54),!0x0):!0x1;}};function delay(_0x8a80b){return new Promise(_0x1495c3=>{const _0x3085d5=_0x1ffc;globalThis[_0x3085d5(0x258)](()=>_0x1495c3(),_0x8a80b);});}function isPromiseLike(_0x4a6fc0){const _0x287263=_0xa5ca61;return typeof _0x4a6fc0==_0x287263(0x381)&&_0x4a6fc0!==null&&'then'in _0x4a6fc0;}function advance(_0xaa1a42,_0xfe8520){const _0xec1b15=_0xa5ca61;for(;;){let {done:_0x1b237a,value:_0x12c0e2}=_0xaa1a42[_0xec1b15(0x1e9)](_0xfe8520);if(_0x1b237a)return _0x12c0e2;if(isPromiseLike(_0x12c0e2))return _0x12c0e2[_0xec1b15(0x298)](_0x264ff3=>advance(_0xaa1a42,{'resolved':_0x264ff3}),_0x544426=>advance(_0xaa1a42,{'error':_0x544426}));_0xfe8520=_0x12c0e2;}}function bipedal(_0x2b5bf2,_0x4360b2){const _0x323b52=_0xa5ca61;function _0x299a97(..._0x13e825){const _0x20232=_0x1ffc;let _0x107432=_0x2b5bf2[_0x20232(0x1f9)](this,function*(_0x4c5e27){const _0x96ccb0=_0x20232;if(isPromiseLike(_0x4c5e27)){let _0x505447=yield _0x4c5e27;if(_0x96ccb0(0x294)in _0x505447)return _0x505447[_0x96ccb0(0x294)];throw _0x505447['error'];}return _0x4c5e27;},..._0x13e825);return advance(_0x107432,void 0x0);}return _0x4360b2?_0x299a97[_0x323b52(0x2ec)](_0x4360b2):_0x299a97;}function defaultFieldSerializer(_0x22d2dc){return(_0xac332c,_0x4c4e27)=>{const _0x5143d5=_0x1ffc;if(_0x5143d5(0x2bf)in _0x4c4e27){let _0x1ff5a3=_0x22d2dc(_0xac332c,_0x4c4e27);return _0x4c4e27['buffer'][_0x5143d5(0x2f6)](_0x1ff5a3,_0x4c4e27[_0x5143d5(0x2a0)]),_0x1ff5a3['length'];}else return _0x22d2dc(_0xac332c,_0x4c4e27);};}function _0x25c1(){const _0x7b8937=['uMvJzwL2zq','tgLZDa','DhjHBNnHy3rPB24','zMX1C2G','z2vUzxjHDgvlzxK','DMfSDwvZ','zMLLBgrZ','C2XPy2u','ig1PBgXPC2vJB25KCW','zgLZywjSzq','ChjVzhvJDa','y2XVC2u','Dw5YzwfJAgfIBgu','Bw9Kzq','zw50CMLLCW','CMvHza','yxjNma','ChjVzhvJDe5HBwu','B3v0rw5KCg9PBNq','u2vUzfyY','Cg9ZDerLC2vYAwfSAxPL','uhjVzhvJDa','vgfUz28','ChvSBa','vw5RBM93BIbSB2nHBcbZB2nRzxqGAwq6ia','thn0yxq','Aw5WDxqGyw5Kig91Dhb1DcbJyw5UB3qGB3zLCMXHCa','BM90Awz5t25L','CNvUBMLUzW','y3jLyxrLvgfZAW','Aw5fBMrWB2LUDa','vgHLihvUzgvYBhLPBMCGCMvHzgfIBguGzg9LC24NDcbJB250ywLUigfUEsbTB3jLihn0CNvJDa','BMv4Da','B3bLBMvK','qxv0Aa','AgfZ','Dhj5q29UC3vTzq','BgLZDgvUzxi','C2HLBgWSDJiSChr5','ChjVBwLZzq','Aw5WDxq','Bg9JywXdCMvHDgvK','rgv2AwnL','m1DTtuv4wq','tM8Gyxv0AgvUDgLJyxrVCIbJyw4GAgfUzgXLihrOzsbYzxf1zxn0','C3rKzxjY','BxrPBwu','rxHHy3rszwfKywjSzsbLBMrLza','y2fSBa','Dg9mB3DLCKnHC2u','rxHPDa','y29UBMvJDgLVBG','C3bHD25xywL0vgv4Da','CMvTB3zLrxzLBNrmAxn0zw5LCG','CMvHzfrPBwvmAw1PDa','z3jHBNrLzd10CNvL','rgf0yq','zML4zwrqDxnOtwTKAxi','Bw9KzwW','zMLLBgq','Bg9JyxrPB24','ChvZAa','zxHJBhvZAw9UrMLSDgvYCW','mtuZnJjYy0nbzMS','igfUzhjVAwqUCgvYBwLZC2LVBI5xuKLurv9trunvuKvFu0vuveLor1m','y29UBMvJDa','mtK3mtzfuhzQrLq','vw5YzwfJAgfIBguUiefYz3vTzw50CZOk','zxjYB3i','B3v0','CgvYBwLZC2LVBG','yxv0AgvUDgLJyxrL','Bw9Yzsb0AgfUig9UzsbKzxzPy2uVzw11Bgf0B3i','C2LKzwXVywq','C3vWCg9YDhntDgf0','yxnvAw50tG','u0Hblte','u29JA2v0ignSB3nLza','tM90ihn1ChbVCNrLza','zgLZy29UBMvJDgvK','CgfJA2fNztO','CMvQzwn0','Cg0GBgLZDcbWywnRywDLCYa','C3rHDa','u05emG','CgfKu3rHCNq','CMvHzgvY','zgvZAxjLzfnPEMu','CMfUzg9T','y29UC3vTzq','C3rHCNrZv2L0Aa','CgvUzgLUz1jLC29SDMvYCW','ue9xrvi','zw5XDwv1zq','CgfJA2v0u2L6zq','yxv0AgvUDgLJyxrVCNm','v3jPDgu','zxHPDgvK','C3rVCa','CMvJDxjZAxzL','qxv0AgvUDgLJyxrPB24','C2LNBMfS','DMvUzg9Yswq','u2HLBgXwmG','x2fKyG','BwLU','Bhn0yxq','zgvSzxrL','C3rHCNq','vw5ZDxbWB3j0zwqGrNjHBwvcDwzMzxiGDMvYC2LVBIa','CMvHzgfIBgu','sw52ywXPzcbps0fzihbHy2TLDc4Gugf5Bg9HzcbZAxPLihnOB3vSzcbIzsaW','vgHLief1Dg9szxnLDev2zw50igHHCYbIzwvUigrPC3bVC2vK','zg93BMXVywq','zgvMAw5LuhjVCgvYDgLLCW','D3jHCfjLywrHyMXL','z2v0ChjVCcbYBY5WCM9KDwn0lM1VzgvS','B25ZDwnJzxnZ','C3LUyZO','q2fUj3qGy2fSBcbGBMv4DgaGyMvMB3jLihbYzxzPB3vZifbYB21PC2uGCMvZB2X2zxm','tM8GB3v0Chv0igvUzhbVAw50igzVDw5KlG','B3bLBG','C2vYDMLJzs5HzgiUDgnWlNbVCNq','BMvLzfb1C2HnA2rPCLDVCMTHCM91BMq','q2XVC2vtDgrPBG','y2HHCKnVzgvbDa','BwfNAwm','y2XLyxjszxzLCNnLvhvUBMvSCW','tM8Gzgv2AwnLihnLBgvJDgvK','B3v0Chv0igj1zMzLCIbPCYb0B28GC21HBgW','CMv2zxjZztPSAxn0lwzVCNDHCMq','C2L6zq','B2jQzwn0u3rVCMu','zgf0yq','CMvHC29U','C2vUzhjLy3zFDJjFzhj5x3j1BL9Zzw5K','CMvSzwfZzq','ycbOyxmGC3rHBgXLzcbMB3iG','Cg0Gz3jHBNqG','thn0yxqY','zgLZCgf0y2HLCG','CMv2zxjZztPRAwXSzM9YD2fYzdO','C3bHD25xywL0','C2v0vgLTzw91Da','z2v0qwXS','ls1SB25NChjLC3m','tfnumG','ygLUAxrPywXezwXHEwvKqwnRqNL0zxnGig11C3qGyMuGz3jLyxrLCIb0AgfUidaGD2HLBIbezwXHEwvKqwnRigzLyxr1CMuGAxmGzw5HyMXLzc4','z2v0rgv2AwnLCW','C2v0DgLUz3mGChv0ihnLy3vYzsbLBMfIBgvKx2fJy2vZC2LIAwXPDhLFC2vYDMLJzxmG','zMXVB3i','z2v0uhjVCa','DhjHy2TezxzPy2vZ','Aw50zxjMywnLuhjVDg9JB2W','rML4zwrqDxnOtwTKAxi','zgLYzwn0Aw9U','B3b0Aw9UCW','ntbRyuT2BK4','C3vIC3rYAw5N','CgTJCZG','BMfTzq','DgHPC0fYzW','CMf3','yxjNmq','D3jPDgfIBgvdBg9Zzwq','CMvTB3vUDf9ZAgvSBa','BNvTyMvY','tM90rM91BMrfCNjVCG','zNjHBwvIDwzMzxi6','zw5KCg9PBNroDw1Izxi','mJy3nZeWmfD4zeTJAa','zNvUy3rPB24','Aw5PDa','rMfPBa','y29UzMLNDxjHDgLVBLzHBhvL','ywX0zxjUyxrL','y2f0y2G','y2HLy2TZDw0','y2fSy3vSyxrLq2HLy2TZDw0','qLjpv1nfuG','yM9VDgXVywrLCG','sw52ywXPzcbpuevoihbHy2TLDc4GyxjNmsbZAg91BgqGyMuGma','Chr5','re9orq','C2vSzwn0q29UzMLNDxjHDgLVBG','DhjPBq','v2LUzg93u2L6zunOyw5Nzq','mZuZodi5nKXsr0z4DW','AM9PBG','D3jPDgu','C2HLBgXqCM90B2nVBa','zNjHBwvIDwzMzxi','y29UC3vTzxi','refuqq','CMvHzgfIBguGB2yGya','zhvTChn5CYbHy2nVDw50','C3vIDgXL','zhbTigXPC3qTB3DUzxjZ','zML4zwrFChvZAf9TA2rPCG','u3rKAw4','uLnbu1nblvblq1mXlxyXxZu','y2fUvxnLrMvHDhvYzq','z2v0tgLZDgvUqwrKCMvZC2vZ','CMvZB2X2zwq','yxnZAwDU','q29UBMvJDgLVBIbJBg9ZzwqGDw5LEhbLy3rLzgX5','y3jLyxrLu29JA2v0','DgHLBG','CgvYC2LZDc5HzgiUDgnWlNbVCNq','DxnIoG','y3jLyxrLu29JA2v0qw5Kv2fPDa','C2HLBgXFDJi','CM8UChjVzhvJDc5KzxzPy2u','sw52ywXPzcbps0fzihbHy2TLDc4Gugf5Bg9HzcbZAxPLihnOB3vSzcbIzsa0','CMvXDwvZDerLDMLJzq','Aw5KzxG','B3v0Chv0','CMvKDwnL','yxzHAwXHyMXLv3jPDgvcExrLCW','C2vYAwfStNvTyMvY','z2v0ChjVCa','oda0mdK2n3fWB3r0sW','nZbuEe5lBhG','B25ezxzPy2vszw1VDMu','CMvZAxPL','vgv4DerLy29KzxjtDhjLyw0','AxneAxjLy3rVCNK','CMvZB2X2zq','C2HLBgW6','v3jPDgfIBgvtDhjLyw0','CNvU','zMLSBa','q2XVC2u','ywrK','yxbLEa','Cg0Gy2XLyxiG','zxHLyZO','y21K','q21K','CMvTB3zLuMv2zxjZzvr1BM5LBa','CMvIB290oG','DgnWoG','v3jHCfDYAxrHyMXLu3rYzwfT','mti2ntq2meXUu2TZvG','yNL0zu9MzNnLDa','zhj5uNvU','yNvMzMvY','BgvUz3rO','ywrKuMv2zxjZzvr1BM5LBa','ChjVzhvJzxi','Ag9ZDdO6zMvHDhvYzxm9','Aw50zxjMywnLu3vIy2XHC3m','CgfYC2u','zhvTChn5CYbWywnRywDLia','teLtmG','teLtva','yw0GzM9Yy2uTC3rVCca','C2v0vwLUDdmY','z2v0t3DUuhjVCgvYDhLezxnJCMLWDg9YCW','BMv4DeLK','tM9Uzq','ywnR','y3jLyxrLv3jPDgfIBgu','BgfZDeLUzgv4t2y','C29Tzq','C2vYDMLJzs5HzgiUBgLZDgvUx2fKzhjZ','rNjHBwvcDwzMzxiGAxmGzgLZywjSzwqGyNKGy3vYCMvUDcbHCha','DhLWzq','u0vora','ChjLC2vYDMvdB25Uzwn0Aw9U','CMv2zxjZzq','Aw5KzxHpzG','CMvZDgfYDgLUzYbPBIbuq1aGBw9KzsbWB3j0oIa','CMvHzg9UBhK','zMLSDgvY','zMLYzq','y2XHC3ndB2rL','tMv0D29YA0vYCM9Y','u2vUzfjLy2vPDMvwmG','mJK5nJaXv252s0rs','uMvHzgfIBgvtDhjLyw0','C2vUzhjLy3zFDJi','ChjVy2vZCW','ihWGz3jLCca','yxbWzw5KtNvSBfrVu2vYDMLJzvn0CMLUzW','y3jLyxrLqNvMzMvYzwrtDhjLyw0','B3bLBMrPCG','rMLSzq','Bg9JAW','zNjVBq','BM9UzvbYB3rVy29S','yMLUza','y29TlMzHy3rVCI5IBgLUAY5Kzwj1zW','ywXS','tgLZDfyY','z2v0ChjVCcbYBY5WCM9KDwn0lMjYyw5K','v2vIvvncig5VDcbZDxbWB3j0zwqGAw4GDgHPCYbICM93C2vY','BwvZC2fNzq','u2vUza','qwjI','y29UDgvUDa','C2v0','ywrI','A2LSBa','CMvZDwX0','ChjVDg90ExbL','CgfYC2vjBNq','l2nVBs5IBgLUAY5WzxjZAxn0zw5Jzs5cBgLUA0rLDMLJzufKBwLUuMvJzwL2zxi','y29TCgXLDgu','C29JA2v0','zgv2AwnLrMvHDhvYzxm','nZfoENrXuLO','zgvMyxvSDa','y29UDMvYDa','DhjHBNnMzxjjBG','AxrLCMf0zuTLExm','CgLWzvrOCM91z2G','Bg9JA1nVy2TLDa','zM9Yy2u','C3bSAxq','t0Tbwq','Cgf5Bg9HzeXLBMD0Aa','C3rKAw4','CM8UChjVzhvJDc5Uyw1L','DgnWAxa6','D2fPDa','DgHYB3DjzKfIB3j0zwq','zgvMAw5LuhjVCgvYDhK','BgL0DgXLrw5KAwfU','y2XVC2vK','zxH0CMe','CMvIB290','C3rKB3v0','rw50CNK','Aw5JBhvKzxm','rg9Uzq','AwDUB3jLza','Dg9tDhjPBMC','ywrKrxzLBNrmAxn0zw5LCG','C2v0sw50mZi','qwjIrxHLyW','z2v0uMvZB2X2zxi','rxHWzwn0zwqGjW','yNLVyG','DgvYBwLUywXuExbL','y29TBwfUza','qwXYzwfKEsbLBMfIBgvK','DMvYAwz5','z2v0uMvHzgvY','zgLZCg9Zzq','Aw50zxjMywnLCW','CMvHzhDYAxrL','x3nVy2TLDa','revova','CgLWzvrV','BwfW','y2fUy2vS','zMLUywXSEq','q29UBMvJDa','zw5KC1DPDgG','y2XPzw50rMvHDhvYzxm','u1rbmG','B25LCNjVCG','C2vUzhjLy3zFDJjFBhO0','u3rKB3v0','zhbTihnLDc1KzxzPy2uTB3DUzxiG','Aw50zxjMywnLtNvTyMvY','ywX0zxjUyxrLu2v0DgLUzW','DgnWAxa','AxnbCNjHEq','C2v0ug9YDa','vwLUDdHbCNjHEq','C2vUzhjLy3zFDJjFENn0za','y29UzMLNDxjHDgLVBNm','AxntDxbWB3j0zwq','CMv0DxjU','y3jLyxrL','uKvdvG','Ag9ZDg5HBwu','vgHLigrLDMLJzsbPCYbHBhjLywr5igLUihvZzwqGyNKGyw5VDgHLCIbWCM9NCMfT','yxn5BMnjDgvYyxrVCG','AgLNAfDHDgvYtwfYAW','yNL0zuXLBMD0Aa','C2vYAwfSAxPL','DhjHBNnMzxjpDxq','mtjAzgP0twO','yxjNCW','D3jPDgfIBgu','zg9Uzq','C2vYDMLJzq','DxnI','C2LNAw50','zxzLBNq','ldb4maa','u2LNBMf0DxjL','rgvSyxLLzefJAW','B25ezxzPy2vbzgq','B25JB21WBgv0zq','ywjI','C2LNBG','ywjVCNq','y3jLyxrLt2jQzwn0u3rVCMu','CMvTB3rLswq','jYWGyNv0igDVDcaN','ywrKrgLZCg9ZywjSzq','C3vIyxjYyxK','C3vIChjVy2vZCW','yMfUBMvY','sw52ywXPzcbOzxGGy2HHCIa','CM8UChjVzhvJDc5TB2rLBa','CMvJB3zLCNK','lfrfuK09','C3bHD24','Cg93zxi','DMfSDwu','zw5KCg9PBNrZ','C3rYzwfT','C2vUzfbHy2TLDa','y2XLyxi','C3vWCg9YDhntzw5KuMvJzwL2zvyY','Cg93zxjcDxr0B24','rKfjta','CMvTB3zLqwXS','ChjVDg9JB2XdB2rL','C3bSAwnL','zMLUzeLUzgv4','BM93','zML4zwrFChvZAf9ZEw1SAw5Rx3rPBwvZDgfTCa','y3vYCMvUDa','CMv2zxjZztPMB3j3yxjKoG','C3vIy2XHC3ndB2rL','C3rHDf92mG','sw52ywXPzcbWyxrO','u29JA2v0igvUzgvKihDPDgHVDxqGzxHPDcbTzxnZywDL','DhjHBNnWB3j0','yMfJAW','Cgf5Bg9Hza','z2v0','zhj5uNvUigLZig5VDcbZDxbWB3j0zwqGAw4GDJe','BMf2AwDHDg9Y','B2jQzwn0','y29UC3vTzwq','qNvMzMvYihrVBYbZBwfSBa','C2vYAwfS','vw5YzwfJAgfIBgu','ChjLDMvUDenHBMnLBa','ywX0zxjUyxrLCW','C2vUzfjLCxvLC3q','vgv4DevUy29KzxjtDhjLyw0','B21PDeLUAxq','rgv2AwnLqNvZEuvYCM9Y','rMvHDhvYzxm','ywjVCNrLza','zgLZy29UBMvJDa','u3rHDa','CMvSzwfZzuXVy2S','z2v0v3jPDgvY','ChjVzhvJDeLK','ywrKrxH0zxjUywW','Aw5PDgLHBerLBgf5zwrby2TcExrLCW','ywjVCNrtAwDUywW','y2XHAw1jBNrLCMzHy2u','BNvSBa','u1vdq0vtuW','AxrLCMf0zuv4ywn0BhK','zMLSzw5HBwu','rw50CNKY','uhvIBgLJs2v5','u1rbva','BhnFDJi','u3rHDfyY','Bg9JywXHyNn0CMfJDdPYzxzLCNnLxW','Bg9JywXjza','C3rYAw5N','qurcihjLDMvYC2uGDhvUBMvSigLZig5VDcbZDxbWB3j0zwqGB24GDgHPCYbKzxzPy2uGD2HLBIbJB25Uzwn0zwqGD2LYzwXLC3nSEs4','y29TlMzHy3rVCI5IBgLUAW','DhjHy2TFyxbW','C2v0DgLUz3mGz2v0ihnLy3vYzsbLBMfIBgvKx2fJy2vZC2LIAwXPDhLFC2vYDMLJzxm','CMvHzev4ywn0BhK','zMvHDhvYzxm','v3jHCej5DgvszwfKywjSzvn0CMvHBq','zMLSDgvYCW','Cg9ZAxrPB24','t2THEq','BgLZDgvUzxjZ','D2fPDgLUzW','zgvZzxjPywXPEMu','Bhn0yxqGzxjYB3i','zwrS','C3LUyW','vgHLihvUzgvYBhLPBMCGCMvHzgfIBguGD2fZigvUzgvKigjLzM9Yzsb0AguGC3rYDwn0ihDHCYbMDwXSEsbKzxnLCMLHBgL6zwq','zgv2AwnL','C3vWCg9YDhnmAxn0vJi','Bwf4ugf5Bg9HzfnPEMu','A2v5zxzLBNq'];_0x25c1=function(){return _0x7b8937;};return _0x25c1();}function byobFieldSerializer(_0xc5eec5,_0x3abcea){return(_0x5a6e79,_0x241b93)=>{const _0x4bbc82=_0x1ffc;if('buffer'in _0x241b93)return _0x241b93[_0x4bbc82(0x2a0)]??=0x0,_0x3abcea(_0x5a6e79,_0x241b93),_0xc5eec5;{let _0x38c0b9=new Uint8Array(_0xc5eec5);return _0x3abcea(_0x5a6e79,{'buffer':_0x38c0b9,'index':0x0,'littleEndian':_0x241b93[_0x4bbc82(0x311)]}),_0x38c0b9;}};}function _field(_0x1afce9,_0x389f57,_0x48c26d,_0x26d0fb,_0x4e586b){const _0xb17685=_0xa5ca61;let _0x54203e={'size':_0x1afce9,'type':_0x389f57,'serialize':_0x389f57===_0xb17685(0x301)?defaultFieldSerializer(_0x48c26d):byobFieldSerializer(_0x1afce9,_0x48c26d),'deserialize':bipedal(_0x26d0fb),'omitInit':_0x4e586b==null?void 0x0:_0x4e586b[_0xb17685(0x38a)]};return _0x4e586b!=null&&_0x4e586b[_0xb17685(0x275)]&&(_0x54203e[_0xb17685(0x275)]=_0x4e586b[_0xb17685(0x275)]),_0x54203e;}var field=_field,EmptyUint8Array=new Uint8Array(0x0);function copyMaybeDifferentLength(_0x3c89c7,_0x5d8c35,_0x44322e,_0x133274){const _0x241eb8=_0xa5ca61;_0x5d8c35[_0x241eb8(0x2c0)]<_0x133274?(_0x3c89c7[_0x241eb8(0x2f6)](_0x5d8c35,_0x44322e),_0x3c89c7[_0x241eb8(0x2b0)](0x0,_0x44322e+_0x5d8c35[_0x241eb8(0x2c0)],_0x44322e+_0x133274)):_0x5d8c35[_0x241eb8(0x2c0)]===_0x133274?_0x3c89c7['set'](_0x5d8c35,_0x44322e):_0x3c89c7[_0x241eb8(0x2f6)](_0x5d8c35[_0x241eb8(0x35e)](0x0,_0x133274),_0x44322e);}function buffer(_0x4b0dc6,_0x20bc48){const _0x43986a=_0xa5ca61;if(typeof _0x4b0dc6=='number'){let _0x24606e,_0x5049b8,_0x442480;return _0x4b0dc6===0x0?(_0x24606e=()=>{},_0x20bc48?_0x5049b8=function*(){const _0x4fc6af=_0x1ffc;return _0x20bc48[_0x4fc6af(0x302)](EmptyUint8Array);}:_0x5049b8=function*(){return EmptyUint8Array;}):(_0x24606e=(_0x4efe68,{buffer:_0x3e9456,index:_0x41c7b7})=>copyMaybeDifferentLength(_0x3e9456,_0x4efe68,_0x41c7b7,_0x4b0dc6),_0x20bc48?(_0x5049b8=function*(_0x152cbd,_0x36a2fc){const _0x2c92c5=_0x1ffc;let _0x4d92d0=_0x36a2fc[_0x2c92c5(0x3a7)](_0x4b0dc6);return _0x20bc48['convert'](yield*_0x152cbd(_0x4d92d0));},_0x442480=_0x2493dd=>_0x20bc48[_0x43986a(0x37c)](_0x2493dd)):_0x5049b8=function*(_0x4d920a,_0x64a954){const _0x5d06a0=_0x43986a;return _0x64a954[_0x5d06a0(0x3a7)](_0x4b0dc6);}),field(_0x4b0dc6,'byob',_0x24606e,_0x5049b8,{'init':_0x442480});}if((typeof _0x4b0dc6==_0x43986a(0x381)||typeof _0x4b0dc6==_0x43986a(0x274))&&_0x43986a(0x348)in _0x4b0dc6){let _0x3c4a13,_0x1b21bc;return _0x20bc48?(_0x3c4a13=function*(_0x1ee62d,_0x5e7747,_0x2bed5f){const _0x103054=_0x43986a;let _0x4d2747=yield*_0x1ee62d(_0x4b0dc6['deserialize'](_0x5e7747,_0x2bed5f)),_0x576c09=_0x4d2747!==0x0?_0x5e7747['readExactly'](_0x4d2747):EmptyUint8Array;return _0x20bc48[_0x103054(0x302)](yield*_0x1ee62d(_0x576c09));},_0x1b21bc=_0x15c45b=>_0x20bc48[_0x43986a(0x37c)](_0x15c45b)):_0x3c4a13=function*(_0x445120,_0x23b101,_0x4036f9){const _0x2d1794=_0x43986a;let _0x4f8549=yield*_0x445120(_0x4b0dc6[_0x2d1794(0x3af)](_0x23b101,_0x4036f9));return _0x4f8549!==0x0?_0x23b101['readExactly'](_0x4f8549):EmptyUint8Array;},field(_0x4b0dc6[_0x43986a(0x24c)],'default',(_0x377d53,{littleEndian:_0x5a813a})=>{const _0x5995f8=_0x43986a;if(_0x4b0dc6[_0x5995f8(0x2d4)]===_0x5995f8(0x301)){let _0x2ec700=_0x4b0dc6[_0x5995f8(0x348)](_0x377d53[_0x5995f8(0x2c0)],{'littleEndian':_0x5a813a});if(_0x377d53['length']===0x0)return _0x2ec700;let _0x190c21=new Uint8Array(_0x2ec700[_0x5995f8(0x2c0)]+_0x377d53[_0x5995f8(0x2c0)]);return _0x190c21[_0x5995f8(0x2f6)](_0x2ec700,0x0),_0x190c21['set'](_0x377d53,_0x2ec700[_0x5995f8(0x2c0)]),_0x190c21;}else{let _0xe59295=new Uint8Array(_0x4b0dc6[_0x5995f8(0x24c)]+_0x377d53[_0x5995f8(0x2c0)]);return _0x4b0dc6[_0x5995f8(0x348)](_0x377d53[_0x5995f8(0x2c0)],{'buffer':_0xe59295,'index':0x0,'littleEndian':_0x5a813a}),_0xe59295['set'](_0x377d53,_0x4b0dc6[_0x5995f8(0x24c)]),_0xe59295;}},_0x3c4a13,{'init':_0x1b21bc});}if(typeof _0x4b0dc6==_0x43986a(0x3a2)){let _0x2430cf,_0x4df03e;return _0x20bc48?(_0x2430cf=function*(_0x51276a,_0x1d8f82,{dependencies:_0x54eff1}){const _0x52e0e5=_0x43986a;let _0x8a078c=_0x54eff1[_0x4b0dc6],_0x9adb50=_0x8a078c!==0x0?_0x1d8f82[_0x52e0e5(0x3a7)](_0x8a078c):EmptyUint8Array;return _0x20bc48['convert'](yield*_0x51276a(_0x9adb50));},_0x4df03e=(_0x1d5c65,_0x42b116)=>{const _0x4360c8=_0x43986a;let _0x314e02=_0x20bc48[_0x4360c8(0x37c)](_0x1d5c65);return _0x42b116[_0x4b0dc6]=_0x314e02[_0x4360c8(0x2c0)],_0x314e02;}):(_0x2430cf=function*(_0x3fd8af,_0x56db24,{dependencies:_0x2a74a9}){const _0x1fb9d0=_0x43986a;let _0x4ebbfd=_0x2a74a9[_0x4b0dc6];return _0x4ebbfd!==0x0?_0x56db24[_0x1fb9d0(0x3a7)](_0x4ebbfd):EmptyUint8Array;},_0x4df03e=(_0x156d40,_0x4a481)=>{const _0x86676b=_0x43986a;let _0x47a529=_0x156d40;return _0x4a481[_0x4b0dc6]=_0x47a529[_0x86676b(0x2c0)],_0x47a529;}),field(0x0,_0x43986a(0x301),_0x34669b=>_0x34669b,_0x2430cf,{'init':_0x4df03e});}let _0xac192f,_0x1e6c3d;return _0x20bc48?(_0xac192f=function*(_0x44dc7e,_0x385f4b,{dependencies:_0x3b0908}){const _0xa2416e=_0x43986a;let _0x2a5283=_0x3b0908[_0x4b0dc6[_0xa2416e(0x204)]],_0x1df8dd=_0x4b0dc6[_0xa2416e(0x302)](_0x2a5283),_0x17fc94=_0x1df8dd!==0x0?_0x385f4b[_0xa2416e(0x3a7)](_0x1df8dd):EmptyUint8Array;return _0x20bc48['convert'](yield*_0x44dc7e(_0x17fc94));},_0x1e6c3d=(_0x4ac57d,_0x5a6eef)=>{const _0x3906cb=_0x43986a;let _0x478ee1=_0x20bc48[_0x3906cb(0x37c)](_0x4ac57d);return _0x5a6eef[_0x4b0dc6[_0x3906cb(0x204)]]=_0x4b0dc6['back'](_0x478ee1[_0x3906cb(0x2c0)]),_0x478ee1;}):(_0xac192f=function*(_0x4205c3,_0x5e5e13,{dependencies:_0x2bb195}){const _0x13bd5f=_0x43986a;let _0x10e140=_0x2bb195[_0x4b0dc6[_0x13bd5f(0x204)]],_0x4c954f=_0x4b0dc6[_0x13bd5f(0x302)](_0x10e140);return _0x4c954f!==0x0?_0x5e5e13[_0x13bd5f(0x3a7)](_0x4c954f):EmptyUint8Array;},_0x1e6c3d=(_0x36fd90,_0x49f55a)=>{const _0x2f4ad4=_0x43986a;let _0x5dcc4d=_0x36fd90;return _0x49f55a[_0x4b0dc6[_0x2f4ad4(0x204)]]=_0x4b0dc6[_0x2f4ad4(0x37c)](_0x5dcc4d[_0x2f4ad4(0x2c0)]),_0x5dcc4d;}),field(0x0,_0x43986a(0x301),_0x48b7ce=>_0x48b7ce,_0xac192f,{'init':_0x1e6c3d});}var ExactReadableEndedError=class extends Error{constructor(){const _0x1f0392=_0xa5ca61;super(_0x1f0392(0x1f8));}},Uint8ArrayExactReadable=class{#data;#position;get[_0xa5ca61(0x3ab)](){return this.#position;}constructor(_0x1b2f53){this.#data=_0x1b2f53,this.#position=0x0;}[_0xa5ca61(0x3a7)](_0x4c0f40){const _0x219407=_0xa5ca61;if(this.#position+_0x4c0f40>this.#data['length'])throw new ExactReadableEndedError();let _0x460bac=this.#data[_0x219407(0x35e)](this.#position,this.#position+_0x4c0f40);return this.#position+=_0x4c0f40,_0x460bac;}},StructDeserializeError=class extends Error{constructor(_0x5b5ced){super(_0x5b5ced);}},StructNotEnoughDataError=class extends StructDeserializeError{constructor(){const _0x5c25ca=_0xa5ca61;super(_0x5c25ca(0x1c4));}},StructEmptyError=class extends StructDeserializeError{constructor(){const _0x371062=_0xa5ca61;super(_0x371062(0x1e8));}};function struct(_0x7070,_0x330655){const _0x227460=_0xa5ca61;let _0x1c8024=Object['entries'](_0x7070),_0x1e5826=0x0,_0x25d08c=!0x0;for(let [,_0x25da5f]of _0x1c8024)_0x1e5826+=_0x25da5f[_0x227460(0x24c)],_0x25d08c&&_0x25da5f[_0x227460(0x2d4)]!==_0x227460(0x320)&&(_0x25d08c=!0x1);let _0x1d7776=_0x330655['littleEndian'],_0x35953e=_0x330655[_0x227460(0x313)]?Object[_0x227460(0x2cb)](_0x330655[_0x227460(0x313)]):void 0x0;return{'littleEndian':_0x1d7776,'fields':_0x7070,'extra':_0x330655['extra'],'type':_0x25d08c?_0x227460(0x320):_0x227460(0x301),'size':_0x1e5826,'serialize'(_0x1b7994,_0x1c3812){const _0x56756b=_0x227460;var _0xa51a72;let _0x56c6fb={..._0x1b7994};for(let [_0x2b446f,_0x2b3397]of _0x1c8024)if(_0x2b446f in _0x56c6fb&&_0x56756b(0x275)in _0x2b3397){let _0x116f2b=(_0xa51a72=_0x2b3397[_0x56756b(0x275)])==null?void 0x0:_0xa51a72[_0x56756b(0x1f9)](_0x2b3397,_0x56c6fb[_0x2b446f],_0x56c6fb);_0x56c6fb[_0x2b446f]=_0x116f2b;}let _0x3f1102=new Array(_0x1c8024['length']),_0x39b56d=new Array(_0x1c8024[_0x56756b(0x2c0)]);{let _0xb0551d={'littleEndian':_0x1d7776};for(let [_0x4040c2,[_0x397c24,_0x3b9c28]]of _0x1c8024[_0x56756b(0x1d7)]())_0x3b9c28[_0x56756b(0x2d4)]===_0x56756b(0x320)?_0x3f1102[_0x4040c2]=_0x3b9c28[_0x56756b(0x24c)]:(_0x39b56d[_0x4040c2]=_0x3b9c28[_0x56756b(0x348)](_0x56c6fb[_0x397c24],_0xb0551d),_0x3f1102[_0x4040c2]=_0x39b56d[_0x4040c2][_0x56756b(0x2c0)]);}let _0x2178c3=_0x3f1102[_0x56756b(0x2a2)]((_0x219066,_0x3b6751)=>_0x219066+_0x3b6751,0x0),_0x465980,_0x5ef95d,_0x47d438;if(_0x1c3812 instanceof Uint8Array){if(_0x1c3812['length']<_0x2178c3)throw new Error(_0x56756b(0x383));_0x465980=!0x0,_0x5ef95d=_0x1c3812,_0x47d438=0x0;}else{if(typeof _0x1c3812=='object'&&'buffer'in _0x1c3812){if(_0x465980=!0x0,_0x5ef95d=_0x1c3812[_0x56756b(0x2bf)],_0x47d438=_0x1c3812['index']??0x0,_0x5ef95d['length']-_0x47d438<_0x2178c3)throw new Error(_0x56756b(0x383));}else _0x465980=!0x1,_0x5ef95d=new Uint8Array(_0x2178c3),_0x47d438=0x0;}let _0x2b74aa={'buffer':_0x5ef95d,'index':_0x47d438,'littleEndian':_0x1d7776};for(let [_0x2f0bbf,[_0x28af6e,_0x2a26bb]]of _0x1c8024['entries']())_0x39b56d[_0x2f0bbf]?_0x5ef95d[_0x56756b(0x2f6)](_0x39b56d[_0x2f0bbf],_0x2b74aa[_0x56756b(0x2a0)]):_0x2a26bb['serialize'](_0x56c6fb[_0x28af6e],_0x2b74aa),_0x2b74aa[_0x56756b(0x2a0)]+=_0x3f1102[_0x2f0bbf];return _0x465980?_0x2178c3:_0x5ef95d;},'deserialize':bipedal(function*(_0x42fe70,_0x2e1170){const _0x6df622=_0x227460;let _0x230a1e=_0x2e1170[_0x6df622(0x3ab)],_0xe01f40={},_0x2916c2={'dependencies':_0xe01f40,'littleEndian':_0x1d7776};try{for(let [_0x49245b,_0x3b03e6]of _0x1c8024)_0xe01f40[_0x49245b]=yield*_0x42fe70(_0x3b03e6[_0x6df622(0x3af)](_0x2e1170,_0x2916c2));}catch(_0x492d2f){throw _0x492d2f instanceof ExactReadableEndedError?_0x2e1170[_0x6df622(0x3ab)]===_0x230a1e?new StructEmptyError():new StructNotEnoughDataError():_0x492d2f;}return _0x35953e&&Object[_0x6df622(0x23b)](_0xe01f40,_0x35953e),_0x330655[_0x6df622(0x1dd)]?_0x330655[_0x6df622(0x1dd)]['call'](_0xe01f40,_0xe01f40):_0xe01f40;})};}function extend(_0x416c94,_0x3dfd92,_0x220a46){const _0x541e96=_0xa5ca61;return struct(Object['assign']({},_0x416c94[_0x541e96(0x1cf)],_0x3dfd92),{'littleEndian':(_0x220a46==null?void 0x0:_0x220a46['littleEndian'])??_0x416c94['littleEndian'],'extra':_0x416c94[_0x541e96(0x313)],'postDeserialize':_0x220a46==null?void 0x0:_0x220a46[_0x541e96(0x1dd)]});}function getInt32(_0x2b18f0,_0x5c8464,_0x27abda){return _0x27abda?_0x2b18f0[_0x5c8464]|_0x2b18f0[_0x5c8464+0x1]<<0x8|_0x2b18f0[_0x5c8464+0x2]<<0x10|_0x2b18f0[_0x5c8464+0x3]<<0x18:_0x2b18f0[_0x5c8464]<<0x18|_0x2b18f0[_0x5c8464+0x1]<<0x10|_0x2b18f0[_0x5c8464+0x2]<<0x8|_0x2b18f0[_0x5c8464+0x3];}function setInt32(_0x312201,_0x22d6fa,_0x125a9a,_0x34304d){_0x34304d?(_0x312201[_0x22d6fa]=_0x125a9a,_0x312201[_0x22d6fa+0x1]=_0x125a9a>>0x8,_0x312201[_0x22d6fa+0x2]=_0x125a9a>>0x10,_0x312201[_0x22d6fa+0x3]=_0x125a9a>>0x18):(_0x312201[_0x22d6fa]=_0x125a9a>>0x18,_0x312201[_0x22d6fa+0x1]=_0x125a9a>>0x10,_0x312201[_0x22d6fa+0x2]=_0x125a9a>>0x8,_0x312201[_0x22d6fa+0x3]=_0x125a9a);}function setInt64LittleEndian(_0x37c01c,_0x32f9d2,_0x1bfe15){_0x37c01c[_0x32f9d2]=Number(_0x1bfe15&0xffn),_0x37c01c[_0x32f9d2+0x1]=Number(_0x1bfe15>>0x8n&0xffn),_0x37c01c[_0x32f9d2+0x2]=Number(_0x1bfe15>>0x10n&0xffn),_0x37c01c[_0x32f9d2+0x3]=Number(_0x1bfe15>>0x18n&0xffn),_0x37c01c[_0x32f9d2+0x4]=Number(_0x1bfe15>>0x20n&0xffn),_0x37c01c[_0x32f9d2+0x5]=Number(_0x1bfe15>>0x28n&0xffn),_0x37c01c[_0x32f9d2+0x6]=Number(_0x1bfe15>>0x30n&0xffn),_0x37c01c[_0x32f9d2+0x7]=Number(_0x1bfe15>>0x38n&0xffn);}function setInt64BigEndian(_0x362cf7,_0x209b2d,_0x27f37c){_0x362cf7[_0x209b2d]=Number(_0x27f37c>>0x38n&0xffn),_0x362cf7[_0x209b2d+0x1]=Number(_0x27f37c>>0x30n&0xffn),_0x362cf7[_0x209b2d+0x2]=Number(_0x27f37c>>0x28n&0xffn),_0x362cf7[_0x209b2d+0x3]=Number(_0x27f37c>>0x20n&0xffn),_0x362cf7[_0x209b2d+0x4]=Number(_0x27f37c>>0x18n&0xffn),_0x362cf7[_0x209b2d+0x5]=Number(_0x27f37c>>0x10n&0xffn),_0x362cf7[_0x209b2d+0x6]=Number(_0x27f37c>>0x8n&0xffn),_0x362cf7[_0x209b2d+0x7]=Number(_0x27f37c&0xffn);}function getUint32LittleEndian(_0x18c98a,_0x5dc122){return(_0x18c98a[_0x5dc122]|_0x18c98a[_0x5dc122+0x1]<<0x8|_0x18c98a[_0x5dc122+0x2]<<0x10|_0x18c98a[_0x5dc122+0x3]<<0x18)>>>0x0;}function getUint32(_0x58e68c,_0x300edb,_0x185118){return _0x185118?(_0x58e68c[_0x300edb]|_0x58e68c[_0x300edb+0x1]<<0x8|_0x58e68c[_0x300edb+0x2]<<0x10|_0x58e68c[_0x300edb+0x3]<<0x18)>>>0x0:(_0x58e68c[_0x300edb]<<0x18|_0x58e68c[_0x300edb+0x1]<<0x10|_0x58e68c[_0x300edb+0x2]<<0x8|_0x58e68c[_0x300edb+0x3])>>>0x0;}function setUint32LittleEndian(_0x25c169,_0x3eeb72,_0x1b126e){_0x25c169[_0x3eeb72]=_0x1b126e,_0x25c169[_0x3eeb72+0x1]=_0x1b126e>>0x8,_0x25c169[_0x3eeb72+0x2]=_0x1b126e>>0x10,_0x25c169[_0x3eeb72+0x3]=_0x1b126e>>0x18;}function setUint32(_0x5dff6c,_0x23828,_0x2c1cea,_0x930eb6){_0x930eb6?(_0x5dff6c[_0x23828]=_0x2c1cea,_0x5dff6c[_0x23828+0x1]=_0x2c1cea>>0x8,_0x5dff6c[_0x23828+0x2]=_0x2c1cea>>0x10,_0x5dff6c[_0x23828+0x3]=_0x2c1cea>>0x18):(_0x5dff6c[_0x23828]=_0x2c1cea>>0x18,_0x5dff6c[_0x23828+0x1]=_0x2c1cea>>0x10,_0x5dff6c[_0x23828+0x2]=_0x2c1cea>>0x8,_0x5dff6c[_0x23828+0x3]=_0x2c1cea);}function getUint64BigEndian(_0x15cd7e,_0xc4e0ff){return BigInt(_0x15cd7e[_0xc4e0ff])<<0x38n|BigInt(_0x15cd7e[_0xc4e0ff+0x1])<<0x30n|BigInt(_0x15cd7e[_0xc4e0ff+0x2])<<0x28n|BigInt(_0x15cd7e[_0xc4e0ff+0x3])<<0x20n|BigInt(_0x15cd7e[_0xc4e0ff+0x4])<<0x18n|BigInt(_0x15cd7e[_0xc4e0ff+0x5])<<0x10n|BigInt(_0x15cd7e[_0xc4e0ff+0x6])<<0x8n|BigInt(_0x15cd7e[_0xc4e0ff+0x7]);}function getUint64(_0x3c6bb1,_0x265dbe,_0x591930){return _0x591930?BigInt(_0x3c6bb1[_0x265dbe])|BigInt(_0x3c6bb1[_0x265dbe+0x1])<<0x8n|BigInt(_0x3c6bb1[_0x265dbe+0x2])<<0x10n|BigInt(_0x3c6bb1[_0x265dbe+0x3])<<0x18n|BigInt(_0x3c6bb1[_0x265dbe+0x4])<<0x20n|BigInt(_0x3c6bb1[_0x265dbe+0x5])<<0x28n|BigInt(_0x3c6bb1[_0x265dbe+0x6])<<0x30n|BigInt(_0x3c6bb1[_0x265dbe+0x7])<<0x38n:BigInt(_0x3c6bb1[_0x265dbe])<<0x38n|BigInt(_0x3c6bb1[_0x265dbe+0x1])<<0x30n|BigInt(_0x3c6bb1[_0x265dbe+0x2])<<0x28n|BigInt(_0x3c6bb1[_0x265dbe+0x3])<<0x20n|BigInt(_0x3c6bb1[_0x265dbe+0x4])<<0x18n|BigInt(_0x3c6bb1[_0x265dbe+0x5])<<0x10n|BigInt(_0x3c6bb1[_0x265dbe+0x6])<<0x8n|BigInt(_0x3c6bb1[_0x265dbe+0x7]);}function setUint64(_0x41f625,_0x87dd75,_0x146f0e,_0x30a07e){_0x30a07e?(_0x41f625[_0x87dd75]=Number(_0x146f0e&0xffn),_0x41f625[_0x87dd75+0x1]=Number(_0x146f0e>>0x8n&0xffn),_0x41f625[_0x87dd75+0x2]=Number(_0x146f0e>>0x10n&0xffn),_0x41f625[_0x87dd75+0x3]=Number(_0x146f0e>>0x18n&0xffn),_0x41f625[_0x87dd75+0x4]=Number(_0x146f0e>>0x20n&0xffn),_0x41f625[_0x87dd75+0x5]=Number(_0x146f0e>>0x28n&0xffn),_0x41f625[_0x87dd75+0x6]=Number(_0x146f0e>>0x30n&0xffn),_0x41f625[_0x87dd75+0x7]=Number(_0x146f0e>>0x38n&0xffn)):(_0x41f625[_0x87dd75]=Number(_0x146f0e>>0x38n&0xffn),_0x41f625[_0x87dd75+0x1]=Number(_0x146f0e>>0x30n&0xffn),_0x41f625[_0x87dd75+0x2]=Number(_0x146f0e>>0x28n&0xffn),_0x41f625[_0x87dd75+0x3]=Number(_0x146f0e>>0x20n&0xffn),_0x41f625[_0x87dd75+0x4]=Number(_0x146f0e>>0x18n&0xffn),_0x41f625[_0x87dd75+0x5]=Number(_0x146f0e>>0x10n&0xffn),_0x41f625[_0x87dd75+0x6]=Number(_0x146f0e>>0x8n&0xffn),_0x41f625[_0x87dd75+0x7]=Number(_0x146f0e&0xffn));}function number(_0x133854,_0x1281ff,_0x572f78){const _0x5c78fe=_0xa5ca61;let _0x4b889c=()=>_0x4b889c;return Object[_0x5c78fe(0x295)](_0x4b889c,field(_0x133854,_0x5c78fe(0x320),_0x1281ff,_0x572f78)),_0x4b889c;}var u8=number(0x1,(_0x1b90c2,{buffer:_0xb1c6da,index:_0x226628})=>{_0xb1c6da[_0x226628]=_0x1b90c2;},function*(_0x2fd56b,_0x7280b4){const _0x1ed50d=_0xa5ca61;return(yield*_0x2fd56b(_0x7280b4[_0x1ed50d(0x3a7)](0x1)))[0x0];}),u32=number(0x4,(_0x3f1046,{buffer:_0x43bb5d,index:_0x440cd9,littleEndian:_0x4ab16e})=>{setUint32(_0x43bb5d,_0x440cd9,_0x3f1046,_0x4ab16e);},function*(_0x4f394f,_0x2c51a8,{littleEndian:_0x9fef49}){const _0x413c12=_0xa5ca61;let _0xc1bf8e=yield*_0x4f394f(_0x2c51a8[_0x413c12(0x3a7)](0x4));return getUint32(_0xc1bf8e,0x0,_0x9fef49);}),s32=number(0x4,(_0x14ada9,{buffer:_0x160ea4,index:_0x1e017f,littleEndian:_0x48a389})=>{setInt32(_0x160ea4,_0x1e017f,_0x14ada9,_0x48a389);},function*(_0x497c5c,_0x1464cf,{littleEndian:_0x5e4ac6}){const _0x5b67a9=_0xa5ca61;let _0x40459a=yield*_0x497c5c(_0x1464cf[_0x5b67a9(0x3a7)](0x4));return getInt32(_0x40459a,0x0,_0x5e4ac6);}),u64=number(0x8,(_0x24d235,{buffer:_0x5da6db,index:_0x1f9e48,littleEndian:_0x2226ad})=>{setUint64(_0x5da6db,_0x1f9e48,_0x24d235,_0x2226ad);},function*(_0x1b2863,_0x3a8e97,{littleEndian:_0x2170a4}){const _0xa70f10=_0xa5ca61;let _0x11c756=yield*_0x1b2863(_0x3a8e97[_0xa70f10(0x3a7)](0x8));return getUint64(_0x11c756,0x0,_0x2170a4);}),{TextEncoder,TextDecoder}=globalThis,SharedEncoder=new TextEncoder(),SharedDecoder=new TextDecoder();function encodeUtf8(_0x35d339){return SharedEncoder['encode'](_0x35d339);}function decodeUtf8(_0x1b1439){return SharedDecoder['decode'](_0x1b1439);}var string=_0x1174d8=>{let _0xc80b4e=buffer(_0x1174d8,{'convert':decodeUtf8,'back':encodeUtf8});return _0xc80b4e['as']=()=>_0xc80b4e,_0xc80b4e;},{AbortController}=globalThis,ReadableStream=((()=>{const _0x19112c=_0xa5ca61;let {ReadableStream:_0x34cae3}=globalThis;return _0x34cae3[_0x19112c(0x2ea)]||(_0x34cae3[_0x19112c(0x2ea)]=function(_0x857296){const _0x1199f3=_0x19112c;let _0x4478d2=Symbol[_0x1199f3(0x345)]in _0x857296?_0x857296[Symbol[_0x1199f3(0x345)]]():_0x857296[Symbol['iterator']]();return new _0x34cae3({async 'pull'(_0x2bc5d6){const _0x5f4fee=_0x1199f3;let _0x2c4bf1=await _0x4478d2[_0x5f4fee(0x1e9)]();if(_0x2c4bf1[_0x5f4fee(0x34d)]){_0x2bc5d6[_0x5f4fee(0x1d4)]();return;}_0x2bc5d6[_0x5f4fee(0x226)](_0x2c4bf1['value']);},async 'cancel'(_0x3a1f92){const _0x5763fb=_0x1199f3;var _0x38457f;await((_0x38457f=_0x4478d2[_0x5763fb(0x340)])==null?void 0x0:_0x38457f[_0x5763fb(0x1f9)](_0x4478d2,_0x3a1f92));}});}),(!_0x34cae3['prototype'][Symbol[_0x19112c(0x345)]]||!_0x34cae3[_0x19112c(0x2fa)][_0x19112c(0x1ce)])&&(_0x34cae3['prototype']['values']=async function*(_0x2ccab1){const _0x5c068a=_0x19112c;let _0x9a9537=this[_0x5c068a(0x325)]();try{for(;;){let {done:_0x3ad884,value:_0xdd43a8}=await _0x9a9537[_0x5c068a(0x1d8)]();if(_0x3ad884)return;yield _0xdd43a8;}}finally{_0x2ccab1!=null&&_0x2ccab1[_0x5c068a(0x386)]||await _0x9a9537[_0x5c068a(0x32d)](),_0x9a9537[_0x5c068a(0x390)]();}},_0x34cae3[_0x19112c(0x2fa)][Symbol[_0x19112c(0x345)]]=_0x34cae3[_0x19112c(0x2fa)][_0x19112c(0x1ce)]),_0x34cae3;})()),{WritableStream,TransformStream}=globalThis,PushReadableStream=class extends ReadableStream{constructor(_0x27899b,_0x53278c,_0x5e993b){let _0x2bd3f3,_0x4cb63c=!0x1,_0x4a495e=new AbortController();super({'start':_0x263dca=>{const _0x5ac3e3=_0x1ffc;let _0x4e212c=_0x27899b({'abortSignal':_0x4a495e[_0x5ac3e3(0x22e)],'enqueue':async _0x5801b9=>{const _0x42a584=_0x5ac3e3;if(_0x5e993b==null||_0x5e993b({'source':_0x42a584(0x2c2),'operation':_0x42a584(0x226),'value':_0x5801b9,'phase':_0x42a584(0x235)}),_0x4a495e[_0x42a584(0x22e)][_0x42a584(0x38d)]){_0x5e993b==null||_0x5e993b({'source':_0x42a584(0x2c2),'operation':_0x42a584(0x226),'value':_0x5801b9,'phase':_0x42a584(0x319)});return;}if(_0x263dca[_0x42a584(0x220)]===null){_0x263dca[_0x42a584(0x226)](_0x5801b9);return;}if(_0x4cb63c){_0x4cb63c=!0x1,_0x263dca[_0x42a584(0x226)](_0x5801b9),_0x5e993b==null||_0x5e993b({'source':_0x42a584(0x2c2),'operation':_0x42a584(0x226),'value':_0x5801b9,'phase':'complete'});return;}if(_0x263dca[_0x42a584(0x220)]<=0x0&&(_0x5e993b==null||_0x5e993b({'source':_0x42a584(0x2c2),'operation':_0x42a584(0x226),'value':_0x5801b9,'phase':_0x42a584(0x3ae)}),_0x2bd3f3=new PromiseResolver(),await _0x2bd3f3[_0x42a584(0x1f0)],_0x4a495e[_0x42a584(0x22e)][_0x42a584(0x38d)])){_0x5e993b==null||_0x5e993b({'source':_0x42a584(0x2c2),'operation':_0x42a584(0x226),'value':_0x5801b9,'phase':_0x42a584(0x319)});return;}_0x263dca[_0x42a584(0x226)](_0x5801b9),_0x5e993b==null||_0x5e993b({'source':_0x42a584(0x2c2),'operation':_0x42a584(0x226),'value':_0x5801b9,'phase':_0x42a584(0x2fd)});},'close'(){const _0x1aad0a=_0x5ac3e3;if(_0x5e993b==null||_0x5e993b({'source':_0x1aad0a(0x2c2),'operation':_0x1aad0a(0x1d4),'explicit':!0x0,'phase':_0x1aad0a(0x235)}),_0x4a495e[_0x1aad0a(0x22e)]['aborted']){_0x5e993b==null||_0x5e993b({'source':_0x1aad0a(0x2c2),'operation':_0x1aad0a(0x1d4),'explicit':!0x0,'phase':_0x1aad0a(0x319)});return;}_0x263dca[_0x1aad0a(0x1d4)](),_0x5e993b==null||_0x5e993b({'source':_0x1aad0a(0x2c2),'operation':'close','explicit':!0x0,'phase':_0x1aad0a(0x2fd)});},'error'(_0x16751a){const _0x1ffc14=_0x5ac3e3;_0x5e993b==null||_0x5e993b({'source':_0x1ffc14(0x2c2),'operation':_0x1ffc14(0x20d),'explicit':!0x0,'phase':_0x1ffc14(0x235)}),_0x263dca[_0x1ffc14(0x20d)](_0x16751a),_0x5e993b==null||_0x5e993b({'source':_0x1ffc14(0x2c2),'operation':_0x1ffc14(0x20d),'explicit':!0x0,'phase':_0x1ffc14(0x2fd)});}});_0x4e212c&&_0x5ac3e3(0x298)in _0x4e212c&&_0x4e212c[_0x5ac3e3(0x298)](()=>{const _0x52e935=_0x5ac3e3;_0x5e993b==null||_0x5e993b({'source':_0x52e935(0x2c2),'operation':_0x52e935(0x1d4),'explicit':!0x1,'phase':_0x52e935(0x235)});try{_0x263dca[_0x52e935(0x1d4)](),_0x5e993b==null||_0x5e993b({'source':'producer','operation':_0x52e935(0x1d4),'explicit':!0x1,'phase':_0x52e935(0x2fd)});}catch{_0x5e993b==null||_0x5e993b({'source':'producer','operation':'close','explicit':!0x1,'phase':_0x52e935(0x319)});}},_0x1d5857=>{const _0x43d69c=_0x5ac3e3;_0x5e993b==null||_0x5e993b({'source':_0x43d69c(0x2c2),'operation':_0x43d69c(0x20d),'explicit':!0x1,'phase':_0x43d69c(0x235)}),_0x263dca['error'](_0x1d5857),_0x5e993b==null||_0x5e993b({'source':_0x43d69c(0x2c2),'operation':_0x43d69c(0x20d),'explicit':!0x1,'phase':_0x43d69c(0x2fd)});});},'pull':()=>{const _0x2828bc=_0x1ffc;_0x5e993b==null||_0x5e993b({'source':'consumer','operation':_0x2828bc(0x1e0),'phase':_0x2828bc(0x235)}),_0x2bd3f3?_0x2bd3f3[_0x2828bc(0x2ac)]():(_0x53278c==null?void 0x0:_0x53278c[_0x2828bc(0x346)])===0x0&&(_0x4cb63c=!0x0),_0x5e993b==null||_0x5e993b({'source':'consumer','operation':'pull','phase':_0x2828bc(0x2fd)});},'cancel':_0x36c08d=>{const _0xa371ea=_0x1ffc;_0x5e993b==null||_0x5e993b({'source':_0xa371ea(0x289),'operation':'cancel','phase':'start'}),_0x4a495e['abort'](_0x36c08d),_0x2bd3f3==null||_0x2bd3f3[_0xa371ea(0x2ac)](),_0x5e993b==null||_0x5e993b({'source':_0xa371ea(0x289),'operation':_0xa371ea(0x32d),'phase':_0xa371ea(0x2fd)});}},_0x53278c);}};function tryClose(_0x25592e){const _0x526c67=_0xa5ca61;try{return _0x25592e[_0x526c67(0x1d4)](),!0x0;}catch{return!0x1;}}async function tryCancel(_0x5f1dda){const _0x4ad2e8=_0xa5ca61;try{return await _0x5f1dda[_0x4ad2e8(0x32d)](),!0x0;}catch{return!0x1;}}var BufferedReadableStream=class{#buffered;#bufferedOffset=0x0;#bufferedLength=0x0;#position=0x0;get['position'](){return this.#position;}['stream'];[_0xa5ca61(0x21f)];constructor(_0x4ee41b){const _0x4d59b9=_0xa5ca61;this[_0x4d59b9(0x369)]=_0x4ee41b,this[_0x4d59b9(0x21f)]=_0x4ee41b[_0x4d59b9(0x325)]();}#readBuffered(_0x409bfd){const _0x3ce818=_0xa5ca61;if(!this.#buffered)return;let _0x5c060b=this.#buffered[_0x3ce818(0x35e)](this.#bufferedOffset,this.#bufferedOffset+_0x409bfd);return this.#bufferedLength>_0x409bfd?(this.#position+=_0x409bfd,this.#bufferedOffset+=_0x409bfd,this.#bufferedLength-=_0x409bfd,_0x5c060b):(this.#position+=this.#bufferedLength,this.#buffered=void 0x0,this.#bufferedOffset=0x0,this.#bufferedLength=0x0,_0x5c060b);}async #readSource(_0x45278c){const _0x360a2b=_0xa5ca61;let {done:_0x4c3a91,value:_0x30b17f}=await this[_0x360a2b(0x21f)][_0x360a2b(0x1d8)]();if(_0x4c3a91)throw new ExactReadableEndedError();return _0x30b17f[_0x360a2b(0x2c0)]>_0x45278c?(this.#buffered=_0x30b17f,this.#bufferedOffset=_0x45278c,this.#bufferedLength=_0x30b17f[_0x360a2b(0x2c0)]-_0x45278c,this.#position+=_0x45278c,_0x30b17f['subarray'](0x0,_0x45278c)):(this.#position+=_0x30b17f[_0x360a2b(0x2c0)],_0x30b17f);}[_0xa5ca61(0x399)](_0x26feec){let _0x416a87=this.#buffered?0x0:0x1;return{'next':()=>{const _0x17d405=_0x1ffc;switch(_0x416a87){case 0x0:{let _0x3c143e=this.#readBuffered(_0x26feec);return _0x3c143e[_0x17d405(0x2c0)]===_0x26feec?_0x416a87=0x2:(_0x26feec-=_0x3c143e[_0x17d405(0x2c0)],_0x416a87=0x1),{'done':!0x1,'value':_0x3c143e};}case 0x1:return _0x416a87=0x3,{'done':!0x1,'value':this.#readSource(_0x26feec)[_0x17d405(0x298)](_0x2d67d3=>(_0x2d67d3[_0x17d405(0x2c0)]===_0x26feec?_0x416a87=0x2:(_0x26feec-=_0x2d67d3[_0x17d405(0x2c0)],_0x416a87=0x1),_0x2d67d3))};case 0x2:return{'done':!0x0,'value':void 0x0};case 0x3:throw new Error(_0x17d405(0x240));default:throw new Error('unreachable');}}};}['readExactly']=bipedal(function*(then,length){const _0x1d4b88=_0xa5ca61;let result,index=0x0,initial=this.#readBuffered(length);if(initial){if(initial['length']===length)return initial;result=new Uint8Array(length),result[_0x1d4b88(0x2f6)](initial,index),index+=initial[_0x1d4b88(0x2c0)],length-=initial['length'];}else result=new Uint8Array(length);for(;length>0x0;){let value=yield*then(this.#readSource(length));result[_0x1d4b88(0x2f6)](value,index),index+=value[_0x1d4b88(0x2c0)],length-=value[_0x1d4b88(0x2c0)];}return result;});[_0xa5ca61(0x251)](){const _0x339b64=_0xa5ca61;return this.#bufferedLength>0x0?new PushReadableStream(async _0x3c3458=>{const _0x23c254=_0x1ffc;let _0x776c5b=this.#buffered[_0x23c254(0x35e)](this.#bufferedOffset);for(await _0x3c3458['enqueue'](_0x776c5b),_0x3c3458[_0x23c254(0x395)][_0x23c254(0x31b)](_0x23c254(0x359),()=>{const _0x482032=_0x23c254;tryCancel(this[_0x482032(0x21f)]);});;){let {done:_0x3f6f71,value:_0x11f557}=await this[_0x23c254(0x21f)][_0x23c254(0x1d8)]();if(_0x3f6f71)return;await _0x3c3458['enqueue'](_0x11f557);}}):(this[_0x339b64(0x21f)][_0x339b64(0x390)](),this[_0x339b64(0x369)]);}async[_0xa5ca61(0x32d)](_0x1e0550){const _0x56d807=_0xa5ca61;await this['reader'][_0x56d807(0x32d)](_0x1e0550);}},BufferedTransformStream=class{#readable;get[_0xa5ca61(0x237)](){return this.#readable;}#writable;get[_0xa5ca61(0x34c)](){return this.#writable;}constructor(_0x51f8a9){const _0x57ce0b=_0xa5ca61;let _0x175f84,_0x2b11d1,_0x2cd514=new BufferedReadableStream(new PushReadableStream(_0x3cbbcd=>{_0x175f84=_0x3cbbcd;}));this.#readable=new ReadableStream({async 'pull'(_0x1fc010){const _0x2168b2=_0x1ffc;try{let _0x1b6d6e=await _0x51f8a9(_0x2cd514);_0x1fc010['enqueue'](_0x1b6d6e);}catch(_0x523dd7){if(_0x523dd7 instanceof StructEmptyError){_0x1fc010[_0x2168b2(0x1d4)]();return;}throw _0x523dd7;}},'cancel':_0x1968d7=>_0x2b11d1[_0x57ce0b(0x20d)](_0x1968d7)}),this.#writable=new WritableStream({'start'(_0x5b3d7c){_0x2b11d1=_0x5b3d7c;},async 'write'(_0x3111a6){const _0x41000b=_0x57ce0b;await _0x175f84[_0x41000b(0x226)](_0x3111a6);},'abort'(){const _0x27b8ef=_0x57ce0b;_0x175f84[_0x27b8ef(0x1d4)]();},'close'(){const _0x4a62bd=_0x57ce0b;_0x175f84[_0x4a62bd(0x1d4)]();}});}},ConcatStringStream=class{#result='';#resolver=new PromiseResolver();#writable=new WritableStream({'write':chunk=>{this.#result+=chunk;},'close':()=>{const _0xb16b82=_0xa5ca61;this.#resolver[_0xb16b82(0x2ac)](this.#result),this.#readableController['enqueue'](this.#result),this.#readableController['close']();},'abort':reason=>{const _0x45f37b=_0xa5ca61;this.#resolver[_0x45f37b(0x21a)](reason),this.#readableController['error'](reason);}});get[_0xa5ca61(0x34c)](){return this.#writable;}#readableController;#readable=new ReadableStream({'start':controller=>{this.#readableController=controller;}});get[_0xa5ca61(0x237)](){return this.#readable;}constructor(){const _0x48a251=_0xa5ca61;Object[_0x48a251(0x23b)](this.#readable,{'then':{'get':()=>this.#resolver['promise'][_0x48a251(0x298)]['bind'](this.#resolver[_0x48a251(0x1f0)])},'catch':{'get':()=>this.#resolver['promise'][_0x48a251(0x279)][_0x48a251(0x2ec)](this.#resolver['promise'])},'finally':{'get':()=>this.#resolver[_0x48a251(0x1f0)][_0x48a251(0x32e)][_0x48a251(0x2ec)](this.#resolver[_0x48a251(0x1f0)])}});}},ConcatBufferStream=class{#segments=[];#resolver=new PromiseResolver();#writable=new WritableStream({'write':chunk=>{this.#segments['push'](chunk);},'close':()=>{const _0xb6fc21=_0xa5ca61;let result,offset=0x0;switch(this.#segments[_0xb6fc21(0x2c0)]){case 0x0:result=EmptyUint8Array;break;case 0x1:result=this.#segments[0x0];break;default:result=new Uint8Array(this.#segments[_0xb6fc21(0x2a2)]((prev,item)=>prev+item[_0xb6fc21(0x2c0)],0x0));for(let segment of this.#segments)result[_0xb6fc21(0x2f6)](segment,offset),offset+=segment[_0xb6fc21(0x2c0)];break;}this.#resolver[_0xb6fc21(0x2ac)](result),this.#readableController[_0xb6fc21(0x226)](result),this.#readableController[_0xb6fc21(0x1d4)]();},'abort':reason=>{const _0x1805be=_0xa5ca61;this.#resolver[_0x1805be(0x21a)](reason),this.#readableController[_0x1805be(0x20d)](reason);}});get[_0xa5ca61(0x34c)](){return this.#writable;}#readableController;#readable=new ReadableStream({'start':controller=>{this.#readableController=controller;}});get['readable'](){return this.#readable;}constructor(){const _0x46ac9e=_0xa5ca61;Object[_0x46ac9e(0x23b)](this.#readable,{'then':{'get':()=>this.#resolver[_0x46ac9e(0x1f0)][_0x46ac9e(0x298)][_0x46ac9e(0x2ec)](this.#resolver[_0x46ac9e(0x1f0)])},'catch':{'get':()=>this.#resolver[_0x46ac9e(0x1f0)]['catch'][_0x46ac9e(0x2ec)](this.#resolver[_0x46ac9e(0x1f0)])},'finally':{'get':()=>this.#resolver[_0x46ac9e(0x1f0)]['finally'][_0x46ac9e(0x2ec)](this.#resolver[_0x46ac9e(0x1f0)])}});}},ConsumableReadableStream=class _ConsumableReadableStream extends ReadableStream{static async[_0xa5ca61(0x226)](_0x2b2f02,_0x444d22){const _0x1a0eca=_0xa5ca61;let _0xdce053=new Consumable(_0x444d22);_0x2b2f02[_0x1a0eca(0x226)](_0xdce053),await _0xdce053[_0x1a0eca(0x382)];}constructor(_0x44d847,_0x5513dc){const _0x25b0e6=_0xa5ca61;let _0x159d16,_0x1775eb;_0x5513dc&&(_0x1775eb={},'highWaterMark'in _0x5513dc&&(_0x1775eb[_0x25b0e6(0x346)]=_0x5513dc['highWaterMark']),_0x25b0e6(0x24c)in _0x5513dc&&(_0x1775eb[_0x25b0e6(0x24c)]=_0x3d8562=>_0x5513dc[_0x25b0e6(0x24c)](_0x3d8562['value']))),super({'start'(_0x470db6){const _0x111d98=_0x25b0e6;var _0x396b05;return _0x159d16={'enqueue'(_0x5b6b23){const _0x88088f=_0x1ffc;return _ConsumableReadableStream[_0x88088f(0x226)](_0x470db6,_0x5b6b23);},'close'(){_0x470db6['close']();},'error'(_0x4cc7e3){_0x470db6['error'](_0x4cc7e3);}},(_0x396b05=_0x44d847[_0x111d98(0x235)])==null?void 0x0:_0x396b05[_0x111d98(0x1f9)](_0x44d847,_0x159d16);},'pull'(){const _0x1b8352=_0x25b0e6;var _0x573735;return(_0x573735=_0x44d847[_0x1b8352(0x1e0)])==null?void 0x0:_0x573735[_0x1b8352(0x1f9)](_0x44d847,_0x159d16);},'cancel'(_0x1758ab){const _0x8d2286=_0x25b0e6;var _0x422605;return(_0x422605=_0x44d847['cancel'])==null?void 0x0:_0x422605[_0x8d2286(0x1f9)](_0x44d847,_0x1758ab);}},_0x1775eb);}},ConsumableWrapByteReadableStream=class extends ReadableStream{constructor(_0x2823e7,_0x1b15db,_0x1f599e){const _0x4591bc=_0xa5ca61;let _0x452aef=_0x2823e7['getReader']({'mode':_0x4591bc(0x320)}),_0x501e60=new Uint8Array(_0x1b15db);super({async 'pull'(_0x51e474){const _0x3c4bd2=_0x4591bc;let {done:_0x171a39,value:_0x3c3310}=await _0x452aef[_0x3c4bd2(0x1d8)](_0x501e60,{'min':_0x1f599e});if(_0x171a39){_0x51e474['close']();return;}await ConsumableReadableStream['enqueue'](_0x51e474,_0x3c3310),_0x501e60=new Uint8Array(_0x3c3310[_0x3c4bd2(0x2bf)]);},'cancel'(_0x209b4b){return _0x452aef['cancel'](_0x209b4b);}});}},ConsumableWrapWritableStream=class extends WritableStream{constructor(_0x3c7573){const _0x3ea422=_0xa5ca61;let _0x86b78=_0x3c7573[_0x3ea422(0x391)]();super({'write'(_0x49880c){const _0x3cbfda=_0x3ea422;return _0x49880c[_0x3cbfda(0x1ed)](_0xce8d7d=>_0x86b78[_0x3cbfda(0x286)](_0xce8d7d));},'abort'(_0x5e514b){const _0x5e10a9=_0x3ea422;return _0x86b78[_0x5e10a9(0x359)](_0x5e514b);},'close'(){const _0x1f0e25=_0x3ea422;return _0x86b78[_0x1f0e25(0x1d4)]();}});}},ConsumableWritableStream=class extends WritableStream{static async[_0xa5ca61(0x286)](_0xa198d7,_0x4907b6){const _0x3d5850=_0xa5ca61;let _0x2206be=new Consumable(_0x4907b6);await _0xa198d7['write'](_0x2206be),await _0x2206be[_0x3d5850(0x382)];}constructor(_0x499b06,_0x45223f){const _0x2bb758=_0xa5ca61;let _0x35438f;_0x45223f&&(_0x35438f={},_0x2bb758(0x346)in _0x45223f&&(_0x35438f[_0x2bb758(0x346)]=_0x45223f[_0x2bb758(0x346)]),'size'in _0x45223f&&(_0x35438f[_0x2bb758(0x24c)]=_0xd48a55=>_0x45223f[_0x2bb758(0x24c)](_0xd48a55 instanceof Consumable?_0xd48a55[_0x2bb758(0x367)]:_0xd48a55))),super({'start'(_0x3365c1){const _0x3c2d3d=_0x2bb758;var _0x391d02;return(_0x391d02=_0x499b06[_0x3c2d3d(0x235)])==null?void 0x0:_0x391d02['call'](_0x499b06,_0x3365c1);},'write'(_0x47177e,_0x4589af){const _0x2ab7fc=_0x2bb758;return _0x47177e[_0x2ab7fc(0x1ed)](_0x1164f2=>{const _0x4f54a8=_0x2ab7fc;var _0x25d496;return(_0x25d496=_0x499b06[_0x4f54a8(0x286)])==null?void 0x0:_0x25d496[_0x4f54a8(0x1f9)](_0x499b06,_0x1164f2,_0x4589af);});},'abort'(_0x3aeade){const _0x1aae7d=_0x2bb758;var _0x3bae12;return(_0x3bae12=_0x499b06['abort'])==null?void 0x0:_0x3bae12[_0x1aae7d(0x1f9)](_0x499b06,_0x3aeade);},'close'(){const _0x432b8d=_0x2bb758;var _0x3236ba;return(_0x3236ba=_0x499b06[_0x432b8d(0x1d4)])==null?void 0x0:_0x3236ba[_0x432b8d(0x1f9)](_0x499b06);}},_0x35438f);}},{console}=globalThis,createTask=((()=>{const _0x576346=_0xa5ca61;var _0x1a6b82;return((_0x1a6b82=console==null?void 0x0:console[_0x576346(0x1e6)])==null?void 0x0:_0x1a6b82[_0x576346(0x2ec)](console))??(()=>({'run'(_0xbdd34f){return _0xbdd34f();}}));})()),Consumable=class{static [_0xa5ca61(0x2ae)]=ConsumableWritableStream;static [_0xa5ca61(0x2bb)]=ConsumableWrapWritableStream;static [_0xa5ca61(0x2e1)]=ConsumableReadableStream;static [_0xa5ca61(0x3a9)]=ConsumableWrapByteReadableStream;#task;#resolver;[_0xa5ca61(0x367)];[_0xa5ca61(0x382)];constructor(_0x436566){const _0x2e7660=_0xa5ca61;this.#task=createTask('Consumable'),this[_0x2e7660(0x367)]=_0x436566,this.#resolver=new PromiseResolver(),this[_0x2e7660(0x382)]=this.#resolver['promise'];}[_0xa5ca61(0x222)](){const _0xd6a3ec=_0xa5ca61;this.#resolver[_0xd6a3ec(0x2ac)]();}[_0xa5ca61(0x20d)](_0x19523d){const _0x53b64e=_0xa5ca61;this.#resolver[_0x53b64e(0x21a)](_0x19523d);}[_0xa5ca61(0x1ed)](_0x596baf){const _0x306b46=_0xa5ca61;try{let _0x89d96f=this.#task[_0x306b46(0x2af)](()=>_0x596baf(this['value']));return isPromiseLike(_0x89d96f)?_0x89d96f=_0x89d96f[_0x306b46(0x298)](_0xc4c784=>(this.#resolver[_0x306b46(0x2ac)](),_0xc4c784),_0x5af355=>{const _0x4c5ee3=_0x306b46;throw this.#resolver[_0x4c5ee3(0x21a)](_0x5af355),_0x5af355;}):this.#resolver[_0x306b46(0x2ac)](),_0x89d96f;}catch(_0x4e405b){throw this.#resolver[_0x306b46(0x21a)](_0x4e405b),_0x4e405b;}}},maybe_consumable_exports={};__export(maybe_consumable_exports,{'WrapWritableStream':()=>MaybeConsumableWrapWritableStream,'WritableStream':()=>MaybeConsumableWritableStream,'getValue':()=>getValue,'tryConsume':()=>tryConsume});function getValue(_0x358721){const _0x5dba89=_0xa5ca61;return _0x358721 instanceof Consumable?_0x358721[_0x5dba89(0x367)]:_0x358721;}function tryConsume(_0x49ced,_0x5c9f10){const _0x1509b3=_0xa5ca61;return _0x49ced instanceof Consumable?_0x49ced[_0x1509b3(0x1ed)](_0x5c9f10):_0x5c9f10(_0x49ced);}var MaybeConsumableWrapWritableStream=class extends WritableStream{constructor(_0x5e0cde){const _0x4c7117=_0xa5ca61;let _0x523092=_0x5e0cde[_0x4c7117(0x391)]();super({'write'(_0x121421){return tryConsume(_0x121421,_0x1fefa2=>_0x523092['write'](_0x1fefa2));},'abort'(_0x2e70ce){const _0x3eeaa6=_0x4c7117;return _0x523092[_0x3eeaa6(0x359)](_0x2e70ce);},'close'(){const _0x25a3ba=_0x4c7117;return _0x523092[_0x25a3ba(0x1d4)]();}});}},MaybeConsumableWritableStream=class extends WritableStream{constructor(_0x2e7a47,_0x4f7fcf){const _0x39bd7f=_0xa5ca61;let _0x4b0ffd;_0x4f7fcf&&(_0x4b0ffd={},_0x39bd7f(0x346)in _0x4f7fcf&&(_0x4b0ffd['highWaterMark']=_0x4f7fcf['highWaterMark']),_0x39bd7f(0x24c)in _0x4f7fcf&&(_0x4b0ffd[_0x39bd7f(0x24c)]=_0x4521e4=>_0x4f7fcf[_0x39bd7f(0x24c)](_0x4521e4 instanceof Consumable?_0x4521e4['value']:_0x4521e4))),super({'start'(_0x2543b3){const _0x4afce1=_0x39bd7f;var _0x470cb9;return(_0x470cb9=_0x2e7a47[_0x4afce1(0x235)])==null?void 0x0:_0x470cb9['call'](_0x2e7a47,_0x2543b3);},'write'(_0x3a902f,_0x1eaa5e){return tryConsume(_0x3a902f,_0x5d39c9=>{const _0x330c18=_0x1ffc;var _0x2f3c55;return(_0x2f3c55=_0x2e7a47[_0x330c18(0x286)])==null?void 0x0:_0x2f3c55[_0x330c18(0x1f9)](_0x2e7a47,_0x5d39c9,_0x1eaa5e);});},'abort'(_0x7adfa9){const _0x441816=_0x39bd7f;var _0x532625;return(_0x532625=_0x2e7a47['abort'])==null?void 0x0:_0x532625[_0x441816(0x1f9)](_0x2e7a47,_0x7adfa9);},'close'(){const _0x4d523c=_0x39bd7f;var _0x177858;return(_0x177858=_0x2e7a47[_0x4d523c(0x1d4)])==null?void 0x0:_0x177858[_0x4d523c(0x1f9)](_0x2e7a47);}},_0x4b0ffd);}},BufferCombiner=class{#capacity;#buffer;#offset;#available;constructor(_0x2c9d0d){this.#capacity=_0x2c9d0d,this.#buffer=new Uint8Array(_0x2c9d0d),this.#offset=0x0,this.#available=_0x2c9d0d;}*[_0xa5ca61(0x206)](_0x12bb66){const _0x495447=_0xa5ca61;let _0x3cef82=0x0,_0x2564b3=_0x12bb66[_0x495447(0x2c0)];if(this.#offset!==0x0){if(_0x2564b3>=this.#available){if(this.#buffer[_0x495447(0x2f6)](_0x12bb66['subarray'](0x0,this.#available),this.#offset),_0x3cef82+=this.#available,_0x2564b3-=this.#available,yield this.#buffer,this.#offset=0x0,this.#available=this.#capacity,_0x2564b3===0x0)return;}else{this.#buffer[_0x495447(0x2f6)](_0x12bb66,this.#offset),this.#offset+=_0x2564b3,this.#available-=_0x2564b3;return;}}for(;_0x2564b3>=this.#capacity;){let _0xed671e=_0x3cef82+this.#capacity;yield _0x12bb66[_0x495447(0x35e)](_0x3cef82,_0xed671e),_0x3cef82=_0xed671e,_0x2564b3-=this.#capacity;}_0x2564b3>0x0&&(this.#buffer['set'](_0x12bb66['subarray'](_0x3cef82),this.#offset),this.#offset+=_0x2564b3,this.#available-=_0x2564b3);}[_0xa5ca61(0x1cc)](){const _0x474b0e=_0xa5ca61;if(this.#offset===0x0)return;let _0x19c730=this.#buffer[_0x474b0e(0x35e)](0x0,this.#offset);return this.#offset=0x0,this.#available=this.#capacity,_0x19c730;}},DistributionStream=class extends TransformStream{constructor(_0x48a038,_0x300444=!0x1){let _0x140ed1=_0x300444?new BufferCombiner(_0x48a038):void 0x0;super({async 'transform'(_0x2002c7,_0x1505b1){const _0x136d71=_0x1ffc;await maybe_consumable_exports[_0x136d71(0x1ed)](_0x2002c7,async _0x5bafff=>{const _0x51d3c1=_0x136d71;if(_0x140ed1){for(let _0x441595 of _0x140ed1[_0x51d3c1(0x206)](_0x5bafff))await Consumable['ReadableStream'][_0x51d3c1(0x226)](_0x1505b1,_0x441595);}else{let _0x594425=0x0,_0x597e98=_0x5bafff[_0x51d3c1(0x2c0)];for(;_0x597e98>0x0;){let _0x3878e4=_0x594425+_0x48a038;await Consumable['ReadableStream'][_0x51d3c1(0x226)](_0x1505b1,_0x5bafff[_0x51d3c1(0x35e)](_0x594425,_0x3878e4)),_0x594425=_0x3878e4,_0x597e98-=_0x48a038;}}});},'flush'(_0x5927a1){const _0x37b526=_0x1ffc;if(_0x140ed1){let _0x2e857f=_0x140ed1[_0x37b526(0x1cc)]();_0x2e857f&&_0x5927a1[_0x37b526(0x226)](_0x2e857f);}}});}};function getWrappedReadableStream(_0x5d26b6,_0xc25e8e){const _0x4d052c=_0xa5ca61;return _0x4d052c(0x235)in _0x5d26b6?_0x5d26b6[_0x4d052c(0x235)](_0xc25e8e):typeof _0x5d26b6==_0x4d052c(0x274)?_0x5d26b6(_0xc25e8e):_0x5d26b6;}var WrapReadableStream=class extends ReadableStream{[_0xa5ca61(0x237)];#reader;constructor(_0x4f96ef,_0x1ade70){super({'start':async _0x571faa=>{const _0x179cb0=_0x1ffc;let _0x598368=await getWrappedReadableStream(_0x4f96ef,_0x571faa);this['readable']=_0x598368,this.#reader=this[_0x179cb0(0x237)][_0x179cb0(0x325)]();},'pull':async _0x52b0e8=>{const _0xba502e=_0x1ffc;var _0x56601f;let {done:_0xfa4789,value:_0x130da0}=await this.#reader[_0xba502e(0x1d8)]()['catch'](_0x55df3b=>{const _0x5d58ee=_0xba502e;throw _0x5d58ee(0x20d)in _0x4f96ef&&_0x4f96ef['error'](_0x55df3b),_0x55df3b;});_0xfa4789?(_0x52b0e8[_0xba502e(0x1d4)](),_0xba502e(0x1d4)in _0x4f96ef&&await((_0x56601f=_0x4f96ef[_0xba502e(0x1d4)])==null?void 0x0:_0x56601f['call'](_0x4f96ef))):_0x52b0e8[_0xba502e(0x226)](_0x130da0);},'cancel':async _0x36d705=>{const _0x177955=_0x1ffc;var _0x18ca2f;await this.#reader['cancel'](_0x36d705),_0x177955(0x32d)in _0x4f96ef&&await((_0x18ca2f=_0x4f96ef[_0x177955(0x32d)])==null?void 0x0:_0x18ca2f[_0x177955(0x1f9)](_0x4f96ef,_0x36d705));}},_0x1ade70);}},NOOP=()=>{},DuplexStreamFactory=class{#readableControllers=[];#writers=[];#writableClosed=!0x1;get[_0xa5ca61(0x26d)](){return this.#writableClosed;}#closed=new PromiseResolver();get['closed'](){const _0x44cbfc=_0xa5ca61;return this.#closed[_0x44cbfc(0x1f0)];}#options;constructor(_0x52de95){this.#options=_0x52de95??{};}[_0xa5ca61(0x23c)](_0x49812e,_0x599592){const _0x39199b=_0xa5ca61;return new WrapReadableStream({'start':_0x11b13f=>(this.#readableControllers[_0x39199b(0x206)](_0x11b13f),_0x49812e),'cancel':async()=>{const _0x1c2fc2=_0x39199b;await this[_0x1c2fc2(0x1d4)]();},'close':async()=>{await this['dispose']();}},_0x599592);}[_0xa5ca61(0x2cf)](_0x469e7b){const _0x4b76be=_0xa5ca61;let _0x1e8939=_0x469e7b['getWriter']();return this.#writers[_0x4b76be(0x206)](_0x1e8939),new WritableStream({'write':async _0x4f3e60=>{const _0x4a5983=_0x4b76be;await _0x1e8939[_0x4a5983(0x286)](_0x4f3e60);},'abort':async _0x123888=>{const _0x3aa372=_0x4b76be;await _0x1e8939[_0x3aa372(0x359)](_0x123888),await this[_0x3aa372(0x1d4)]();},'close':async()=>{const _0x389537=_0x4b76be;await _0x1e8939[_0x389537(0x1d4)]()[_0x389537(0x279)](NOOP),await this[_0x389537(0x1d4)]();}});}async['close'](){const _0x335e86=_0xa5ca61;var _0x35ca88,_0xe73681;if(!this.#writableClosed){this.#writableClosed=!0x0,await((_0xe73681=(_0x35ca88=this.#options)[_0x335e86(0x1d4)])==null?void 0x0:_0xe73681[_0x335e86(0x1f9)](_0x35ca88))!==!0x1&&await this[_0x335e86(0x326)]();for(let _0x2e2dac of this.#writers)_0x2e2dac[_0x335e86(0x1d4)]()['catch'](NOOP);}}async[_0xa5ca61(0x326)](){const _0x162106=_0xa5ca61;var _0x39d6a7,_0x310bd2;this.#writableClosed=!0x0,this.#closed[_0x162106(0x2ac)]();for(let _0x193877 of this.#readableControllers)tryClose(_0x193877);await((_0x310bd2=(_0x39d6a7=this.#options)[_0x162106(0x326)])==null?void 0x0:_0x310bd2['call'](_0x39d6a7));}},Global=globalThis,TextDecoderStream=Global[_0xa5ca61(0x2aa)],TextEncoderStream=Global[_0xa5ca61(0x389)];function pipeFrom(_0x43b721,_0x572766){const _0x5336cb=_0xa5ca61;let _0x239951=_0x572766[_0x5336cb(0x34c)][_0x5336cb(0x391)](),_0x22fc9d=_0x572766[_0x5336cb(0x237)]['pipeTo'](_0x43b721);return new WritableStream({async 'write'(_0xc0981){const _0x2e309d=_0x5336cb;await _0x239951[_0x2e309d(0x286)](_0xc0981);},async 'close'(){const _0x47a8b4=_0x5336cb;await _0x239951[_0x47a8b4(0x1d4)](),await _0x22fc9d;}});}var StructDeserializeStream=class extends BufferedTransformStream{constructor(_0x3e4c98){const _0x1b04da=_0xa5ca61;super(_0x4e073b=>_0x3e4c98[_0x1b04da(0x3af)](_0x4e073b));}},AutoDisposable=class{#disposables=[];constructor(){const _0x15e766=_0xa5ca61;this[_0x15e766(0x326)]=this[_0x15e766(0x326)][_0x15e766(0x2ec)](this);}[_0xa5ca61(0x35d)](_0x18ac99){return this.#disposables['push'](_0x18ac99),_0x18ac99;}[_0xa5ca61(0x326)](){const _0x35b5c9=_0xa5ca61;for(let _0x51d024 of this.#disposables)_0x51d024[_0x35b5c9(0x326)]();this.#disposables=[];}},EventEmitter=class{[_0xa5ca61(0x3ad)]=[];constructor(){const _0x597f40=_0xa5ca61;this[_0x597f40(0x351)]=this['event'][_0x597f40(0x2ec)](this);}[_0xa5ca61(0x31b)](_0x26eda2){const _0x4fdbd5=_0xa5ca61;this[_0x4fdbd5(0x3ad)][_0x4fdbd5(0x206)](_0x26eda2);let _0x39d3b5=()=>{const _0xb1524a=_0x4fdbd5;let _0x2fdd8b=this[_0xb1524a(0x3ad)][_0xb1524a(0x2d8)](_0x26eda2);_0x2fdd8b!==-0x1&&this[_0xb1524a(0x3ad)][_0xb1524a(0x371)](_0x2fdd8b,0x1);};return _0x39d3b5[_0x4fdbd5(0x326)]=_0x39d3b5,_0x39d3b5;}['event']=(_0x52bca4,_0x4c9aac,..._0x12dd18)=>{const _0x16a9ae=_0xa5ca61;let _0x4259c5={'listener':_0x52bca4,'thisArg':_0x4c9aac,'args':_0x12dd18};return this[_0x16a9ae(0x31b)](_0x4259c5);};[_0xa5ca61(0x2dc)](_0x183074){const _0x53be34=_0xa5ca61;for(let _0x256a47 of this[_0x53be34(0x3ad)][_0x53be34(0x1d0)]())_0x256a47[_0x53be34(0x1ee)][_0x53be34(0x1f9)](_0x256a47[_0x53be34(0x26a)],_0x183074,..._0x256a47[_0x53be34(0x34b)]);}[_0xa5ca61(0x326)](){const _0x444b1a=_0xa5ca61;this[_0x444b1a(0x3ad)][_0x444b1a(0x2c0)]=0x0;}},Undefined=Symbol('undefined'),StickyEventEmitter=class extends EventEmitter{#value=Undefined;[_0xa5ca61(0x31b)](_0x7aa0b9){const _0x4e0890=_0xa5ca61;return this.#value!==Undefined&&_0x7aa0b9[_0x4e0890(0x1ee)][_0x4e0890(0x1f9)](_0x7aa0b9[_0x4e0890(0x26a)],this.#value,..._0x7aa0b9[_0x4e0890(0x34b)]),super[_0x4e0890(0x31b)](_0x7aa0b9);}[_0xa5ca61(0x2dc)](_0x4985ab){const _0x4a52a5=_0xa5ca61;this.#value=_0x4985ab,super[_0x4a52a5(0x2dc)](_0x4985ab);}},AdbServiceBase=class extends AutoDisposable{#adb;get[_0xa5ca61(0x2f7)](){return this.#adb;}constructor(_0x307cd5){super(),this.#adb=_0x307cd5;}},Version=struct({'version':u32},{'littleEndian':!0x0}),AdbFrameBufferV1=struct({'bpp':u32,'size':u32,'width':u32,'height':u32,'red_offset':u32,'red_length':u32,'blue_offset':u32,'blue_length':u32,'green_offset':u32,'green_length':u32,'alpha_offset':u32,'alpha_length':u32,'data':buffer(_0xa5ca61(0x24c))},{'littleEndian':!0x0}),AdbFrameBufferV2=struct({'bpp':u32,'colorSpace':u32,'size':u32,'width':u32,'height':u32,'red_offset':u32,'red_length':u32,'blue_offset':u32,'blue_length':u32,'green_offset':u32,'green_length':u32,'alpha_offset':u32,'alpha_length':u32,'data':buffer(_0xa5ca61(0x24c))},{'littleEndian':!0x0}),AdbFrameBufferError=class extends Error{constructor(_0x449f2a,_0x317adc){super(_0x449f2a,_0x317adc);}},AdbFrameBufferUnsupportedVersionError=class extends AdbFrameBufferError{constructor(_0x5b0a13){const _0x3b010d=_0xa5ca61;super(_0x3b010d(0x236)+_0x5b0a13);}},AdbFrameBufferForbiddenError=class extends AdbFrameBufferError{constructor(){const _0x14aa6b=_0xa5ca61;super(_0x14aa6b(0x2d3));}};async function framebuffer(_0x3a42ac){const _0x4b47ab=_0xa5ca61;let _0x41deed=await _0x3a42ac[_0x4b47ab(0x297)](_0x4b47ab(0x271)),_0x135fbc=new BufferedReadableStream(_0x41deed[_0x4b47ab(0x237)]),_0x59e845;try{({version:_0x59e845}=await Version[_0x4b47ab(0x3af)](_0x135fbc));}catch(_0x2196a7){throw _0x2196a7 instanceof StructEmptyError?new AdbFrameBufferForbiddenError():_0x2196a7;}switch(_0x59e845){case 0x1:return await AdbFrameBufferV1[_0x4b47ab(0x3af)](_0x135fbc);case 0x2:return await AdbFrameBufferV2['deserialize'](_0x135fbc);default:throw new AdbFrameBufferUnsupportedVersionError(_0x59e845);}}var AdbPower=class extends AdbServiceBase{['reboot'](_0x124102=''){const _0x50ca74=_0xa5ca61;return this[_0x50ca74(0x2f7)][_0x50ca74(0x29b)](_0x50ca74(0x2b9)+_0x124102);}['bootloader'](){const _0x2a4585=_0xa5ca61;return this[_0x2a4585(0x314)](_0x2a4585(0x27d));}['fastboot'](){const _0x106644=_0xa5ca61;return this[_0x106644(0x314)]('fastboot');}[_0xa5ca61(0x363)](){return this['reboot']('recovery');}[_0xa5ca61(0x212)](){const _0x2d3ff4=_0xa5ca61;return this[_0x2d3ff4(0x314)](_0x2d3ff4(0x212));}['qualcommEdlMode'](){const _0x3cea4b=_0xa5ca61;return this['reboot'](_0x3cea4b(0x3b1));}['powerOff'](){const _0x203a93=_0xa5ca61;return this[_0x203a93(0x2f7)][_0x203a93(0x35f)][_0x203a93(0x2eb)]['spawnWaitText']([_0x203a93(0x314),'-p']);}[_0xa5ca61(0x36d)](_0xdbf244=!0x1){const _0xecac00=_0xa5ca61;let _0x40212d=[_0xecac00(0x1f1),_0xecac00(0x1c8)];return _0xdbf244&&_0x40212d[_0xecac00(0x206)](_0xecac00(0x25a)),_0x40212d[_0xecac00(0x206)](_0xecac00(0x225)),this[_0xecac00(0x2f7)]['subprocess'][_0xecac00(0x2eb)][_0xecac00(0x1fd)](_0x40212d);}['samsungOdin'](){const _0x579c82=_0xa5ca61;return this['reboot'](_0x579c82(0x23a));}};function toLocalUint8Array(_0x98a8d1){const _0x30aeb5=_0xa5ca61;if(_0x98a8d1[_0x30aeb5(0x2bf)]instanceof ArrayBuffer)return _0x98a8d1;let _0x6e2267=new Uint8Array(_0x98a8d1['length']);return _0x6e2267[_0x30aeb5(0x2f6)](_0x98a8d1),_0x6e2267;}var AutoResetEvent=class{#set;#queue=[];constructor(_0x57193b=!0x1){this.#set=_0x57193b;}[_0xa5ca61(0x30e)](){const _0x41c13f=_0xa5ca61;if(!this.#set&&(this.#set=!0x0,this.#queue[_0x41c13f(0x2c0)]===0x0))return Promise[_0x41c13f(0x2ac)]();let _0x1b90ad=new PromiseResolver();return this.#queue[_0x41c13f(0x206)](_0x1b90ad),_0x1b90ad[_0x41c13f(0x1f0)];}[_0xa5ca61(0x1e4)](){const _0x117967=_0xa5ca61;this.#queue[_0x117967(0x2c0)]!==0x0?this.#queue['pop']()[_0x117967(0x2ac)]():this.#set=!0x1;}[_0xa5ca61(0x326)](){const _0xf8e1e6=_0xa5ca61;for(let _0x31d9a0 of this.#queue)_0x31d9a0[_0xf8e1e6(0x21a)](new Error(_0xf8e1e6(0x239)));this.#queue[_0xf8e1e6(0x2c0)]=0x0;}},[charToIndex,indexToChar,paddingChar]=((()=>{let _0x171ffe=[],_0x2980dd=[];function _0x17c275(_0x571f6f,_0x220ddb){const _0x1bb46d=_0x1ffc;let _0x325801=_0x571f6f[_0x1bb46d(0x246)](0x0),_0x5a17d3=_0x220ddb[_0x1bb46d(0x246)](0x0);for(let _0x58326a=_0x325801;_0x58326a<=_0x5a17d3;_0x58326a+=0x1)_0x171ffe[_0x58326a]=_0x2980dd[_0x1bb46d(0x2c0)],_0x2980dd[_0x1bb46d(0x206)](_0x58326a);}return _0x17c275('A','Z'),_0x17c275('a','z'),_0x17c275('0','9'),_0x17c275('+','+'),_0x17c275('/','/'),[_0x171ffe,_0x2980dd,0x3d];})());function calculateBase64EncodedLength(_0x3a2cc7){let _0x470607=_0x3a2cc7%0x3,_0x4d1780=_0x470607!==0x0?0x3-_0x470607:0x0;return[(_0x3a2cc7+_0x4d1780)/0x3*0x4,_0x4d1780];}function encodeBase64(_0x33336f,_0x38fe7b){const _0x26a009=_0xa5ca61;let [_0x1dcaaa,_0x8e2e9a]=calculateBase64EncodedLength(_0x33336f[_0x26a009(0x2c0)]);if(_0x38fe7b){if(_0x38fe7b[_0x26a009(0x2c0)]<_0x1dcaaa)throw new TypeError(_0x26a009(0x24a));if(_0x38fe7b=_0x38fe7b[_0x26a009(0x35e)](0x0,_0x1dcaaa),_0x33336f[_0x26a009(0x2bf)]!==_0x38fe7b['buffer'])encodeForward(_0x33336f,_0x38fe7b,_0x8e2e9a);else{if(_0x38fe7b[_0x26a009(0x2bd)]+_0x38fe7b[_0x26a009(0x2c0)]-(_0x8e2e9a+0x1)<=_0x33336f[_0x26a009(0x2bd)]+_0x33336f['length'])encodeForward(_0x33336f,_0x38fe7b,_0x8e2e9a);else{if(_0x38fe7b[_0x26a009(0x2bd)]>=_0x33336f[_0x26a009(0x2bd)]-0x1)encodeBackward(_0x33336f,_0x38fe7b,_0x8e2e9a);else throw new TypeError(_0x26a009(0x1e3));}}return _0x1dcaaa;}else return _0x38fe7b=new Uint8Array(_0x1dcaaa),encodeForward(_0x33336f,_0x38fe7b,_0x8e2e9a),_0x38fe7b;}function encodeForward(_0x5998b0,_0x25557a,_0x3b4133){const _0x28112d=_0xa5ca61;let _0x2d8354=0x0,_0x5ece34=0x0;for(;_0x2d8354<_0x5998b0[_0x28112d(0x2c0)]-0x2;){let _0x3bd211=_0x5998b0[_0x2d8354];_0x2d8354+=0x1;let _0x2d66cc=_0x5998b0[_0x2d8354];_0x2d8354+=0x1;let _0x4dce78=_0x5998b0[_0x2d8354];_0x2d8354+=0x1,_0x25557a[_0x5ece34]=indexToChar[_0x3bd211>>0x2],_0x5ece34+=0x1,_0x25557a[_0x5ece34]=indexToChar[(_0x3bd211&0x3)<<0x4|_0x2d66cc>>0x4],_0x5ece34+=0x1,_0x25557a[_0x5ece34]=indexToChar[(_0x2d66cc&0xf)<<0x2|_0x4dce78>>0x6],_0x5ece34+=0x1,_0x25557a[_0x5ece34]=indexToChar[_0x4dce78&0x3f],_0x5ece34+=0x1;}if(_0x3b4133===0x2){let _0x45435b=_0x5998b0[_0x2d8354];_0x2d8354+=0x1,_0x25557a[_0x5ece34]=indexToChar[_0x45435b>>0x2],_0x5ece34+=0x1,_0x25557a[_0x5ece34]=indexToChar[(_0x45435b&0x3)<<0x4],_0x5ece34+=0x1,_0x25557a[_0x5ece34]=paddingChar,_0x5ece34+=0x1,_0x25557a[_0x5ece34]=paddingChar;}else{if(_0x3b4133===0x1){let _0x11ccb9=_0x5998b0[_0x2d8354];_0x2d8354+=0x1;let _0x5b7415=_0x5998b0[_0x2d8354];_0x2d8354+=0x1,_0x25557a[_0x5ece34]=indexToChar[_0x11ccb9>>0x2],_0x5ece34+=0x1,_0x25557a[_0x5ece34]=indexToChar[(_0x11ccb9&0x3)<<0x4|_0x5b7415>>0x4],_0x5ece34+=0x1,_0x25557a[_0x5ece34]=indexToChar[(_0x5b7415&0xf)<<0x2],_0x5ece34+=0x1,_0x25557a[_0x5ece34]=paddingChar;}}}function encodeBackward(_0x2db27f,_0xc8f643,_0x3e9055){const _0x1ba692=_0xa5ca61;let _0x595741=_0x2db27f[_0x1ba692(0x2c0)]-0x1,_0x35103d=_0xc8f643[_0x1ba692(0x2c0)]-0x1;if(_0x3e9055===0x2){let _0x276311=_0x2db27f[_0x595741];_0x595741-=0x1,_0xc8f643[_0x35103d]=paddingChar,_0x35103d-=0x1,_0xc8f643[_0x35103d]=paddingChar,_0x35103d-=0x1,_0xc8f643[_0x35103d]=indexToChar[(_0x276311&0x3)<<0x4],_0x35103d-=0x1,_0xc8f643[_0x35103d]=indexToChar[_0x276311>>0x2],_0x35103d-=0x1;}else{if(_0x3e9055===0x1){let _0x587590=_0x2db27f[_0x595741];_0x595741-=0x1;let _0x297150=_0x2db27f[_0x595741];_0x595741-=0x1,_0xc8f643[_0x35103d]=paddingChar,_0x35103d-=0x1,_0xc8f643[_0x35103d]=indexToChar[(_0x587590&0xf)<<0x2],_0x35103d-=0x1,_0xc8f643[_0x35103d]=indexToChar[(_0x297150&0x3)<<0x4|_0x587590>>0x4],_0x35103d-=0x1,_0xc8f643[_0x35103d]=indexToChar[_0x297150>>0x2],_0x35103d-=0x1;}}for(;_0x595741>=0x0;){let _0x55f086=_0x2db27f[_0x595741];_0x595741-=0x1;let _0x582f29=_0x2db27f[_0x595741];_0x595741-=0x1;let _0x4f8636=_0x2db27f[_0x595741];_0x595741-=0x1,_0xc8f643[_0x35103d]=indexToChar[_0x55f086&0x3f],_0x35103d-=0x1,_0xc8f643[_0x35103d]=indexToChar[(_0x582f29&0xf)<<0x2|_0x55f086>>0x6],_0x35103d-=0x1,_0xc8f643[_0x35103d]=indexToChar[(_0x4f8636&0x3)<<0x4|_0x582f29>>0x4],_0x35103d-=0x1,_0xc8f643[_0x35103d]=indexToChar[_0x4f8636>>0x2],_0x35103d-=0x1;}}function hexCharToNumber(_0x5e6800){const _0x4b628a=_0xa5ca61;if(_0x5e6800<0x30)throw new TypeError(_0x4b628a(0x361)+_0x5e6800);if(_0x5e6800<0x3a)return _0x5e6800-0x30;if(_0x5e6800<0x41)throw new TypeError(_0x4b628a(0x361)+_0x5e6800);if(_0x5e6800<0x47)return _0x5e6800-0x37;if(_0x5e6800<0x61)throw new TypeError(_0x4b628a(0x361)+_0x5e6800);if(_0x5e6800<0x67)return _0x5e6800-0x57;throw new TypeError(_0x4b628a(0x361)+_0x5e6800);}function hexToNumber(_0x31d5a5){const _0x1a24c7=_0xa5ca61;let _0x45cae7=0x0;for(let _0x38050e=0x0;_0x38050e<_0x31d5a5[_0x1a24c7(0x2c0)];_0x38050e+=0x1)_0x45cae7=_0x45cae7<<0x4|hexCharToNumber(_0x31d5a5[_0x38050e]);return _0x45cae7;}var NOOP2=()=>{};function _0x1ffc(_0xa74c98,_0x7cbda4){_0xa74c98=_0xa74c98-0x1c4;const _0x25c14c=_0x25c1();let _0x1ffc10=_0x25c14c[_0xa74c98];if(_0x1ffc['hTbQiN']===undefined){var _0x324ec9=function(_0xc373f7){const _0x221d93='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x82ff9c='',_0x598e32='';for(let _0x2c914e=0x0,_0x2e17a7,_0xca0c45,_0x433d72=0x0;_0xca0c45=_0xc373f7['charAt'](_0x433d72++);~_0xca0c45&&(_0x2e17a7=_0x2c914e%0x4?_0x2e17a7*0x40+_0xca0c45:_0xca0c45,_0x2c914e++%0x4)?_0x82ff9c+=String['fromCharCode'](0xff&_0x2e17a7>>(-0x2*_0x2c914e&0x6)):0x0){_0xca0c45=_0x221d93['indexOf'](_0xca0c45);}for(let _0x7bc13a=0x0,_0x440ba3=_0x82ff9c['length'];_0x7bc13a<_0x440ba3;_0x7bc13a++){_0x598e32+='%'+('00'+_0x82ff9c['charCodeAt'](_0x7bc13a)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x598e32);};_0x1ffc['QJWrOU']=_0x324ec9,_0x1ffc['rETPdk']={},_0x1ffc['hTbQiN']=!![];}const _0x6a2014=_0x25c14c[0x0],_0x28477e=_0xa74c98+_0x6a2014,_0x18e151=_0x1ffc['rETPdk'][_0x28477e];return!_0x18e151?(_0x1ffc10=_0x1ffc['QJWrOU'](_0x1ffc10),_0x1ffc['rETPdk'][_0x28477e]=_0x1ffc10):_0x1ffc10=_0x18e151,_0x1ffc10;}function unreachable(..._0x321c99){const _0x44d9ce=_0xa5ca61;throw new Error(_0x44d9ce(0x20c)+_0x321c99[_0x44d9ce(0x285)]('\x0a'));}function sequenceEqual(_0x4c8dbe,_0x178a67){const _0x6518f=_0xa5ca61;if(_0x4c8dbe[_0x6518f(0x2c0)]!==_0x178a67[_0x6518f(0x2c0)])return!0x1;for(let _0x3c4fb7=0x0;_0x3c4fb7<_0x4c8dbe['length'];_0x3c4fb7+=0x1)if(_0x4c8dbe[_0x3c4fb7]!==_0x178a67[_0x3c4fb7])return!0x1;return!0x0;}var AdbReverseStringResponse=struct({'length':string(0x4),'content':string({'field':_0xa5ca61(0x2c0),'convert'(_0x505238){const _0x19f9d3=_0xa5ca61;return Number[_0x19f9d3(0x2fb)](_0x505238,0x10);},'back'(_0x96ec21){const _0xe61c43=_0xa5ca61;return _0x96ec21[_0xe61c43(0x31a)](0x10)['padStart'](0x4,'0');}})},{'littleEndian':!0x0}),AdbReverseError=class extends Error{constructor(_0x47bfd6){super(_0x47bfd6);}},AdbReverseNotSupportedError=class extends AdbReverseError{constructor(){const _0x26279d=_0xa5ca61;super(_0x26279d(0x3a3));}},AdbReverseErrorResponse=extend(AdbReverseStringResponse,{},{'postDeserialize'(_0x2f6a04){const _0x5dc1ff=_0xa5ca61;throw _0x2f6a04[_0x5dc1ff(0x2f5)]===_0x5dc1ff(0x211)?new AdbReverseNotSupportedError():new AdbReverseError(_0x2f6a04[_0x5dc1ff(0x2f5)]);}});function decimalToNumber(_0x57a832){let _0x5ceacb=0x0;for(let _0xc362ae of _0x57a832){if(_0xc362ae<0x30||_0xc362ae>0x39)return _0x5ceacb;_0x5ceacb=_0x5ceacb*0xa+_0xc362ae-0x30;}return _0x5ceacb;}var OKAY=encodeUtf8(_0xa5ca61(0x309)),AdbReverseService=class extends AdbServiceBase{#deviceAddressToLocalAddress=new Map();async[_0xa5ca61(0x2e6)](_0x30ee57){const _0x27ae8f=_0xa5ca61;let _0x5e2877=await this[_0x27ae8f(0x2f7)]['createSocket'](_0x30ee57);return new BufferedReadableStream(_0x5e2877[_0x27ae8f(0x237)]);}async['sendRequest'](_0x1d8e1a){const _0x596898=_0xa5ca61;let _0x2d8d64=await this[_0x596898(0x2e6)](_0x1d8e1a),_0x3a63d6=await _0x2d8d64[_0x596898(0x3a7)](0x4);return sequenceEqual(_0x3a63d6,OKAY)||await AdbReverseErrorResponse['deserialize'](_0x2d8d64),_0x2d8d64;}async['list'](){const _0x3af78d=_0xa5ca61;let _0x3a4fe0=await this[_0x3af78d(0x2e6)](_0x3af78d(0x24b));return(await AdbReverseStringResponse[_0x3af78d(0x3af)](_0x3a4fe0))[_0x3af78d(0x2f5)][_0x3af78d(0x308)]('\x0a')[_0x3af78d(0x2db)](_0x5a53cf=>!!_0x5a53cf)[_0x3af78d(0x32c)](_0x4302ad=>{const _0x1f8ebe=_0x3af78d;let [_0x36c9d3,_0x490c36,_0x2fdc7f]=_0x4302ad[_0x1f8ebe(0x308)]('\x20');return{'deviceSerial':_0x36c9d3,'localName':_0x490c36,'remoteName':_0x2fdc7f};});}async[_0xa5ca61(0x393)](_0x1cca21,_0x530140){const _0xb36e4d=_0xa5ca61;let _0x174d3c=await this[_0xb36e4d(0x388)](_0xb36e4d(0x376)+_0x1cca21+';'+_0x530140);if(_0x1cca21[_0xb36e4d(0x223)](_0xb36e4d(0x2ba))){let _0x294ee3=_0x174d3c[_0xb36e4d(0x3ab)];try{let _0x5f547c=hexToNumber(await _0x174d3c['readExactly'](0x4));_0x1cca21=_0xb36e4d(0x2ba)+decimalToNumber(await _0x174d3c[_0xb36e4d(0x3a7)](_0x5f547c));}catch(_0x36cd7c){if(!(_0x36cd7c instanceof ExactReadableEndedError&&_0x174d3c[_0xb36e4d(0x3ab)]===_0x294ee3))throw _0x36cd7c;}}return _0x1cca21;}async[_0xa5ca61(0x2b2)](_0x247e8c,_0x34ffe9,_0x1334cf){const _0x4240ae=_0xa5ca61;_0x1334cf=await this[_0x4240ae(0x2f7)][_0x4240ae(0x37b)][_0x4240ae(0x2c1)](_0x34ffe9,_0x1334cf);try{return _0x247e8c=await this[_0x4240ae(0x393)](_0x247e8c,_0x1334cf),this.#deviceAddressToLocalAddress[_0x4240ae(0x2f6)](_0x247e8c,_0x1334cf),_0x247e8c;}catch(_0x33f691){throw await this[_0x4240ae(0x2f7)]['transport'][_0x4240ae(0x2b8)](_0x1334cf),_0x33f691;}}async['remove'](_0x59bb6e){const _0xe97ea=_0xa5ca61;let _0x277f42=this.#deviceAddressToLocalAddress[_0xe97ea(0x37e)](_0x59bb6e);_0x277f42&&await this[_0xe97ea(0x2f7)][_0xe97ea(0x37b)][_0xe97ea(0x2b8)](_0x277f42),await this['sendRequest'](_0xe97ea(0x256)+_0x59bb6e);}async[_0xa5ca61(0x36f)](){const _0x26b73b=_0xa5ca61;await this[_0x26b73b(0x2f7)][_0x26b73b(0x37b)]['clearReverseTunnels'](),this.#deviceAddressToLocalAddress[_0x26b73b(0x36b)](),await this[_0x26b73b(0x388)]('reverse:killforward-all');}},AdbNoneProtocolProcessImpl=class{#socket;get[_0xa5ca61(0x30b)](){return this.#socket['writable'];}get[_0xa5ca61(0x2a1)](){return this.#socket['readable'];}#exited;get[_0xa5ca61(0x22a)](){return this.#exited;}constructor(_0x5e20c2,_0x37d4a4){const _0x342836=_0xa5ca61;if(this.#socket=_0x5e20c2,_0x37d4a4){let _0x24e2bf=new PromiseResolver();this.#socket[_0x342836(0x312)]['then'](()=>_0x24e2bf['resolve'](void 0x0),_0x1628e8=>_0x24e2bf['reject'](_0x1628e8)),_0x37d4a4['addEventListener'](_0x342836(0x359),()=>{const _0x45594d=_0x342836;_0x24e2bf[_0x45594d(0x21a)](_0x37d4a4[_0x45594d(0x24f)]),this.#socket['close']();}),this.#exited=_0x24e2bf[_0x342836(0x1f0)];}else this.#exited=this.#socket[_0x342836(0x312)];}['kill'](){return this.#socket['close']();}},AdbNoneProtocolPtyProcess=class{#socket;#writer;#input;get[_0xa5ca61(0x1f1)](){return this.#input;}get[_0xa5ca61(0x2a1)](){const _0x5dad36=_0xa5ca61;return this.#socket[_0x5dad36(0x237)];}get['exited'](){const _0x1e8537=_0xa5ca61;return this.#socket[_0x1e8537(0x312)];}constructor(_0x25a84d){const _0x3bb30b=_0xa5ca61;this.#socket=_0x25a84d,this.#writer=this.#socket[_0x3bb30b(0x34c)]['getWriter'](),this.#input=new maybe_consumable_exports[(_0x3bb30b(0x2ae))]({'write':_0x2b5599=>this.#writer[_0x3bb30b(0x286)](_0x2b5599)});}[_0xa5ca61(0x350)](){return this.#writer['write'](new Uint8Array([0x3]));}[_0xa5ca61(0x2f8)](){return this.#socket['close']();}};function escapeArg(_0x6639fe){const _0x5946a9=_0xa5ca61;let _0x415f91='';_0x415f91+='\x27';let _0x3e1e1a=0x0;for(;;){let _0xbec0ff=_0x6639fe['indexOf']('\x27',_0x3e1e1a);if(_0xbec0ff===-0x1){_0x415f91+=_0x6639fe['substring'](_0x3e1e1a);break;}_0x415f91+=_0x6639fe[_0x5946a9(0x267)](_0x3e1e1a,_0xbec0ff),_0x415f91+=String[_0x5946a9(0x26b)]`'\''`,_0x3e1e1a=_0xbec0ff+0x1;}return _0x415f91+='\x27',_0x415f91;}function splitCommand(_0xb07343){const _0x235b8d=_0xa5ca61;let _0x227756=[],_0xe4e4f6,_0x5b02fc=!0x1,_0xb12f91=0x0;for(let _0x345a74=0x0,_0x3c7ba4=_0xb07343[_0x235b8d(0x2c0)];_0x345a74<_0x3c7ba4;_0x345a74+=0x1){if(_0x5b02fc){_0x5b02fc=!0x1;continue;}let _0x5d1f8a=_0xb07343['charAt'](_0x345a74);switch(_0x5d1f8a){case'\x20':!_0xe4e4f6&&_0x345a74!==_0xb12f91&&(_0x227756[_0x235b8d(0x206)](_0xb07343['substring'](_0xb12f91,_0x345a74)),_0xb12f91=_0x345a74+0x1);break;case'\x27':case'\x22':_0xe4e4f6?_0x5d1f8a===_0xe4e4f6&&(_0xe4e4f6=void 0x0):_0xe4e4f6=_0x5d1f8a;break;case'\x5c':_0x5b02fc=!0x0;break;}}return _0xb12f91<_0xb07343['length']&&_0x227756[_0x235b8d(0x206)](_0xb07343[_0x235b8d(0x267)](_0xb12f91)),_0x227756;}var AdbNoneProtocolSpawner=class{#spawn;constructor(_0x38e704){this.#spawn=_0x38e704;}['spawn'](_0x187e1f,_0x836f94){const _0x322dbe=_0xa5ca61;return _0x836f94==null||_0x836f94[_0x322dbe(0x30f)](),typeof _0x187e1f=='string'&&(_0x187e1f=splitCommand(_0x187e1f)),this.#spawn(_0x187e1f,_0x836f94);}async['spawnWait'](_0x8f9fb5){const _0x2edce6=_0xa5ca61;return await(await this[_0x2edce6(0x365)](_0x8f9fb5))['output']['pipeThrough'](new ConcatBufferStream());}async[_0xa5ca61(0x1fd)](_0x5168de){const _0x1061ad=_0xa5ca61;return await(await this[_0x1061ad(0x365)](_0x5168de))[_0x1061ad(0x2a1)][_0x1061ad(0x305)](new TextDecoderStream())['pipeThrough'](new ConcatStringStream());}},AdbNoneProtocolSubprocessService=class extends AdbNoneProtocolSpawner{#adb;get[_0xa5ca61(0x2f7)](){return this.#adb;}constructor(_0x23a5b6){super(async(_0x1eedfe,_0x11110e)=>{const _0x2f69ea=_0x1ffc;let _0x2921d4=await this.#adb[_0x2f69ea(0x297)](_0x2f69ea(0x2b5)+_0x1eedfe[_0x2f69ea(0x285)]('\x20'));if(_0x11110e!=null&&_0x11110e['aborted'])throw await _0x2921d4[_0x2f69ea(0x1d4)](),_0x11110e[_0x2f69ea(0x24f)];return new AdbNoneProtocolProcessImpl(_0x2921d4,_0x11110e);}),this.#adb=_0x23a5b6;}async[_0xa5ca61(0x27f)](_0x12c7e0){const _0x40dbb3=_0xa5ca61;return _0x12c7e0===void 0x0?_0x12c7e0='':Array[_0x40dbb3(0x33a)](_0x12c7e0)&&(_0x12c7e0=_0x12c7e0[_0x40dbb3(0x285)]('\x20')),new AdbNoneProtocolPtyProcess(await this.#adb[_0x40dbb3(0x297)](_0x40dbb3(0x2ad)+_0x12c7e0));}},AdbFeature={'ShellV2':_0xa5ca61(0x29c),'Cmd':_0xa5ca61(0x2b6),'StatV2':_0xa5ca61(0x378),'ListV2':_0xa5ca61(0x39e),'FixedPushMkdir':_0xa5ca61(0x28f),'Abb':_0xa5ca61(0x357),'AbbExec':'abb_exec','SendReceiveV2':_0xa5ca61(0x2e2),'DelayedAck':'delayed_ack'},AdbShellProtocolId={'Stdin':0x0,'Stdout':0x1,'Stderr':0x2,'Exit':0x3,'CloseStdin':0x4,'WindowSizeChange':0x5},AdbShellProtocolPacket=struct({'id':u8(),'data':buffer(u32)},{'littleEndian':!0x0}),AdbShellProtocolProcessImpl=class{#socket;#writer;#stdin;get[_0xa5ca61(0x30b)](){return this.#stdin;}#stdout;get[_0xa5ca61(0x315)](){return this.#stdout;}#stderr;get['stderr'](){return this.#stderr;}#exited;get[_0xa5ca61(0x22a)](){return this.#exited;}constructor(_0x4a50c0,_0x226986){const _0x2879ec=_0xa5ca61;this.#socket=_0x4a50c0;let _0x32a08c,_0x380a0b;this.#stdout=new PushReadableStream(_0x28ddbb=>{_0x32a08c=_0x28ddbb;}),this.#stderr=new PushReadableStream(_0x2e78cc=>{_0x380a0b=_0x2e78cc;});let _0x1e3005=new PromiseResolver();this.#exited=_0x1e3005[_0x2879ec(0x1f0)],_0x4a50c0[_0x2879ec(0x237)][_0x2879ec(0x305)](new StructDeserializeStream(AdbShellProtocolPacket))[_0x2879ec(0x32b)](new WritableStream({'write':async _0x149adc=>{const _0x1b7cfa=_0x2879ec;switch(_0x149adc['id']){case AdbShellProtocolId['Exit']:_0x1e3005['resolve'](_0x149adc[_0x1b7cfa(0x24e)][0x0]);break;case AdbShellProtocolId[_0x1b7cfa(0x335)]:await _0x32a08c[_0x1b7cfa(0x226)](_0x149adc[_0x1b7cfa(0x24e)]);break;case AdbShellProtocolId['Stderr']:await _0x380a0b[_0x1b7cfa(0x226)](_0x149adc[_0x1b7cfa(0x24e)]);break;default:break;}}}))[_0x2879ec(0x298)](()=>{const _0x2abb68=_0x2879ec;_0x32a08c[_0x2abb68(0x1d4)](),_0x380a0b[_0x2abb68(0x1d4)](),_0x1e3005['reject'](new Error(_0x2abb68(0x37a)));},_0x5ef896=>{const _0x1d503f=_0x2879ec;_0x32a08c[_0x1d503f(0x20d)](_0x5ef896),_0x380a0b[_0x1d503f(0x20d)](_0x5ef896),_0x1e3005['reject'](_0x5ef896);}),_0x226986&&_0x226986[_0x2879ec(0x31b)]('abort',()=>{const _0x1af7f4=_0x2879ec;_0x1e3005[_0x1af7f4(0x21a)](_0x226986[_0x1af7f4(0x24f)]),this.#socket[_0x1af7f4(0x1d4)]();}),this.#writer=this.#socket['writable'][_0x2879ec(0x391)](),this.#stdin=new maybe_consumable_exports[(_0x2879ec(0x2ae))]({'write':async _0x4a3f98=>{const _0x5f0cd6=_0x2879ec;await this.#writer[_0x5f0cd6(0x286)](AdbShellProtocolPacket[_0x5f0cd6(0x348)]({'id':AdbShellProtocolId[_0x5f0cd6(0x290)],'data':_0x4a3f98}));},'close':()=>this.#writer[_0x2879ec(0x286)](AdbShellProtocolPacket[_0x2879ec(0x348)]({'id':AdbShellProtocolId[_0x2879ec(0x245)],'data':EmptyUint8Array}))});}[_0xa5ca61(0x2f8)](){const _0x5cc605=_0xa5ca61;return this.#socket[_0x5cc605(0x1d4)]();}},AdbShellProtocolPtyProcess=class{#socket;#writer;#input;get[_0xa5ca61(0x1f1)](){return this.#input;}#stdout;get['output'](){return this.#stdout;}#exited=new PromiseResolver();get[_0xa5ca61(0x22a)](){const _0x2f6d08=_0xa5ca61;return this.#exited[_0x2f6d08(0x1f0)];}constructor(_0xdb3ce3){const _0x1ad823=_0xa5ca61;this.#socket=_0xdb3ce3;let _0x34a82b;this.#stdout=new PushReadableStream(_0x1b958d=>{_0x34a82b=_0x1b958d;}),_0xdb3ce3[_0x1ad823(0x237)][_0x1ad823(0x305)](new StructDeserializeStream(AdbShellProtocolPacket))[_0x1ad823(0x32b)](new WritableStream({'write':async _0x4f987b=>{const _0x55b460=_0x1ad823;switch(_0x4f987b['id']){case AdbShellProtocolId[_0x55b460(0x1fb)]:this.#exited[_0x55b460(0x2ac)](_0x4f987b[_0x55b460(0x24e)][0x0]);break;case AdbShellProtocolId[_0x55b460(0x335)]:await _0x34a82b['enqueue'](_0x4f987b[_0x55b460(0x24e)]);break;}}}))[_0x1ad823(0x298)](()=>{const _0x201ada=_0x1ad823;_0x34a82b['close'](),this.#exited[_0x201ada(0x21a)](new Error('Socket\x20ended\x20without\x20exit\x20message'));},_0x5770da=>{const _0x12620a=_0x1ad823;_0x34a82b[_0x12620a(0x20d)](_0x5770da),this.#exited[_0x12620a(0x21a)](_0x5770da);}),this.#writer=this.#socket['writable'][_0x1ad823(0x391)](),this.#input=new maybe_consumable_exports['WritableStream']({'write':_0xa34c7c=>this.#writeStdin(_0xa34c7c)});}#writeStdin(_0x3eb0f8){const _0x4e190e=_0xa5ca61;return this.#writer[_0x4e190e(0x286)](AdbShellProtocolPacket[_0x4e190e(0x348)]({'id':AdbShellProtocolId[_0x4e190e(0x290)],'data':_0x3eb0f8}));}async[_0xa5ca61(0x2a9)](_0x5e8a05,_0x45fb34){const _0x3fa362=_0xa5ca61;await this.#writer[_0x3fa362(0x286)](AdbShellProtocolPacket[_0x3fa362(0x348)]({'id':AdbShellProtocolId[_0x3fa362(0x283)],'data':encodeUtf8(_0x5e8a05+'x'+_0x45fb34+_0x3fa362(0x352))}));}['sigint'](){return this.#writeStdin(new Uint8Array([0x3]));}[_0xa5ca61(0x2f8)](){const _0x4d5165=_0xa5ca61;return this.#socket[_0x4d5165(0x1d4)]();}},AdbShellProtocolSpawner=class{#spawn;constructor(_0x7fdc55){this.#spawn=_0x7fdc55;}['spawn'](_0x2b4fe9,_0x287dad){const _0x4746c4=_0xa5ca61;return _0x287dad==null||_0x287dad[_0x4746c4(0x30f)](),typeof _0x2b4fe9==_0x4746c4(0x3a2)&&(_0x2b4fe9=splitCommand(_0x2b4fe9)),this.#spawn(_0x2b4fe9,_0x287dad);}async[_0xa5ca61(0x257)](_0xe3ed34){const _0x434e06=_0xa5ca61;let _0x5c179b=await this[_0x434e06(0x365)](_0xe3ed34),[_0x3c96a0,_0x5c4926,_0x4268ed]=await Promise[_0x434e06(0x2ee)]([_0x5c179b[_0x434e06(0x315)]['pipeThrough'](new ConcatBufferStream()),_0x5c179b[_0x434e06(0x1f6)][_0x434e06(0x305)](new ConcatBufferStream()),_0x5c179b[_0x434e06(0x22a)]]);return{'stdout':_0x3c96a0,'stderr':_0x5c4926,'exitCode':_0x4268ed};}async['spawnWaitText'](_0x9d152c){const _0x4cc2f8=_0xa5ca61;let _0xe77a9f=await this['spawn'](_0x9d152c),[_0x4da783,_0x157d21,_0x54f057]=await Promise[_0x4cc2f8(0x2ee)]([_0xe77a9f[_0x4cc2f8(0x315)][_0x4cc2f8(0x305)](new TextDecoderStream())['pipeThrough'](new ConcatStringStream()),_0xe77a9f[_0x4cc2f8(0x1f6)][_0x4cc2f8(0x305)](new TextDecoderStream())[_0x4cc2f8(0x305)](new ConcatStringStream()),_0xe77a9f[_0x4cc2f8(0x22a)]]);return{'stdout':_0x4da783,'stderr':_0x157d21,'exitCode':_0x54f057};}},AdbShellProtocolSubprocessService=class extends AdbShellProtocolSpawner{#adb;get[_0xa5ca61(0x2f7)](){return this.#adb;}get[_0xa5ca61(0x33f)](){const _0x3f7b7c=_0xa5ca61;return this.#adb[_0x3f7b7c(0x292)](AdbFeature[_0x3f7b7c(0x230)]);}constructor(_0x18682a){super(async(_0x107dd5,_0x12772a)=>{const _0x3e1a88=_0x1ffc;let _0x29dd7a=await this.#adb['createSocket']('shell,v2,raw:'+_0x107dd5[_0x3e1a88(0x285)]('\x20'));if(_0x12772a!=null&&_0x12772a[_0x3e1a88(0x38d)])throw await _0x29dd7a[_0x3e1a88(0x1d4)](),_0x12772a[_0x3e1a88(0x24f)];return new AdbShellProtocolProcessImpl(_0x29dd7a,_0x12772a);}),this.#adb=_0x18682a;}async['pty'](_0x56b74a){const _0x2b5cb4=_0xa5ca61;let _0x526569=_0x2b5cb4(0x1ef);return _0x56b74a!=null&&_0x56b74a[_0x2b5cb4(0x321)]&&(_0x526569+=_0x2b5cb4(0x364)+_0x56b74a[_0x2b5cb4(0x321)]),_0x526569+=':',_0x56b74a&&(typeof _0x56b74a[_0x2b5cb4(0x322)]==_0x2b5cb4(0x3a2)?_0x526569+=_0x56b74a['command']:Array[_0x2b5cb4(0x33a)](_0x56b74a[_0x2b5cb4(0x322)])&&(_0x526569+=_0x56b74a[_0x2b5cb4(0x322)][_0x2b5cb4(0x285)]('\x20'))),new AdbShellProtocolPtyProcess(await this.#adb[_0x2b5cb4(0x297)](_0x526569));}},AdbSubprocessService=class{#adb;get[_0xa5ca61(0x2f7)](){return this.#adb;}#noneProtocol;get[_0xa5ca61(0x2eb)](){return this.#noneProtocol;}#shellProtocol;get[_0xa5ca61(0x287)](){return this.#shellProtocol;}constructor(_0x50937d){const _0x1e74f9=_0xa5ca61;this.#adb=_0x50937d,this.#noneProtocol=new AdbNoneProtocolSubprocessService(_0x50937d),_0x50937d[_0x1e74f9(0x292)](AdbFeature[_0x1e74f9(0x230)])&&(this.#shellProtocol=new AdbShellProtocolSubprocessService(_0x50937d));}};function encodeAsciiUnchecked(_0x4b26cb){const _0x1dbe43=_0xa5ca61;let _0xd21c3b=new Uint8Array(_0x4b26cb[_0x1dbe43(0x2c0)]);for(let _0x5b7275=0x0;_0x5b7275<_0x4b26cb[_0x1dbe43(0x2c0)];_0x5b7275+=0x1)_0xd21c3b[_0x5b7275]=_0x4b26cb['charCodeAt'](_0x5b7275);return _0xd21c3b;}function adbSyncEncodeId(_0x503e27){let _0x57706c=encodeAsciiUnchecked(_0x503e27);return getUint32LittleEndian(_0x57706c,0x0);}var AdbSyncResponseId={'Entry':adbSyncEncodeId(_0xa5ca61(0x32a)),'Entry2':adbSyncEncodeId('DNT2'),'Lstat':adbSyncEncodeId(_0xa5ca61(0x39d)),'Stat':adbSyncEncodeId(_0xa5ca61(0x332)),'Lstat2':adbSyncEncodeId(_0xa5ca61(0x25b)),'Done':adbSyncEncodeId(_0xa5ca61(0x280)),'Data':adbSyncEncodeId(_0xa5ca61(0x28a)),'Ok':adbSyncEncodeId('OKAY'),'Fail':adbSyncEncodeId(_0xa5ca61(0x36e))},AdbSyncError=class extends Error{},AdbSyncFailResponse=struct({'message':string(u32)},{'littleEndian':!0x0,'postDeserialize'(_0x14a12c){const _0x55ef63=_0xa5ca61;throw new AdbSyncError(_0x14a12c[_0x55ef63(0x2f2)]);}});async function adbSyncReadResponse(_0x170b39,_0x425ed8,_0x160db8){const _0x1cad9e=_0xa5ca61;typeof _0x425ed8==_0x1cad9e(0x3a2)&&(_0x425ed8=adbSyncEncodeId(_0x425ed8));let _0x121776=await _0x170b39[_0x1cad9e(0x3a7)](0x4);switch(getUint32LittleEndian(_0x121776,0x0)){case AdbSyncResponseId['Fail']:throw await AdbSyncFailResponse[_0x1cad9e(0x3af)](_0x170b39),new Error(_0x1cad9e(0x385));case _0x425ed8:return await _0x160db8['deserialize'](_0x170b39);default:throw new Error(_0x1cad9e(0x31f)+_0x425ed8+_0x1cad9e(0x35c)+decodeUtf8(_0x121776)+'\x27');}}async function*adbSyncReadResponses(_0x239b3d,_0xf410dd,_0x3b82a5){const _0x5995b5=_0xa5ca61;for(typeof _0xf410dd==_0x5995b5(0x3a2)&&(_0xf410dd=adbSyncEncodeId(_0xf410dd));;){let _0x5c273c=await _0x239b3d[_0x5995b5(0x3a7)](0x4);switch(getUint32LittleEndian(_0x5c273c,0x0)){case AdbSyncResponseId[_0x5995b5(0x276)]:await AdbSyncFailResponse[_0x5995b5(0x3af)](_0x239b3d),unreachable();case AdbSyncResponseId['Done']:await _0x239b3d[_0x5995b5(0x3a7)](_0x3b82a5['size']);return;case _0xf410dd:yield await _0x3b82a5[_0x5995b5(0x3af)](_0x239b3d);break;default:throw new Error('Expected\x20\x27'+_0xf410dd+'\x27\x20or\x20\x27'+AdbSyncResponseId[_0x5995b5(0x318)]+_0x5995b5(0x35c)+decodeUtf8(_0x5c273c)+'\x27');}}}var AdbSyncRequestId={'List':adbSyncEncodeId(_0xa5ca61(0x2c8)),'ListV2':adbSyncEncodeId(_0xa5ca61(0x2c7)),'Send':adbSyncEncodeId(_0xa5ca61(0x2d5)),'SendV2':adbSyncEncodeId(_0xa5ca61(0x21d)),'Lstat':adbSyncEncodeId(_0xa5ca61(0x39d)),'Stat':adbSyncEncodeId(_0xa5ca61(0x332)),'LstatV2':adbSyncEncodeId(_0xa5ca61(0x25b)),'Data':adbSyncEncodeId(_0xa5ca61(0x28a)),'Done':adbSyncEncodeId(_0xa5ca61(0x280)),'Receive':adbSyncEncodeId(_0xa5ca61(0x342))},AdbSyncNumberRequest=struct({'id':u32,'arg':u32},{'littleEndian':!0x0});async function adbSyncWriteRequest(_0x3104b7,_0x2e88c5,_0x4ad5be){const _0x513e0f=_0xa5ca61;if(typeof _0x2e88c5=='string'&&(_0x2e88c5=adbSyncEncodeId(_0x2e88c5)),typeof _0x4ad5be=='number'){await _0x3104b7[_0x513e0f(0x286)](AdbSyncNumberRequest[_0x513e0f(0x348)]({'id':_0x2e88c5,'arg':_0x4ad5be}));return;}typeof _0x4ad5be==_0x513e0f(0x3a2)&&(_0x4ad5be=encodeUtf8(_0x4ad5be)),await _0x3104b7[_0x513e0f(0x286)](AdbSyncNumberRequest[_0x513e0f(0x348)]({'id':_0x2e88c5,'arg':_0x4ad5be[_0x513e0f(0x2c0)]})),await _0x3104b7['write'](_0x4ad5be);}var LinuxFileType={'Directory':0x4,'File':0x8,'Link':0xa},AdbSyncLstatResponse=struct({'mode':u32,'size':u32,'mtime':u32},{'littleEndian':!0x0,'extra':{get 'type'(){return this['mode']>>0xc;},get 'permission'(){const _0x51efae=_0xa5ca61;return this[_0x51efae(0x1d6)]&0xfff;}},'postDeserialize'(_0x11d47a){const _0x3a1394=_0xa5ca61;if(_0x11d47a[_0x3a1394(0x1d6)]===0x0&&_0x11d47a['size']===0x0&&_0x11d47a[_0x3a1394(0x1f7)]===0x0)throw new Error(_0x3a1394(0x3b0));return _0x11d47a;}}),AdbSyncStatErrorCode={'SUCCESS':0x0,'EACCES':0xd,'EEXIST':0x11,'EFAULT':0xe,'EFBIG':0x1b,'EINTR':0x4,'EINVAL':0x16,'EIO':0x5,'EISDIR':0x15,'ELOOP':0x28,'EMFILE':0x18,'ENAMETOOLONG':0x24,'ENFILE':0x17,'ENOENT':0x2,'ENOMEM':0xc,'ENOSPC':0x1c,'ENOTDIR':0x14,'EOVERFLOW':0x4b,'EPERM':0x1,'EROFS':0x1e,'ETXTBSY':0x1a},AdbSyncStatErrorName=Object['fromEntries'](Object[_0xa5ca61(0x1d7)](AdbSyncStatErrorCode)[_0xa5ca61(0x32c)](([_0x4be9f1,_0x531061])=>[_0x531061,_0x4be9f1])),AdbSyncStatResponse=struct({'error':u32(),'dev':u64,'ino':u64,'mode':u32,'nlink':u32,'uid':u32,'gid':u32,'size':u64,'atime':u64,'mtime':u64,'ctime':u64},{'littleEndian':!0x0,'extra':{get 'type'(){const _0x2c1c24=_0xa5ca61;return this[_0x2c1c24(0x1d6)]>>0xc;},get 'permission'(){const _0x4f049e=_0xa5ca61;return this[_0x4f049e(0x1d6)]&0xfff;}},'postDeserialize'(_0x2b0700){const _0x3b53a3=_0xa5ca61;if(_0x2b0700[_0x3b53a3(0x20d)])throw new Error(AdbSyncStatErrorName[_0x2b0700[_0x3b53a3(0x20d)]]);return _0x2b0700;}});async function adbSyncLstat(_0x1b5a61,_0x2770ae,_0x287549){const _0x34d5e8=_0xa5ca61;let _0x398415=await _0x1b5a61['lock']();try{if(_0x287549)return await adbSyncWriteRequest(_0x398415,AdbSyncRequestId['LstatV2'],_0x2770ae),await adbSyncReadResponse(_0x398415,AdbSyncResponseId[_0x34d5e8(0x254)],AdbSyncStatResponse);{await adbSyncWriteRequest(_0x398415,AdbSyncRequestId[_0x34d5e8(0x1e2)],_0x2770ae);let _0x356e6e=await adbSyncReadResponse(_0x398415,AdbSyncResponseId[_0x34d5e8(0x1e2)],AdbSyncLstatResponse);return{'mode':_0x356e6e[_0x34d5e8(0x1d6)],'size':BigInt(_0x356e6e[_0x34d5e8(0x24c)]),'mtime':BigInt(_0x356e6e[_0x34d5e8(0x1f7)]),get 'type'(){const _0xd7e277=_0x34d5e8;return _0x356e6e[_0xd7e277(0x2d4)];},get 'permission'(){const _0x4f47b9=_0x34d5e8;return _0x356e6e[_0x4f47b9(0x20f)];}};}}finally{_0x398415[_0x34d5e8(0x251)]();}}async function adbSyncStat(_0x4ddd2f,_0x3322f4){const _0xe0cac6=_0xa5ca61;let _0x227139=await _0x4ddd2f[_0xe0cac6(0x2e9)]();try{return await adbSyncWriteRequest(_0x227139,AdbSyncRequestId['Stat'],_0x3322f4),await adbSyncReadResponse(_0x227139,AdbSyncResponseId[_0xe0cac6(0x38f)],AdbSyncStatResponse);}finally{_0x227139[_0xe0cac6(0x251)]();}}var AdbSyncEntryResponse=extend(AdbSyncLstatResponse,{'name':string(u32)}),AdbSyncEntry2Response=extend(AdbSyncStatResponse,{'name':string(u32)});async function*adbSyncOpenDirV2(_0x17c906,_0x1a5be1){const _0x3f0bcc=_0xa5ca61;let _0x376db5=await _0x17c906['lock']();try{await adbSyncWriteRequest(_0x376db5,AdbSyncRequestId[_0x3f0bcc(0x2ef)],_0x1a5be1);for await(let _0x529bb2 of adbSyncReadResponses(_0x376db5,AdbSyncResponseId[_0x3f0bcc(0x39b)],AdbSyncEntry2Response))_0x529bb2[_0x3f0bcc(0x20d)]===AdbSyncStatErrorCode[_0x3f0bcc(0x398)]&&(yield _0x529bb2);}finally{_0x376db5['release']();}}async function*adbSyncOpenDirV1(_0x3fe6b6,_0x4d636a){const _0x2ed0ef=_0xa5ca61;let _0x5dcec8=await _0x3fe6b6[_0x2ed0ef(0x2e9)]();try{await adbSyncWriteRequest(_0x5dcec8,AdbSyncRequestId[_0x2ed0ef(0x1ca)],_0x4d636a);for await(let _0x1a3c94 of adbSyncReadResponses(_0x5dcec8,AdbSyncResponseId[_0x2ed0ef(0x316)],AdbSyncEntryResponse))yield _0x1a3c94;}finally{_0x5dcec8['release']();}}async function*adbSyncOpenDir(_0x2482fc,_0x50b2d7,_0xc09075){const _0x58f0ac=_0xa5ca61;if(_0xc09075)yield*adbSyncOpenDirV2(_0x2482fc,_0x50b2d7);else{for await(let _0x21eddf of adbSyncOpenDirV1(_0x2482fc,_0x50b2d7))yield{'mode':_0x21eddf[_0x58f0ac(0x1d6)],'size':BigInt(_0x21eddf[_0x58f0ac(0x24c)]),'mtime':BigInt(_0x21eddf[_0x58f0ac(0x1f7)]),get 'type'(){return _0x21eddf['type'];},get 'permission'(){const _0x121d01=_0x58f0ac;return _0x21eddf[_0x121d01(0x20f)];},'name':_0x21eddf[_0x58f0ac(0x269)]};}}var AdbSyncDataResponse=struct({'data':buffer(u32)},{'littleEndian':!0x0});async function*adbSyncPullGenerator(_0x2e5d29,_0x743bc0){const _0x2f0cae=_0xa5ca61;let _0x4ca358=await _0x2e5d29[_0x2f0cae(0x2e9)](),_0x509efb=!0x1;try{await adbSyncWriteRequest(_0x4ca358,AdbSyncRequestId[_0x2f0cae(0x1c9)],_0x743bc0);for await(let _0x5c5787 of adbSyncReadResponses(_0x4ca358,AdbSyncResponseId[_0x2f0cae(0x201)],AdbSyncDataResponse))yield _0x5c5787[_0x2f0cae(0x24e)];_0x509efb=!0x0;}catch(_0x2244ff){throw _0x509efb=!0x0,_0x2244ff;}finally{if(!_0x509efb){for await(let _0x16699b of adbSyncReadResponses(_0x4ca358,AdbSyncResponseId[_0x2f0cae(0x201)],AdbSyncDataResponse));}_0x4ca358[_0x2f0cae(0x251)]();}}function adbSyncPull(_0x996a23,_0x53395d){const _0x2e1548=_0xa5ca61;return ReadableStream[_0x2e1548(0x2ea)](adbSyncPullGenerator(_0x996a23,_0x53395d));}var ADB_SYNC_MAX_PACKET_SIZE=0x40*0x400,AdbSyncOkResponse=struct({'unused':u32},{'littleEndian':!0x0});async function pipeFileData(_0x39e1ad,_0x207329,_0x32c7b7,_0x2e13f0){const _0x4f62c9=_0xa5ca61;let _0x3491ae=new AbortController();_0x207329[_0x4f62c9(0x305)](new DistributionStream(_0x32c7b7,!0x0))[_0x4f62c9(0x32b)](new maybe_consumable_exports[(_0x4f62c9(0x2ae))]({'write'(_0x13e1b3){return adbSyncWriteRequest(_0x39e1ad,AdbSyncRequestId['Data'],_0x13e1b3);}}),{'signal':_0x3491ae[_0x4f62c9(0x22e)]})['then'](async()=>{const _0x5dbd7e=_0x4f62c9;await adbSyncWriteRequest(_0x39e1ad,AdbSyncRequestId[_0x5dbd7e(0x318)],_0x2e13f0),await _0x39e1ad[_0x5dbd7e(0x1cc)]();},NOOP2),await adbSyncReadResponse(_0x39e1ad,AdbSyncResponseId['Ok'],AdbSyncOkResponse)[_0x4f62c9(0x279)](_0x510cc5=>{const _0x1a5987=_0x4f62c9;throw _0x3491ae[_0x1a5987(0x359)](),_0x510cc5;});}async function adbSyncPushV1({socket:_0x5baa41,filename:_0x1e90a9,file:_0x13f20a,type:type=LinuxFileType[_0xa5ca61(0x2e8)],permission:permission=0x1b6,mtime:mtime=Date[_0xa5ca61(0x373)]()/0x3e8|0x0,packetSize:packetSize=ADB_SYNC_MAX_PACKET_SIZE}){const _0x33f482=_0xa5ca61;let _0x293457=await _0x5baa41[_0x33f482(0x2e9)]();try{let _0x182843=type<<0xc|permission,_0x1a64af=_0x1e90a9+','+_0x182843[_0x33f482(0x31a)]();await adbSyncWriteRequest(_0x293457,AdbSyncRequestId[_0x33f482(0x2f3)],_0x1a64af),await pipeFileData(_0x293457,_0x13f20a,packetSize,mtime);}finally{_0x293457[_0x33f482(0x251)]();}}var AdbSyncSendV2Flags={'None':0x0,'Brotli':0x1,'Lz4':0x2,'Zstd':0x4,'DryRun':0x80000000},AdbSyncSendV2Request=struct({'id':u32,'mode':u32,'flags':u32()},{'littleEndian':!0x0});async function adbSyncPushV2({socket:_0x19df71,filename:_0x5d4818,file:_0xc3c7d4,type:type=LinuxFileType[_0xa5ca61(0x2e8)],permission:permission=0x1b6,mtime:mtime=Date['now']()/0x3e8|0x0,packetSize:packetSize=ADB_SYNC_MAX_PACKET_SIZE,dryRun:dryRun=!0x1}){const _0x50c6b1=_0xa5ca61;let _0x48e01f=await _0x19df71[_0x50c6b1(0x2e9)]();try{await adbSyncWriteRequest(_0x48e01f,AdbSyncRequestId[_0x50c6b1(0x1dc)],_0x5d4818);let _0x1d9df5=type<<0xc|permission,_0x1dadd6=AdbSyncSendV2Flags[_0x50c6b1(0x2cd)];dryRun&&(_0x1dadd6|=AdbSyncSendV2Flags['DryRun']),await _0x48e01f[_0x50c6b1(0x286)](AdbSyncSendV2Request[_0x50c6b1(0x348)]({'id':AdbSyncRequestId[_0x50c6b1(0x1dc)],'mode':_0x1d9df5,'flags':_0x1dadd6})),await pipeFileData(_0x48e01f,_0xc3c7d4,packetSize,mtime);}finally{_0x48e01f['release']();}}function adbSyncPush(_0x4063fb){const _0x279bb1=_0xa5ca61;if(_0x4063fb['v2'])return adbSyncPushV2(_0x4063fb);if(_0x4063fb[_0x279bb1(0x2be)])throw new Error(_0x279bb1(0x37f));return adbSyncPushV1(_0x4063fb);}var AdbSyncSocketLocked=class{#writer;#readable;#socketLock;#writeLock=new AutoResetEvent();#combiner;get[_0xa5ca61(0x3ab)](){return this.#readable['position'];}constructor(_0x24781e,_0xabe9b6,_0x496ed2,_0x4a98a1){this.#writer=_0x24781e,this.#readable=_0xabe9b6,this.#socketLock=_0x4a98a1,this.#combiner=new BufferCombiner(_0x496ed2);}#write(_0x2831a6){const _0xe3a19c=_0xa5ca61;return Consumable[_0xe3a19c(0x2ae)][_0xe3a19c(0x286)](this.#writer,_0x2831a6);}async[_0xa5ca61(0x1cc)](){const _0x55cfbc=_0xa5ca61;try{await this.#writeLock[_0x55cfbc(0x30e)]();let _0x5110b3=this.#combiner['flush']();_0x5110b3&&await this.#write(_0x5110b3);}finally{this.#writeLock[_0x55cfbc(0x1e4)]();}}async[_0xa5ca61(0x286)](_0x274e60){const _0xb0240=_0xa5ca61;try{await this.#writeLock['wait']();for(let _0xdcd9b2 of this.#combiner['push'](_0x274e60))await this.#write(_0xdcd9b2);}finally{this.#writeLock[_0xb0240(0x1e4)]();}}async[_0xa5ca61(0x3a7)](_0x123113){const _0x23bba1=_0xa5ca61;return await this[_0x23bba1(0x1cc)](),await this.#readable[_0x23bba1(0x3a7)](_0x123113);}[_0xa5ca61(0x251)](){const _0x314c0f=_0xa5ca61;this.#combiner[_0x314c0f(0x1cc)](),this.#socketLock[_0x314c0f(0x1e4)]();}async[_0xa5ca61(0x1d4)](){await this.#readable['cancel']();}},AdbSyncSocket=class{#lock=new AutoResetEvent();#socket;#locked;constructor(_0x2135b7,_0x105704){const _0x44e166=_0xa5ca61;this.#socket=_0x2135b7,this.#locked=new AdbSyncSocketLocked(_0x2135b7[_0x44e166(0x34c)]['getWriter'](),new BufferedReadableStream(_0x2135b7['readable']),_0x105704,this.#lock);}async[_0xa5ca61(0x2e9)](){return await this.#lock['wait'](),this.#locked;}async['close'](){const _0x34e7a2=_0xa5ca61;await this.#locked[_0x34e7a2(0x1d4)](),await this.#socket[_0x34e7a2(0x1d4)]();}};function dirname(_0x1d7f4f){const _0x5397c1=_0xa5ca61;let _0x55475f=_0x1d7f4f[_0x5397c1(0x2d0)]('/');if(_0x55475f===-0x1)throw new Error(_0x5397c1(0x379));return _0x55475f===0x0?'/':_0x1d7f4f[_0x5397c1(0x267)](0x0,_0x55475f);}var AdbSync=class{[_0xa5ca61(0x231)];[_0xa5ca61(0x329)];#supportsStat;#supportsListV2;#fixedPushMkdir;#supportsSendReceiveV2;#needPushMkdirWorkaround;get[_0xa5ca61(0x213)](){return this.#supportsStat;}get[_0xa5ca61(0x1c6)](){return this.#supportsListV2;}get['fixedPushMkdir'](){return this.#fixedPushMkdir;}get['supportsSendReceiveV2'](){return this.#supportsSendReceiveV2;}get[_0xa5ca61(0x244)](){return this.#needPushMkdirWorkaround;}constructor(_0x2f3ec9,_0xbf49d8){const _0x4e27d5=_0xa5ca61;this['_adb']=_0x2f3ec9,this[_0x4e27d5(0x329)]=new AdbSyncSocket(_0xbf49d8,_0x2f3ec9[_0x4e27d5(0x1c7)]),this.#supportsStat=_0x2f3ec9[_0x4e27d5(0x292)](AdbFeature[_0x4e27d5(0x39f)]),this.#supportsListV2=_0x2f3ec9['canUseFeature'](AdbFeature[_0x4e27d5(0x2ef)]),this.#fixedPushMkdir=_0x2f3ec9['canUseFeature'](AdbFeature[_0x4e27d5(0x263)]),this.#supportsSendReceiveV2=_0x2f3ec9['canUseFeature'](AdbFeature[_0x4e27d5(0x2df)]),this.#needPushMkdirWorkaround=this[_0x4e27d5(0x231)][_0x4e27d5(0x292)](AdbFeature['ShellV2'])&&!this[_0x4e27d5(0x202)];}async[_0xa5ca61(0x233)](_0x22f651){const _0x1dd232=_0xa5ca61;return await adbSyncLstat(this[_0x1dd232(0x329)],_0x22f651,this.#supportsStat);}async[_0xa5ca61(0x21c)](_0x4a9f74){const _0x44865e=_0xa5ca61;if(!this.#supportsStat)throw new Error(_0x44865e(0x217));return await adbSyncStat(this[_0x44865e(0x329)],_0x4a9f74);}async[_0xa5ca61(0x2ab)](_0xadcb14){const _0x492423=_0xa5ca61;try{return await this[_0x492423(0x233)](_0xadcb14+'/'),!0x0;}catch{return!0x1;}}[_0xa5ca61(0x2e7)](_0x4575ba){const _0x4ccaa5=_0xa5ca61;return adbSyncOpenDir(this['_socket'],_0x4575ba,this[_0x4ccaa5(0x1c6)]);}async['readdir'](_0x503e2c){const _0x30262e=_0xa5ca61;let _0x506603=[];for await(let _0x40285b of this[_0x30262e(0x2e7)](_0x503e2c))_0x506603[_0x30262e(0x206)](_0x40285b);return _0x506603;}['read'](_0x51c516){const _0x10b4e9=_0xa5ca61;return adbSyncPull(this[_0x10b4e9(0x329)],_0x51c516);}async['write'](_0x33f91c){const _0x35330e=_0xa5ca61;this[_0x35330e(0x244)]&&await this[_0x35330e(0x231)][_0x35330e(0x35f)]['noneProtocol'][_0x35330e(0x257)](['mkdir','-p',escapeArg(dirname(_0x33f91c[_0x35330e(0x39a)]))]),await adbSyncPush({'v2':this[_0x35330e(0x36c)],'socket':this[_0x35330e(0x329)],..._0x33f91c});}[_0xa5ca61(0x306)](){const _0x4aced6=_0xa5ca61;return this[_0x4aced6(0x329)][_0x4aced6(0x2e9)]();}[_0xa5ca61(0x326)](){const _0x31fa31=_0xa5ca61;return this[_0x31fa31(0x329)][_0x31fa31(0x1d4)]();}};function parsePort(_0x24e542){const _0x976ce2=_0xa5ca61;if(!(!_0x24e542||_0x24e542==='0'))return Number[_0x976ce2(0x2fb)](_0x24e542,0xa);}var AdbTcpIpService=class extends AdbServiceBase{async[_0xa5ca61(0x293)](){const _0x3e009c=_0xa5ca61;let _0x424be8=await this[_0x3e009c(0x2f7)]['getProp'](_0x3e009c(0x2d2)),_0x212dca=await this[_0x3e009c(0x2f7)][_0x3e009c(0x260)](_0x3e009c(0x243)),_0x3e104d=await this[_0x3e009c(0x2f7)][_0x3e009c(0x260)](_0x3e009c(0x299));return{'serviceListenAddresses':_0x424be8!=''?_0x424be8['split'](','):[],'servicePort':parsePort(_0x212dca),'persistPort':parsePort(_0x3e104d)};}async[_0xa5ca61(0x33b)](_0x4002f9){const _0x4d0584=_0xa5ca61;if(_0x4002f9<=0x0)throw new TypeError('Invalid\x20port\x20'+_0x4002f9);let _0x59d0fb=await this[_0x4d0584(0x2f7)]['createSocketAndWait'](_0x4d0584(0x30d)+_0x4002f9);if(_0x59d0fb!==_0x4d0584(0x2d9)+_0x4002f9+'\x0a')throw new Error(_0x59d0fb);return _0x59d0fb;}async[_0xa5ca61(0x1d2)](){const _0xa8f722=_0xa5ca61;let _0x1a9374=await this[_0xa8f722(0x2f7)]['createSocketAndWait'](_0xa8f722(0x29a));if(_0x1a9374!=='restarting\x20in\x20USB\x20mode\x0a')throw new Error(_0x1a9374);return _0x1a9374;}},Adb=class{#transport;get[_0xa5ca61(0x37b)](){return this.#transport;}get[_0xa5ca61(0x384)](){return this.#transport['serial'];}get[_0xa5ca61(0x1c7)](){const _0x4af868=_0xa5ca61;return this.#transport[_0x4af868(0x1c7)];}get[_0xa5ca61(0x360)](){const _0x5997fb=_0xa5ca61;return this.#transport[_0x5997fb(0x360)];}get['disconnected'](){return this.#transport['disconnected'];}get[_0xa5ca61(0x331)](){const _0x756cfd=_0xa5ca61;return this.#transport[_0x756cfd(0x331)];}get[_0xa5ca61(0x2ff)](){const _0x5c9f33=_0xa5ca61;return this['banner'][_0x5c9f33(0x3a8)];}['subprocess'];[_0xa5ca61(0x366)];[_0xa5ca61(0x2d7)];[_0xa5ca61(0x339)];constructor(_0x3ad6d6){const _0x157e88=_0xa5ca61;this.#transport=_0x3ad6d6,this[_0x157e88(0x35f)]=new AdbSubprocessService(this),this[_0x157e88(0x366)]=new AdbPower(this),this[_0x157e88(0x2d7)]=new AdbReverseService(this),this[_0x157e88(0x339)]=new AdbTcpIpService(this);}[_0xa5ca61(0x292)](_0x1ca873){const _0x580990=_0xa5ca61;return this[_0x580990(0x331)]['includes'](_0x1ca873)&&this['deviceFeatures'][_0x580990(0x317)](_0x1ca873);}async[_0xa5ca61(0x297)](_0x2e0f09){return this.#transport['connect'](_0x2e0f09);}async[_0xa5ca61(0x29b)](_0x19b96b){const _0x26abad=_0xa5ca61;return await(await this[_0x26abad(0x297)](_0x19b96b))[_0x26abad(0x237)][_0x26abad(0x305)](new TextDecoderStream())[_0x26abad(0x305)](new ConcatStringStream());}[_0xa5ca61(0x260)](_0x60b16d){const _0x5f1c97=_0xa5ca61;return this[_0x5f1c97(0x35f)]['noneProtocol'][_0x5f1c97(0x1fd)]([_0x5f1c97(0x2a5),_0x60b16d])[_0x5f1c97(0x298)](_0x1dc460=>_0x1dc460[_0x5f1c97(0x282)]());}['rm'](_0x349c25,_0x3a5e47){const _0x46fb4f=_0xa5ca61;let _0x1490ce=['rm'];if(_0x3a5e47!=null&&_0x3a5e47[_0x46fb4f(0x22c)]&&_0x1490ce[_0x46fb4f(0x206)]('-r'),_0x3a5e47!=null&&_0x3a5e47[_0x46fb4f(0x307)]&&_0x1490ce[_0x46fb4f(0x206)]('-f'),Array['isArray'](_0x349c25)){for(let _0x4d2a3a of _0x349c25)_0x1490ce[_0x46fb4f(0x206)](escapeArg(_0x4d2a3a));}else _0x1490ce[_0x46fb4f(0x206)](escapeArg(_0x349c25));return _0x1490ce[_0x46fb4f(0x206)]('</dev/null'),this[_0x46fb4f(0x35f)][_0x46fb4f(0x2eb)]['spawnWaitText'](_0x1490ce);}async[_0xa5ca61(0x3b2)](){const _0x212178=_0xa5ca61;let _0x17731d=await this[_0x212178(0x297)](_0x212178(0x23f));return new AdbSync(this,_0x17731d);}async[_0xa5ca61(0x288)](){return framebuffer(this);}async['close'](){const _0x27ab2d=_0xa5ca61;await this.#transport[_0x27ab2d(0x1d4)]();}},AdbBannerKey={'Product':_0xa5ca61(0x30c),'Model':_0xa5ca61(0x362),'Device':_0xa5ca61(0x29d),'Features':_0xa5ca61(0x3a8)},AdbBanner=class _AdbBanner{static[_0xa5ca61(0x2c5)](_0x37b55d){const _0x4c5886=_0xa5ca61;let _0x9b9bba,_0x409171,_0x239055,_0x4cd7b8=[],_0x42aba7=_0x37b55d[_0x4c5886(0x308)]('::');if(_0x42aba7[_0x4c5886(0x2c0)]>0x1){let _0x25ff9a=_0x42aba7[0x1];for(let _0x425293 of _0x25ff9a[_0x4c5886(0x308)](';')){if(!_0x425293)continue;let _0x502602=_0x425293['split']('=');if(_0x502602[_0x4c5886(0x2c0)]!==0x2)continue;let [_0x26798e,_0x58574c]=_0x502602;switch(_0x26798e){case AdbBannerKey[_0x4c5886(0x1de)]:_0x9b9bba=_0x58574c;break;case AdbBannerKey['Model']:_0x409171=_0x58574c;break;case AdbBannerKey[_0x4c5886(0x1f3)]:_0x239055=_0x58574c;break;case AdbBannerKey[_0x4c5886(0x38c)]:_0x4cd7b8=_0x58574c[_0x4c5886(0x308)](',');break;}}}return new _AdbBanner(_0x9b9bba,_0x409171,_0x239055,_0x4cd7b8);}#product;get[_0xa5ca61(0x1d3)](){return this.#product;}#model;get[_0xa5ca61(0x203)](){return this.#model;}#device;get[_0xa5ca61(0x1c5)](){return this.#device;}#features=[];get[_0xa5ca61(0x3a8)](){return this.#features;}constructor(_0x4a04c9,_0x169fe1,_0x46f486,_0x363a07){this.#product=_0x4a04c9,this.#model=_0x169fe1,this.#device=_0x46f486,this.#features=_0x363a07;}};function getBigUint(_0x1ac1f2,_0x304d9d,_0x38f9dd){let _0x80ef8a=0x0n;for(let _0x206bcf=_0x304d9d;_0x206bcf<_0x304d9d+_0x38f9dd;_0x206bcf+=0x8){_0x80ef8a<<=0x40n;let _0x4fb90e=getUint64BigEndian(_0x1ac1f2,_0x206bcf);_0x80ef8a|=_0x4fb90e;}return _0x80ef8a;}function setBigUint(_0x44be84,_0x25a867,_0x53b4db,_0x30af31,_0x3e3ff0){if(_0x3e3ff0){for(;_0x30af31>0x0n;)setInt64LittleEndian(_0x44be84,_0x25a867,_0x30af31),_0x25a867+=0x8,_0x30af31>>=0x40n;}else{let _0x2db4d8=_0x25a867+_0x53b4db-0x8;for(;_0x30af31>0x0n;)setInt64BigEndian(_0x44be84,_0x2db4d8,_0x30af31),_0x2db4d8-=0x8,_0x30af31>>=0x40n;}}var RsaPrivateKeyNOffset=0x26,RsaPrivateKeyNLength=0x800/0x8,RsaPrivateKeyDOffset=0x12f,RsaPrivateKeyDLength=0x800/0x8;function rsaParsePrivateKey(_0x2b3a4f){let _0x5abe0b=getBigUint(_0x2b3a4f,RsaPrivateKeyNOffset,RsaPrivateKeyNLength),_0x2bd902=getBigUint(_0x2b3a4f,RsaPrivateKeyDOffset,RsaPrivateKeyDLength);return[_0x5abe0b,_0x2bd902];}function nonNegativeMod(_0x41c11f,_0x1818d1){let _0x3b8902=_0x41c11f%_0x1818d1;return _0x3b8902>0x0?_0x3b8902:_0x3b8902+(_0x1818d1>0x0?_0x1818d1:-_0x1818d1);}function modInverse(_0x2fcad7,_0x43b968){const _0x56446a=_0xa5ca61;if(_0x2fcad7=nonNegativeMod(_0x2fcad7,_0x43b968),!_0x2fcad7||_0x43b968<0x2)return NaN;let _0x59ea8e=[],_0x5572a3=_0x43b968;for(;_0x5572a3;)[_0x2fcad7,_0x5572a3]=[_0x5572a3,_0x2fcad7%_0x5572a3],_0x59ea8e['push']({'a':_0x2fcad7,'b':_0x5572a3});if(_0x2fcad7!==0x1)return NaN;let _0x5c945d=0x1,_0x595de1=0x0;for(let _0x273903=_0x59ea8e[_0x56446a(0x2c0)]-0x2;_0x273903>=0x0;_0x273903-=0x1)[_0x5c945d,_0x595de1]=[_0x595de1,_0x5c945d-_0x595de1*Math[_0x56446a(0x25f)](_0x59ea8e[_0x273903]['a']/_0x59ea8e[_0x273903]['b'])];return nonNegativeMod(_0x595de1,_0x43b968);}var ModulusLengthInBytes=0x800/0x8,ModulusLengthInWords=ModulusLengthInBytes/0x4;function adbGetPublicKeySize(){return 0x8+ModulusLengthInBytes+ModulusLengthInBytes+0x4;}function adbGeneratePublicKey(_0x5f51f4,_0x3b7e4a){const _0x338eac=_0xa5ca61;let _0x4bda70,_0x9c828=adbGetPublicKeySize();if(!_0x3b7e4a)_0x3b7e4a=new Uint8Array(_0x9c828),_0x4bda70=_0x338eac(0x33c);else{if(_0x3b7e4a[_0x338eac(0x2c0)]<_0x9c828)throw new TypeError(_0x338eac(0x24a));_0x4bda70=_0x338eac(0x26f);}let _0x3663b2=new DataView(_0x3b7e4a[_0x338eac(0x2bf)],_0x3b7e4a[_0x338eac(0x2bd)],_0x3b7e4a['length']),_0x2d0b65=0x0;_0x3663b2[_0x338eac(0x2ca)](_0x2d0b65,ModulusLengthInWords,!0x0),_0x2d0b65+=0x4;let [_0x5a9027]=rsaParsePrivateKey(_0x5f51f4),_0x46670c=-modInverse(Number(_0x5a9027%0x2n**0x20n),0x2**0x20);_0x3663b2[_0x338eac(0x31c)](_0x2d0b65,_0x46670c,!0x0),_0x2d0b65+=0x4,setBigUint(_0x3b7e4a,_0x2d0b65,ModulusLengthInBytes,_0x5a9027,!0x0),_0x2d0b65+=ModulusLengthInBytes;let _0x289ef0=0x2n**0x1000n%_0x5a9027;return setBigUint(_0x3b7e4a,_0x2d0b65,ModulusLengthInBytes,_0x289ef0,!0x0),_0x2d0b65+=ModulusLengthInBytes,_0x3663b2['setUint32'](_0x2d0b65,0x10001,!0x0),_0x2d0b65+=0x4,_0x4bda70===_0x338eac(0x33c)?_0x3b7e4a:_0x9c828;}function powMod(_0x259977,_0x42d479,_0xd5e696){const _0xa1bf15=_0xa5ca61;if(_0xd5e696===0x1n)return 0x0n;let _0x2ea311=0x1n;for(_0x259977=_0x259977%_0xd5e696;_0x42d479>0x0n;)BigInt[_0xa1bf15(0x214)](0x1,_0x42d479)===0x1n&&(_0x2ea311=_0x2ea311*_0x259977%_0xd5e696),_0x259977=_0x259977*_0x259977%_0xd5e696,_0x42d479>>=0x1n;return _0x2ea311;}var SHA1_DIGEST_LENGTH=0x14,ASN1_SEQUENCE=0x30,ASN1_OCTET_STRING=0x4,ASN1_NULL=0x5,ASN1_OID=0x6,SHA1_DIGEST_INFO=new Uint8Array([ASN1_SEQUENCE,0xd+SHA1_DIGEST_LENGTH,ASN1_SEQUENCE,0x9,ASN1_OID,0x5,0x1*0x28+0x3,0xe,0x3,0x2,0x1a,ASN1_NULL,0x0,ASN1_OCTET_STRING,SHA1_DIGEST_LENGTH]);function rsaSign(_0x3658c3,_0x172fae){const _0x5afbd7=_0xa5ca61;let [_0x2ff1e4,_0x23786f]=rsaParsePrivateKey(_0x3658c3),_0xbb3363=new Uint8Array(0x100),_0x2841b4=0x0;_0xbb3363[_0x2841b4]=0x0,_0x2841b4+=0x1,_0xbb3363[_0x2841b4]=0x1,_0x2841b4+=0x1;let _0x3d7757=_0xbb3363['length']-SHA1_DIGEST_INFO[_0x5afbd7(0x2c0)]-_0x172fae[_0x5afbd7(0x2c0)]-0x1;for(;_0x2841b4<_0x3d7757;)_0xbb3363[_0x2841b4]=0xff,_0x2841b4+=0x1;_0xbb3363[_0x2841b4]=0x0,_0x2841b4+=0x1,_0xbb3363[_0x5afbd7(0x2f6)](SHA1_DIGEST_INFO,_0x2841b4),_0x2841b4+=SHA1_DIGEST_INFO[_0x5afbd7(0x2c0)],_0xbb3363[_0x5afbd7(0x2f6)](_0x172fae,_0x2841b4);let _0x592370=powMod(getBigUint(_0xbb3363,0x0,_0xbb3363[_0x5afbd7(0x2c0)]),_0x23786f,_0x2ff1e4);return setBigUint(_0xbb3363,0x0,_0xbb3363[_0x5afbd7(0x2c0)],_0x592370,!0x1),_0xbb3363;}var AdbCommand={'Auth':0x48545541,'Close':0x45534c43,'Connect':0x4e584e43,'Okay':0x59414b4f,'Open':0x4e45504f,'Write':0x45545257},AdbPacketHeader=struct({'command':u32,'arg0':u32,'arg1':u32,'payloadLength':u32,'checksum':u32,'magic':s32},{'littleEndian':!0x0}),AdbPacket=extend(AdbPacketHeader,{'payload':buffer(_0xa5ca61(0x30a))});function calculateChecksum(_0x315aec){const _0x36908d=_0xa5ca61;return _0x315aec[_0x36908d(0x2a2)]((_0x4296f1,_0x1aaf70)=>_0x4296f1+_0x1aaf70,0x0);}var AdbPacketSerializeStream=class extends TransformStream{constructor(){const _0x918898=_0xa5ca61;let _0x4d8f75=new Uint8Array(AdbPacketHeader[_0x918898(0x24c)]);super({'transform':async(_0x537e58,_0x11b289)=>{const _0x31ecf2=_0x918898;await _0x537e58[_0x31ecf2(0x1ed)](async _0x85507=>{const _0x5b82b7=_0x31ecf2;let _0x246920=_0x85507;_0x246920[_0x5b82b7(0x30a)]=_0x246920[_0x5b82b7(0x37d)][_0x5b82b7(0x2c0)],AdbPacketHeader[_0x5b82b7(0x348)](_0x246920,_0x4d8f75),await Consumable[_0x5b82b7(0x2e1)]['enqueue'](_0x11b289,_0x4d8f75),_0x246920[_0x5b82b7(0x30a)]&&await Consumable[_0x5b82b7(0x2e1)][_0x5b82b7(0x226)](_0x11b289,_0x246920[_0x5b82b7(0x37d)]);});}});}},AdbAuthType={'Token':0x1,'Signature':0x2,'PublicKey':0x3},AdbSignatureAuthenticator=async function*(_0x4cc2da,_0x5ada2a){const _0xb92d17=_0xa5ca61;for await(let _0x628d2 of _0x4cc2da[_0xb92d17(0x304)]()){let _0x410ea1=await _0x5ada2a();if(_0x410ea1[_0xb92d17(0x1d9)]!==AdbAuthType['Token'])return;let _0x32c826=rsaSign(_0x628d2[_0xb92d17(0x2bf)],_0x410ea1[_0xb92d17(0x37d)]);yield{'command':AdbCommand[_0xb92d17(0x1eb)],'arg0':AdbAuthType[_0xb92d17(0x353)],'arg1':0x0,'payload':_0x32c826};}},AdbPublicKeyAuthenticator=async function*(_0x11cf68,_0x5cc54c){const _0x2bf53c=_0xa5ca61;var _0x3af430;if((await _0x5cc54c())['arg0']!==AdbAuthType['Token'])return;let _0xb05181;for await(let _0x47f074 of _0x11cf68[_0x2bf53c(0x304)]()){_0xb05181=_0x47f074;break;}_0xb05181||(_0xb05181=await _0x11cf68['generateKey']());let _0xdd7473=adbGetPublicKeySize(),[_0xdb2ef6]=calculateBase64EncodedLength(_0xdd7473),_0x430ec5=(_0x3af430=_0xb05181[_0x2bf53c(0x269)])!=null&&_0x3af430[_0x2bf53c(0x2c0)]?encodeUtf8(_0xb05181[_0x2bf53c(0x269)]):EmptyUint8Array,_0x581a58=new Uint8Array(_0xdb2ef6+(_0x430ec5[_0x2bf53c(0x2c0)]?_0x430ec5[_0x2bf53c(0x2c0)]+0x1:0x0)+0x1);adbGeneratePublicKey(_0xb05181[_0x2bf53c(0x2bf)],_0x581a58),encodeBase64(_0x581a58[_0x2bf53c(0x35e)](0x0,_0xdd7473),_0x581a58),_0x430ec5[_0x2bf53c(0x2c0)]&&(_0x581a58[_0xdb2ef6]=0x20,_0x581a58[_0x2bf53c(0x2f6)](_0x430ec5,_0xdb2ef6+0x1)),yield{'command':AdbCommand[_0x2bf53c(0x1eb)],'arg0':AdbAuthType[_0x2bf53c(0x39c)],'arg1':0x0,'payload':_0x581a58};},ADB_DEFAULT_AUTHENTICATORS=[AdbSignatureAuthenticator,AdbPublicKeyAuthenticator],AdbAuthenticationProcessor=class{[_0xa5ca61(0x228)];#credentialStore;#pendingRequest=new PromiseResolver();#iterator;constructor(_0x553ac7,_0x35f921){const _0x24117c=_0xa5ca61;this[_0x24117c(0x228)]=_0x553ac7,this.#credentialStore=_0x35f921;}#getNextRequest=()=>this.#pendingRequest['promise'];async *#invokeAuthenticator(){const _0x45aef1=_0xa5ca61;for(let _0x1173aa of this[_0x45aef1(0x228)])for await(let _0x1378ed of _0x1173aa(this.#credentialStore,this.#getNextRequest))this.#pendingRequest=new PromiseResolver(),yield _0x1378ed;}async[_0xa5ca61(0x2e3)](_0x2c02f6){const _0x2b56e6=_0xa5ca61;this.#iterator||(this.#iterator=this.#invokeAuthenticator()),this.#pendingRequest[_0x2b56e6(0x2ac)](_0x2c02f6);let _0x31818d=await this.#iterator[_0x2b56e6(0x1e9)]();if(_0x31818d[_0x2b56e6(0x34d)])throw new Error(_0x2b56e6(0x1f5));return _0x31818d[_0x2b56e6(0x367)];}[_0xa5ca61(0x326)](){const _0x2142b8=_0xa5ca61;var _0x4699a8,_0x1a6212;(_0x1a6212=(_0x4699a8=this.#iterator)==null?void 0x0:_0x4699a8[_0x2142b8(0x340)])==null||_0x1a6212['call'](_0x4699a8);}},AdbDaemonSocketController=class{#dispatcher;['localId'];[_0xa5ca61(0x35b)];[_0xa5ca61(0x1f2)];[_0xa5ca61(0x34e)];#readable;#readableController;get[_0xa5ca61(0x237)](){return this.#readable;}#writableController;['writable'];#closed=!0x1;#closedPromise=new PromiseResolver();get['closed'](){const _0x22724e=_0xa5ca61;return this.#closedPromise[_0x22724e(0x1f0)];}#socket;get[_0xa5ca61(0x2fe)](){return this.#socket;}#availableWriteBytesChanged;#availableWriteBytes=0x0;constructor(_0x2e5dba){const _0x3102a7=_0xa5ca61;this.#dispatcher=_0x2e5dba[_0x3102a7(0x255)],this['localId']=_0x2e5dba['localId'],this[_0x3102a7(0x35b)]=_0x2e5dba[_0x3102a7(0x35b)],this[_0x3102a7(0x1f2)]=_0x2e5dba[_0x3102a7(0x1f2)],this[_0x3102a7(0x34e)]=_0x2e5dba[_0x3102a7(0x34e)],this.#readable=new PushReadableStream(_0x4150a0=>{this.#readableController=_0x4150a0;}),this[_0x3102a7(0x34c)]=new maybe_consumable_exports[(_0x3102a7(0x2ae))]({'start':_0x164904=>{const _0x27dd29=_0x3102a7;this.#writableController=_0x164904,_0x164904[_0x27dd29(0x22e)][_0x27dd29(0x31b)](_0x27dd29(0x359),()=>{const _0x3eb9bd=_0x27dd29;var _0x35cdcc;(_0x35cdcc=this.#availableWriteBytesChanged)==null||_0x35cdcc[_0x3eb9bd(0x21a)](_0x164904[_0x3eb9bd(0x22e)][_0x3eb9bd(0x24f)]);});},'write':async _0xfc09db=>{const _0xcc58c1=_0x3102a7;let _0x12fbec=_0xfc09db[_0xcc58c1(0x2c0)],_0x1694b8=this.#dispatcher['options']['maxPayloadSize'];for(let _0x4b73c9=0x0,_0x428e65=_0x1694b8;_0x4b73c9<_0x12fbec;_0x4b73c9=_0x428e65,_0x428e65+=_0x1694b8){let _0x5dc7f3=_0xfc09db[_0xcc58c1(0x35e)](_0x4b73c9,_0x428e65);await this.#writeChunk(_0x5dc7f3);}}}),this.#socket=new AdbDaemonSocket(this),this.#availableWriteBytes=_0x2e5dba[_0x3102a7(0x2a3)];}async #writeChunk(_0x3a4a76){const _0x493b6e=_0xa5ca61;let _0x1f492d=_0x3a4a76[_0x493b6e(0x2c0)];for(;this.#availableWriteBytes<_0x1f492d;){let _0x6f328=new PromiseResolver();this.#availableWriteBytesChanged=_0x6f328,await _0x6f328['promise'];}this.#availableWriteBytes===0x1/0x0?this.#availableWriteBytes=-0x1:this.#availableWriteBytes-=_0x1f492d,await this.#dispatcher['sendPacket'](AdbCommand[_0x493b6e(0x229)],this[_0x493b6e(0x3a1)],this[_0x493b6e(0x35b)],_0x3a4a76);}async[_0xa5ca61(0x226)](_0x155a27){await this.#readableController['enqueue'](_0x155a27);}['ack'](_0x409fc6){const _0x557bb0=_0xa5ca61;var _0x167817;this.#availableWriteBytes+=_0x409fc6,(_0x167817=this.#availableWriteBytesChanged)==null||_0x167817[_0x557bb0(0x2ac)]();}async[_0xa5ca61(0x1d4)](){const _0x4742c3=_0xa5ca61;var _0x325503;if(!this.#closed){this.#closed=!0x0,(_0x325503=this.#availableWriteBytesChanged)==null||_0x325503[_0x4742c3(0x21a)](new Error(_0x4742c3(0x216)));try{this.#writableController['error'](new Error('Socket\x20closed'));}catch{}await this.#dispatcher[_0x4742c3(0x36a)](AdbCommand[_0x4742c3(0x2b1)],this['localId'],this[_0x4742c3(0x35b)],EmptyUint8Array);}}[_0xa5ca61(0x326)](){const _0xc43324=_0xa5ca61;this.#readableController[_0xc43324(0x1d4)](),this.#closedPromise[_0xc43324(0x2ac)](void 0x0);}},AdbDaemonSocket=class{#controller;get[_0xa5ca61(0x3a1)](){const _0x505fb5=_0xa5ca61;return this.#controller[_0x505fb5(0x3a1)];}get[_0xa5ca61(0x35b)](){const _0x2d0c42=_0xa5ca61;return this.#controller[_0x2d0c42(0x35b)];}get[_0xa5ca61(0x1f2)](){const _0x132763=_0xa5ca61;return this.#controller[_0x132763(0x1f2)];}get[_0xa5ca61(0x34e)](){return this.#controller['service'];}get[_0xa5ca61(0x237)](){const _0x649a12=_0xa5ca61;return this.#controller[_0x649a12(0x237)];}get[_0xa5ca61(0x34c)](){const _0x3ae018=_0xa5ca61;return this.#controller[_0x3ae018(0x34c)];}get[_0xa5ca61(0x312)](){const _0x5a3f1d=_0xa5ca61;return this.#controller[_0x5a3f1d(0x312)];}constructor(_0x1a574b){this.#controller=_0x1a574b;}[_0xa5ca61(0x1d4)](){const _0x26bf76=_0xa5ca61;return this.#controller[_0x26bf76(0x1d4)]();}},AdbPacketDispatcher=class{#initializers=new AsyncOperationManager(0x1);#sockets=new Map();#writer;[_0xa5ca61(0x265)];#closed=!0x1;#disconnected=new PromiseResolver();get[_0xa5ca61(0x218)](){return this.#disconnected['promise'];}#incomingSocketHandlers=new Map();#readAbortController=new AbortController();constructor(_0x15fc98,_0x3e0a4d){const _0xb7a455=_0xa5ca61;this[_0xb7a455(0x265)]=_0x3e0a4d,this[_0xb7a455(0x265)][_0xb7a455(0x394)]<0x0&&(this[_0xb7a455(0x265)][_0xb7a455(0x394)]=0x0),_0x15fc98[_0xb7a455(0x237)][_0xb7a455(0x32b)](new WritableStream({'write':async(_0x295d85,_0x44c92e)=>{const _0x3233e7=_0xb7a455;switch(_0x295d85[_0x3233e7(0x322)]){case AdbCommand[_0x3233e7(0x2b1)]:await this.#handleClose(_0x295d85);break;case AdbCommand[_0x3233e7(0x3ac)]:this.#handleOkay(_0x295d85);break;case AdbCommand['Open']:await this.#handleOpen(_0x295d85);break;case AdbCommand[_0x3233e7(0x229)]:this.#handleWrite(_0x295d85)['catch'](_0x337ae3=>{const _0x2a4ab6=_0x3233e7;_0x44c92e[_0x2a4ab6(0x20d)](_0x337ae3);});break;default:throw new Error('Unknown\x20command:\x20'+_0x295d85[_0x3233e7(0x322)][_0x3233e7(0x31a)](0x10));}}}),{'preventCancel':_0x3e0a4d[_0xb7a455(0x2d6)]??!0x1,'signal':this.#readAbortController[_0xb7a455(0x22e)]})[_0xb7a455(0x298)](()=>{this.#dispose();},_0x3c5603=>{const _0x4d43e7=_0xb7a455;this.#closed||this.#disconnected[_0x4d43e7(0x21a)](_0x3c5603),this.#dispose();}),this.#writer=_0x15fc98[_0xb7a455(0x34c)][_0xb7a455(0x391)]();}async #handleClose(_0x211324){const _0x59332c=_0xa5ca61;if(_0x211324['arg0']===0x0&&this.#initializers['reject'](_0x211324[_0x59332c(0x26c)],new Error('Socket\x20open\x20failed')))return;let _0x62e52a=this.#sockets[_0x59332c(0x37e)](_0x211324[_0x59332c(0x26c)]);if(_0x62e52a){await _0x62e52a[_0x59332c(0x1d4)](),_0x62e52a[_0x59332c(0x326)](),this.#sockets[_0x59332c(0x234)](_0x211324[_0x59332c(0x26c)]);return;}}#handleOkay(_0x129d5c){const _0x3e1343=_0xa5ca61;let _0x2ffdc5;if(this['options'][_0x3e1343(0x394)]!==0x0){if(_0x129d5c[_0x3e1343(0x37d)]['length']!==0x4)throw new Error(_0x3e1343(0x29e));_0x2ffdc5=getUint32LittleEndian(_0x129d5c[_0x3e1343(0x37d)],0x0);}else{if(_0x129d5c[_0x3e1343(0x37d)]['length']!==0x0)throw new Error(_0x3e1343(0x238));_0x2ffdc5=0x1/0x0;}if(this.#initializers[_0x3e1343(0x2ac)](_0x129d5c[_0x3e1343(0x26c)],{'remoteId':_0x129d5c[_0x3e1343(0x1d9)],'availableWriteBytes':_0x2ffdc5}))return;let _0x548e4c=this.#sockets['get'](_0x129d5c[_0x3e1343(0x26c)]);if(_0x548e4c){_0x548e4c[_0x3e1343(0x2ce)](_0x2ffdc5);return;}this[_0x3e1343(0x36a)](AdbCommand[_0x3e1343(0x2b1)],_0x129d5c['arg1'],_0x129d5c[_0x3e1343(0x1d9)],EmptyUint8Array);}#sendOkay(_0x52bc7d,_0x345834,_0x385af5){const _0x4abcd3=_0xa5ca61;let _0x5b7250;return this[_0x4abcd3(0x265)]['initialDelayedAckBytes']!==0x0?(_0x5b7250=new Uint8Array(0x4),setUint32LittleEndian(_0x5b7250,0x0,_0x385af5)):_0x5b7250=EmptyUint8Array,this[_0x4abcd3(0x36a)](AdbCommand['Okay'],_0x52bc7d,_0x345834,_0x5b7250);}async #handleOpen(_0x2e67e1){const _0x539622=_0xa5ca61;let [_0x15cf22]=this.#initializers[_0x539622(0x2b2)]();this.#initializers[_0x539622(0x2ac)](_0x15cf22,void 0x0);let _0x550101=_0x2e67e1['arg0'],_0x55a1b7=_0x2e67e1[_0x539622(0x26c)],_0x5e25da=decodeUtf8(_0x2e67e1[_0x539622(0x37d)]);if(_0x5e25da[_0x539622(0x330)]('\x00')&&(_0x5e25da=_0x5e25da[_0x539622(0x267)](0x0,_0x5e25da[_0x539622(0x2c0)]-0x1)),this[_0x539622(0x265)][_0x539622(0x394)]===0x0){if(_0x55a1b7!==0x0)throw new Error(_0x539622(0x27e));_0x55a1b7=0x1/0x0;}else{if(_0x55a1b7===0x0)throw new Error('Invalid\x20OPEN\x20packet.\x20arg1\x20should\x20be\x20greater\x20than\x200');}let _0x2f93fb=this.#incomingSocketHandlers['get'](_0x5e25da);if(!_0x2f93fb){await this[_0x539622(0x36a)](AdbCommand[_0x539622(0x2b1)],0x0,_0x550101,EmptyUint8Array);return;}let _0x303447=new AdbDaemonSocketController({'dispatcher':this,'localId':_0x15cf22,'remoteId':_0x550101,'localCreated':!0x1,'service':_0x5e25da,'availableWriteBytes':_0x55a1b7});try{await _0x2f93fb(_0x303447[_0x539622(0x2fe)]),this.#sockets['set'](_0x15cf22,_0x303447),await this.#sendOkay(_0x15cf22,_0x550101,this['options'][_0x539622(0x394)]);}catch{await this[_0x539622(0x36a)](AdbCommand[_0x539622(0x2b1)],0x0,_0x550101,EmptyUint8Array);}}async #handleWrite(_0x3345f9){const _0x5dfcfd=_0xa5ca61;let _0x583dcc=this.#sockets[_0x5dfcfd(0x37e)](_0x3345f9[_0x5dfcfd(0x26c)]);if(!_0x583dcc)throw new Error(_0x5dfcfd(0x1e1)+_0x3345f9[_0x5dfcfd(0x26c)]);let _0x4353ed=!0x1,_0x382f98=[((async()=>{const _0xe9fde0=_0x5dfcfd;await _0x583dcc['enqueue'](_0x3345f9[_0xe9fde0(0x37d)]),await this.#sendOkay(_0x3345f9[_0xe9fde0(0x26c)],_0x3345f9[_0xe9fde0(0x1d9)],_0x3345f9[_0xe9fde0(0x37d)][_0xe9fde0(0x2c0)]),_0x4353ed=!0x0;})())];this[_0x5dfcfd(0x265)]['readTimeLimit']&&_0x382f98['push'](((async()=>{const _0x309a0c=_0x5dfcfd;if(await delay(this[_0x309a0c(0x265)][_0x309a0c(0x1ff)]),!_0x4353ed)throw new Error(_0x309a0c(0x28b)+_0x583dcc['service']+_0x309a0c(0x252)+this[_0x309a0c(0x265)][_0x309a0c(0x1ff)]+_0x309a0c(0x1d1));})())),await Promise['race'](_0x382f98);}async[_0xa5ca61(0x297)](_0xe3301a){const _0x5adabe=_0xa5ca61;this[_0x5adabe(0x265)][_0x5adabe(0x2e5)]&&(_0xe3301a+='\x00');let [_0x48303d,_0x11cd81]=this.#initializers['add']();await this[_0x5adabe(0x36a)](AdbCommand['Open'],_0x48303d,this['options'][_0x5adabe(0x394)],_0xe3301a);let {remoteId:_0x18e6a6,availableWriteBytes:_0x5610df}=await _0x11cd81,_0x47a8e1=new AdbDaemonSocketController({'dispatcher':this,'localId':_0x48303d,'remoteId':_0x18e6a6,'localCreated':!0x0,'service':_0xe3301a,'availableWriteBytes':_0x5610df});return this.#sockets[_0x5adabe(0x2f6)](_0x48303d,_0x47a8e1),_0x47a8e1[_0x5adabe(0x2fe)];}[_0xa5ca61(0x2c1)](_0x2c5cc4,_0x18e7b4){const _0x552aed=_0xa5ca61;this.#incomingSocketHandlers[_0x552aed(0x2f6)](_0x2c5cc4,_0x18e7b4);}[_0xa5ca61(0x2b8)](_0x2e010f){const _0x3b67c9=_0xa5ca61;this.#incomingSocketHandlers[_0x3b67c9(0x234)](_0x2e010f);}[_0xa5ca61(0x248)](){const _0x3abcc2=_0xa5ca61;this.#incomingSocketHandlers[_0x3abcc2(0x36b)]();}async['sendPacket'](_0x5e119b,_0x2e0c47,_0x11a26f,_0x2bf0ff){const _0x2fd163=_0xa5ca61;if(typeof _0x2bf0ff==_0x2fd163(0x3a2)&&(_0x2bf0ff=encodeUtf8(_0x2bf0ff)),_0x2bf0ff[_0x2fd163(0x2c0)]>this[_0x2fd163(0x265)][_0x2fd163(0x1c7)])throw new TypeError('payload\x20too\x20large');await Consumable[_0x2fd163(0x2ae)]['write'](this.#writer,{'command':_0x5e119b,'arg0':_0x2e0c47,'arg1':_0x11a26f,'payload':_0x2bf0ff,'checksum':this[_0x2fd163(0x265)][_0x2fd163(0x27b)]?calculateChecksum(_0x2bf0ff):0x0,'magic':_0x5e119b^0xffffffff});}async['close'](){const _0x20978b=_0xa5ca61;await Promise['all'](Array[_0x20978b(0x2ea)](this.#sockets[_0x20978b(0x1ce)](),_0x4050a2=>_0x4050a2[_0x20978b(0x1d4)]())),this.#closed=!0x0,this.#readAbortController['abort'](),this[_0x20978b(0x265)]['preserveConnection']?this.#writer[_0x20978b(0x390)]():await this.#writer[_0x20978b(0x1d4)]();}#dispose(){const _0x275c04=_0xa5ca61;for(let _0x2459a6 of this.#sockets['values']())_0x2459a6[_0x275c04(0x326)]();this.#disconnected[_0x275c04(0x2ac)]();}},ADB_DAEMON_VERSION_OMIT_CHECKSUM=0x1000001,ADB_DAEMON_DEFAULT_FEATURES=[AdbFeature[_0xa5ca61(0x230)],AdbFeature[_0xa5ca61(0x2b7)],AdbFeature['StatV2'],AdbFeature[_0xa5ca61(0x2ef)],AdbFeature[_0xa5ca61(0x263)],_0xa5ca61(0x2b3),AdbFeature[_0xa5ca61(0x2f4)],_0xa5ca61(0x374),AdbFeature[_0xa5ca61(0x31d)],_0xa5ca61(0x26e),_0xa5ca61(0x3a5),AdbFeature[_0xa5ca61(0x2df)],'sendrecv_v2_brotli',_0xa5ca61(0x334),_0xa5ca61(0x33d),_0xa5ca61(0x250),AdbFeature[_0xa5ca61(0x354)]],ADB_DAEMON_DEFAULT_INITIAL_PAYLOAD_SIZE=0x20*0x400*0x400,AdbDaemonTransport=class _AdbDaemonTransport{static async[_0xa5ca61(0x210)]({serial:_0xcdb924,connection:_0x140027,credentialStore:_0x2a1821,authenticators:authenticators=ADB_DEFAULT_AUTHENTICATORS,features:features=ADB_DAEMON_DEFAULT_FEATURES,initialDelayedAckBytes:initialDelayedAckBytes=ADB_DAEMON_DEFAULT_INITIAL_PAYLOAD_SIZE,..._0x881d9a}){const _0x4e019c=_0xa5ca61;let _0x41ccc9=0x1000001,_0x1d4e11=0x400*0x400,_0x2468ea=new PromiseResolver(),_0x42f667=new AdbAuthenticationProcessor(authenticators,_0x2a1821),_0x1a3ad8=new AbortController(),_0x1059a0=_0x140027[_0x4e019c(0x237)][_0x4e019c(0x32b)](new WritableStream({async 'write'(_0x29c714){const _0x2677e1=_0x4e019c;switch(_0x29c714[_0x2677e1(0x322)]){case AdbCommand[_0x2677e1(0x32f)]:_0x41ccc9=Math[_0x2677e1(0x232)](_0x41ccc9,_0x29c714[_0x2677e1(0x1d9)]),_0x1d4e11=Math[_0x2677e1(0x232)](_0x1d4e11,_0x29c714[_0x2677e1(0x26c)]),_0x2468ea['resolve'](decodeUtf8(_0x29c714['payload']));break;case AdbCommand[_0x2677e1(0x1eb)]:{let _0x3b878c=await _0x42f667[_0x2677e1(0x2e3)](_0x29c714);await _0x20be5a(_0x3b878c);break;}default:break;}}}),{'preventCancel':!0x0,'signal':_0x1a3ad8[_0x4e019c(0x22e)]})[_0x4e019c(0x298)](()=>{const _0x4ece4a=_0x4e019c;_0x2468ea[_0x4ece4a(0x21a)](new Error(_0x4ece4a(0x296)));},_0x47652b=>{_0x2468ea['reject'](_0x47652b);}),_0x2d05be=_0x140027[_0x4e019c(0x34c)][_0x4e019c(0x391)]();async function _0x20be5a(_0x388a8f){const _0x3400df=_0x4e019c;_0x388a8f[_0x3400df(0x27a)]=calculateChecksum(_0x388a8f[_0x3400df(0x37d)]),_0x388a8f[_0x3400df(0x247)]=_0x388a8f['command']^0xffffffff,await Consumable[_0x3400df(0x2ae)][_0x3400df(0x286)](_0x2d05be,_0x388a8f);}let _0x1c78dc=features[_0x4e019c(0x1d0)]();if(initialDelayedAckBytes<=0x0){let _0x38b031=features['indexOf'](AdbFeature[_0x4e019c(0x354)]);_0x38b031!==-0x1&&_0x1c78dc[_0x4e019c(0x371)](_0x38b031,0x1);}let _0x3ce08b;try{await _0x20be5a({'command':AdbCommand[_0x4e019c(0x32f)],'arg0':_0x41ccc9,'arg1':_0x1d4e11,'payload':encodeUtf8(_0x4e019c(0x2c3)+_0x1c78dc[_0x4e019c(0x285)](','))}),_0x3ce08b=await _0x2468ea[_0x4e019c(0x1f0)];}finally{_0x1a3ad8[_0x4e019c(0x359)](),_0x2d05be[_0x4e019c(0x390)](),await _0x1059a0;}return new _AdbDaemonTransport({'serial':_0xcdb924,'connection':_0x140027,'version':_0x41ccc9,'maxPayloadSize':_0x1d4e11,'banner':_0x3ce08b,'features':_0x1c78dc,'initialDelayedAckBytes':initialDelayedAckBytes,..._0x881d9a});}#connection;get[_0xa5ca61(0x1fc)](){return this.#connection;}#dispatcher;#serial;get[_0xa5ca61(0x384)](){return this.#serial;}#protocolVersion;get['protocolVersion'](){return this.#protocolVersion;}get['maxPayloadSize'](){const _0x1fa69e=_0xa5ca61;return this.#dispatcher['options'][_0x1fa69e(0x1c7)];}#banner;get['banner'](){return this.#banner;}get[_0xa5ca61(0x218)](){const _0x530e82=_0xa5ca61;return this.#dispatcher[_0x530e82(0x218)];}#clientFeatures;get[_0xa5ca61(0x331)](){return this.#clientFeatures;}constructor({serial:_0x3b0da7,connection:_0x48f869,version:_0x587381,banner:_0x4b1cb6,features:features=ADB_DAEMON_DEFAULT_FEATURES,initialDelayedAckBytes:_0x348d97,..._0x5609df}){const _0x418ef4=_0xa5ca61;if(this.#serial=_0x3b0da7,this.#connection=_0x48f869,this.#banner=AdbBanner['parse'](_0x4b1cb6),this.#clientFeatures=features,features[_0x418ef4(0x317)](AdbFeature[_0x418ef4(0x354)])){if(_0x348d97<=0x0)throw new TypeError(_0x418ef4(0x25c));this.#banner[_0x418ef4(0x3a8)][_0x418ef4(0x317)](AdbFeature['DelayedAck'])||(_0x348d97=0x0);}else _0x348d97=0x0;let _0x5c4094,_0x46a18a;_0x587381>=ADB_DAEMON_VERSION_OMIT_CHECKSUM?(_0x5c4094=!0x1,_0x46a18a=!0x1):(_0x5c4094=!0x0,_0x46a18a=!0x0),this.#dispatcher=new AdbPacketDispatcher(_0x48f869,{'calculateChecksum':_0x5c4094,'appendNullToServiceString':_0x46a18a,'initialDelayedAckBytes':_0x348d97,..._0x5609df}),this.#protocolVersion=_0x587381;}[_0xa5ca61(0x20a)](_0x45b469){const _0x166a81=_0xa5ca61;return this.#dispatcher[_0x166a81(0x297)](_0x45b469);}[_0xa5ca61(0x2c1)](_0x42fefc,_0x1e6c42){const _0x3da621=_0xa5ca61;return _0x1e6c42||(_0x1e6c42=_0x3da621(0x3a0)+Math[_0x3da621(0x221)]()[_0x3da621(0x31a)]()['substring'](0x2)),this.#dispatcher[_0x3da621(0x2c1)](_0x1e6c42,_0x42fefc),_0x1e6c42;}[_0xa5ca61(0x2b8)](_0x459ca5){const _0x25d28e=_0xa5ca61;this.#dispatcher[_0x25d28e(0x2b8)](_0x459ca5);}[_0xa5ca61(0x248)](){const _0x472db7=_0xa5ca61;this.#dispatcher[_0x472db7(0x248)]();}['close'](){const _0xf49eb=_0xa5ca61;return this.#dispatcher[_0xf49eb(0x1d4)]();}};function unorderedRemove(_0x263ff4,_0x848654){const _0x31a711=_0xa5ca61;_0x848654<0x0||_0x848654>=_0x263ff4['length']||(_0x263ff4[_0x848654]=_0x263ff4[_0x263ff4[_0x31a711(0x2c0)]-0x1],_0x263ff4[_0x31a711(0x2c0)]-=0x1);}var DeviceBusyError=class extends Error{constructor(_0x1d0a79){const _0x57cf35=_0xa5ca61;super(_0x57cf35(0x344),{'cause':_0x1d0a79});}};function isErrorName(_0x1e8ee6,_0x4e0311){const _0x5062ab=_0xa5ca61;return typeof _0x1e8ee6==_0x5062ab(0x381)&&_0x1e8ee6!==null&&_0x5062ab(0x269)in _0x1e8ee6&&_0x1e8ee6['name']===_0x4e0311;}function isUsbInterfaceFilter(_0x172df2){const _0xbbdb66=_0xa5ca61;return _0x172df2[_0xbbdb66(0x2dd)]!==void 0x0&&_0x172df2[_0xbbdb66(0x377)]!==void 0x0&&_0x172df2[_0xbbdb66(0x370)]!==void 0x0;}function matchUsbInterfaceFilter(_0x17df04,_0x361eeb){const _0x199ed9=_0xa5ca61;return _0x17df04['interfaceClass']===_0x361eeb[_0x199ed9(0x2dd)]&&_0x17df04[_0x199ed9(0x2c4)]===_0x361eeb[_0x199ed9(0x377)]&&_0x17df04[_0x199ed9(0x262)]===_0x361eeb[_0x199ed9(0x370)];}function findUsbInterface(_0x19ce7e,_0x2f298d){const _0x3d8cc5=_0xa5ca61;for(let _0x21f0cf of _0x19ce7e[_0x3d8cc5(0x33e)])for(let _0x9f5cac of _0x21f0cf[_0x3d8cc5(0x327)])for(let _0x36d113 of _0x9f5cac[_0x3d8cc5(0x387)])if(matchUsbInterfaceFilter(_0x36d113,_0x2f298d))return{'configuration':_0x21f0cf,'interface_':_0x9f5cac,'alternate':_0x36d113};}function padNumber(_0x57ab23){const _0x56eda0=_0xa5ca61;return _0x57ab23[_0x56eda0(0x31a)](0x10)[_0x56eda0(0x21e)](0x4,'0');}function getSerialNumber(_0x1f9462){const _0x53e945=_0xa5ca61;return _0x1f9462[_0x53e945(0x2a4)]?_0x1f9462[_0x53e945(0x2a4)]:padNumber(_0x1f9462[_0x53e945(0x22f)])+'x'+padNumber(_0x1f9462[_0x53e945(0x392)]);}function findUsbEndpoints(_0x2ad201){const _0x4d3d6c=_0xa5ca61;if(_0x2ad201[_0x4d3d6c(0x2c0)]===0x0)throw new TypeError('No\x20endpoints\x20given');let _0x1f66d8,_0x52c793;for(let _0x3cad6f of _0x2ad201)switch(_0x3cad6f[_0x4d3d6c(0x264)]){case'in':if(_0x1f66d8=_0x3cad6f,_0x52c793)return{'inEndpoint':_0x1f66d8,'outEndpoint':_0x52c793};break;case _0x4d3d6c(0x20e):if(_0x52c793=_0x3cad6f,_0x1f66d8)return{'inEndpoint':_0x1f66d8,'outEndpoint':_0x52c793};break;}throw _0x1f66d8?_0x52c793?new Error(_0x4d3d6c(0x1d5)):new TypeError(_0x4d3d6c(0x241)):new TypeError('No\x20input\x20endpoint\x20found.');}function matchFilter(_0x2b0cf6,_0x1e8317){const _0x17a6fa=_0xa5ca61;return _0x1e8317[_0x17a6fa(0x22f)]!==void 0x0&&_0x2b0cf6[_0x17a6fa(0x22f)]!==_0x1e8317[_0x17a6fa(0x22f)]||_0x1e8317['productId']!==void 0x0&&_0x2b0cf6[_0x17a6fa(0x392)]!==_0x1e8317[_0x17a6fa(0x392)]||_0x1e8317['serialNumber']!==void 0x0&&getSerialNumber(_0x2b0cf6)!==_0x1e8317[_0x17a6fa(0x2a4)]?!0x1:isUsbInterfaceFilter(_0x1e8317)?findUsbInterface(_0x2b0cf6,_0x1e8317)||!0x1:!0x0;}function matchFilters(_0x5a65b4,_0x2a83ef,_0x1e9274){const _0x4533e0=_0xa5ca61;if(_0x1e9274&&_0x1e9274[_0x4533e0(0x2c0)]>0x0&&matchFilters(_0x5a65b4,_0x1e9274))return!0x1;for(let _0x4a5010 of _0x2a83ef){let _0xfeb0ee=matchFilter(_0x5a65b4,_0x4a5010);if(_0xfeb0ee)return _0xfeb0ee;}return!0x1;}var AdbDefaultInterfaceFilter={'classCode':0xff,'subclassCode':0x42,'protocolCode':0x1};function mergeDefaultAdbInterfaceFilter(_0x53e581){const _0x790d76=_0xa5ca61;return!_0x53e581||_0x53e581[_0x790d76(0x2c0)]===0x0?[AdbDefaultInterfaceFilter]:_0x53e581[_0x790d76(0x32c)](_0x5d61e7=>({..._0x5d61e7,'classCode':_0x5d61e7[_0x790d76(0x2dd)]??AdbDefaultInterfaceFilter[_0x790d76(0x2dd)],'subclassCode':_0x5d61e7[_0x790d76(0x377)]??AdbDefaultInterfaceFilter[_0x790d76(0x377)],'protocolCode':_0x5d61e7[_0x790d76(0x370)]??AdbDefaultInterfaceFilter[_0x790d76(0x370)]}));}var AdbDaemonWebUsbConnection=class{#device;get[_0xa5ca61(0x1c5)](){return this.#device;}#inEndpoint;get[_0xa5ca61(0x1e7)](){return this.#inEndpoint;}#outEndpoint;get[_0xa5ca61(0x1db)](){return this.#outEndpoint;}#readable;get[_0xa5ca61(0x237)](){return this.#readable;}#writable;get[_0xa5ca61(0x34c)](){return this.#writable;}constructor(_0x29a9fc,_0x5b8dc1,_0x1face7,_0x475c55){const _0x5cc8f5=_0xa5ca61;this.#device=_0x29a9fc,this.#inEndpoint=_0x5b8dc1,this.#outEndpoint=_0x1face7;let _0xf563fb=!0x1,_0x30e525=new DuplexStreamFactory({'close':async()=>{const _0x42e679=_0x1ffc;try{_0xf563fb=!0x0,await _0x29a9fc[_0x42e679(0x26b)][_0x42e679(0x1d4)]();}catch{}},'dispose':()=>{const _0x2b3568=_0x1ffc;_0xf563fb=!0x0,_0x475c55[_0x2b3568(0x1fe)](_0x2b3568(0x38e),_0x24df6b);}});function _0x24df6b(_0x4a648e){const _0x426380=_0x1ffc;_0x4a648e[_0x426380(0x1c5)]===_0x29a9fc[_0x426380(0x26b)]&&_0x30e525[_0x426380(0x326)]()['catch'](unreachable);}_0x475c55['addEventListener'](_0x5cc8f5(0x38e),_0x24df6b),this.#readable=_0x30e525[_0x5cc8f5(0x23c)](new ReadableStream({'pull':async _0x5cc4d8=>{const _0x5d685c=_0x5cc8f5;let _0x4d184f=await this.#transferIn();_0x4d184f?_0x5cc4d8[_0x5d685c(0x226)](_0x4d184f):_0x5cc4d8[_0x5d685c(0x1d4)]();}},{'highWaterMark':0x0}));let _0x15c443=_0x1face7[_0x5cc8f5(0x227)]-0x1;this.#writable=pipeFrom(_0x30e525['createWritable'](new maybe_consumable_exports[(_0x5cc8f5(0x2ae))]({'write':async _0x4acd7a=>{const _0x5420ca=_0x5cc8f5;try{await _0x29a9fc['raw'][_0x5420ca(0x349)](_0x1face7[_0x5420ca(0x272)],toLocalUint8Array(_0x4acd7a)),_0x15c443&&!(_0x4acd7a[_0x5420ca(0x2c0)]&_0x15c443)&&await _0x29a9fc[_0x5420ca(0x26b)][_0x5420ca(0x349)](_0x1face7['endpointNumber'],EmptyUint8Array);}catch(_0x143f3d){if(_0xf563fb)return;throw _0x143f3d;}}})),new AdbPacketSerializeStream());}async #transferIn(){const _0x4024f2=_0xa5ca61;try{for(;;){let _0xecc6d6=await this.#device[_0x4024f2(0x26b)][_0x4024f2(0x303)](this.#inEndpoint[_0x4024f2(0x272)],this.#inEndpoint[_0x4024f2(0x227)]);if(_0xecc6d6[_0x4024f2(0x24e)][_0x4024f2(0x347)]!==0x18)continue;let _0x18d3b0=new Uint8Array(_0xecc6d6[_0x4024f2(0x24e)][_0x4024f2(0x2bf)]),_0xe4c34=new Uint8ArrayExactReadable(_0x18d3b0),_0x3cfd35=AdbPacketHeader[_0x4024f2(0x3af)](_0xe4c34);if(_0x3cfd35[_0x4024f2(0x247)]===(_0x3cfd35[_0x4024f2(0x322)]^0xffffffff)){if(_0x3cfd35['payloadLength']!==0x0){let _0x46e242=await this.#device[_0x4024f2(0x26b)][_0x4024f2(0x303)](this.#inEndpoint['endpointNumber'],_0x3cfd35['payloadLength']);_0x3cfd35[_0x4024f2(0x37d)]=new Uint8Array(_0x46e242[_0x4024f2(0x24e)][_0x4024f2(0x2bf)]);}else _0x3cfd35[_0x4024f2(0x37d)]=EmptyUint8Array;return _0x3cfd35;}}}catch(_0x4df928){if(isErrorName(_0x4df928,_0x4024f2(0x2de))&&(await new Promise(_0x4c89b3=>{setTimeout(()=>{_0x4c89b3();},0x64);}),closed))return;throw _0x4df928;}}},AdbDaemonWebUsbDevice=class _AdbDaemonWebUsbDevice{static [_0xa5ca61(0x38b)]=DeviceBusyError;#interface;#usbManager;#raw;get[_0xa5ca61(0x26b)](){return this.#raw;}#serial;get[_0xa5ca61(0x384)](){return this.#serial;}get[_0xa5ca61(0x269)](){const _0x2846eb=_0xa5ca61;return this.#raw[_0x2846eb(0x1da)];}constructor(_0x507d4e,_0x4fa623,_0x5be4c8){this.#raw=_0x507d4e,this.#serial=getSerialNumber(_0x507d4e),this.#interface=_0x4fa623,this.#usbManager=_0x5be4c8;}async #claimInterface(){const _0x148f08=_0xa5ca61;var _0xf8015e;this.#raw[_0x148f08(0x1ea)]||await this.#raw[_0x148f08(0x242)]();let {configuration:_0x42467b,interface_:_0x4fb0a5,alternate:_0x172afc}=this.#interface;if(((_0xf8015e=this.#raw['configuration'])==null?void 0x0:_0xf8015e[_0x148f08(0x277)])!==_0x42467b[_0x148f08(0x277)]&&await this.#raw[_0x148f08(0x281)](_0x42467b[_0x148f08(0x277)]),!_0x4fb0a5['claimed'])try{await this.#raw[_0x148f08(0x396)](_0x4fb0a5[_0x148f08(0x337)]);}catch(_0x273712){throw isErrorName(_0x273712,_0x148f08(0x2de))?new _AdbDaemonWebUsbDevice[(_0x148f08(0x38b))](_0x273712):_0x273712;}return _0x4fb0a5[_0x148f08(0x278)]['alternateSetting']!==_0x172afc[_0x148f08(0x338)]&&await this.#raw['selectAlternateInterface'](_0x4fb0a5[_0x148f08(0x337)],_0x172afc[_0x148f08(0x338)]),findUsbEndpoints(_0x172afc[_0x148f08(0x368)]);}async[_0xa5ca61(0x20a)](){let {inEndpoint:_0x5a8e63,outEndpoint:_0x50b617}=await this.#claimInterface();return new AdbDaemonWebUsbConnection(this,_0x5a8e63,_0x50b617,this.#usbManager);}},AdbDaemonWebUsbDeviceObserver=class _AdbDaemonWebUsbDeviceObserver{static async['create'](_0x2ad45b,_0x2e5bde={}){const _0x249267=_0xa5ca61;let _0x4bd5bc=await _0x2ad45b[_0x249267(0x25d)]();return new _AdbDaemonWebUsbDeviceObserver(_0x2ad45b,_0x4bd5bc,_0x2e5bde);}#filters;#exclusionFilters;#usbManager;#onDeviceAdd=new EventEmitter();[_0xa5ca61(0x355)]=this.#onDeviceAdd['event'];#onDeviceRemove=new EventEmitter();[_0xa5ca61(0x2a8)]=this.#onDeviceRemove[_0xa5ca61(0x351)];#onListChange=new StickyEventEmitter();['onListChange']=this.#onListChange[_0xa5ca61(0x351)];[_0xa5ca61(0x375)]=[];constructor(_0x1e0a84,_0x551e81,_0x4eeeef={}){const _0x10bc25=_0xa5ca61;this.#filters=mergeDefaultAdbInterfaceFilter(_0x4eeeef['filters']),this.#exclusionFilters=_0x4eeeef[_0x10bc25(0x207)],this.#usbManager=_0x1e0a84,this[_0x10bc25(0x375)]=_0x551e81[_0x10bc25(0x32c)](_0x245ff8=>this.#convertDevice(_0x245ff8))[_0x10bc25(0x2db)](_0x197316=>!!_0x197316),this.#onListChange[_0x10bc25(0x2dc)](this[_0x10bc25(0x375)]),this.#usbManager[_0x10bc25(0x31b)](_0x10bc25(0x20a),this.#handleConnect),this.#usbManager[_0x10bc25(0x31b)](_0x10bc25(0x38e),this.#handleDisconnect);}#convertDevice(_0x189741){let _0x4e7dce=matchFilters(_0x189741,this.#filters,this.#exclusionFilters);if(_0x4e7dce)return new AdbDaemonWebUsbDevice(_0x189741,_0x4e7dce,this.#usbManager);}#handleConnect=_0x2aad5f=>{const _0x322839=_0xa5ca61;let _0x65b8b=this.#convertDevice(_0x2aad5f[_0x322839(0x1c5)]);if(!_0x65b8b||this[_0x322839(0x375)][_0x322839(0x2d1)](_0x1f3eb2=>_0x1f3eb2[_0x322839(0x26b)]===_0x65b8b['raw']))return;let _0x1da85b=this['current']['slice']();_0x1da85b[_0x322839(0x206)](_0x65b8b),this[_0x322839(0x375)]=_0x1da85b,this.#onDeviceAdd[_0x322839(0x2dc)]([_0x65b8b]),this.#onListChange[_0x322839(0x2dc)](this[_0x322839(0x375)]);};#handleDisconnect=_0x5de9dc=>{const _0x280360=_0xa5ca61;let _0x3e8b91=this[_0x280360(0x375)][_0x280360(0x372)](_0x31119d=>_0x31119d[_0x280360(0x26b)]===_0x5de9dc[_0x280360(0x1c5)]);if(_0x3e8b91!==-0x1){let _0x2932a2=this[_0x280360(0x375)][_0x3e8b91],_0x480c4e=this[_0x280360(0x375)]['slice']();unorderedRemove(_0x480c4e,_0x3e8b91),this['current']=_0x480c4e,this.#onDeviceRemove[_0x280360(0x2dc)]([_0x2932a2]),this.#onListChange['fire'](this[_0x280360(0x375)]);}};[_0xa5ca61(0x22b)](){const _0x4979d5=_0xa5ca61;this.#usbManager[_0x4979d5(0x1fe)](_0x4979d5(0x20a),this.#handleConnect),this.#usbManager[_0x4979d5(0x1fe)](_0x4979d5(0x38e),this.#handleDisconnect),this.#onDeviceAdd[_0x4979d5(0x326)](),this.#onDeviceRemove[_0x4979d5(0x326)](),this.#onListChange[_0x4979d5(0x326)]();}},AdbDaemonWebUsbDeviceManager=class _AdbDaemonWebUsbDeviceManager{static [_0xa5ca61(0x27c)]=typeof globalThis[_0xa5ca61(0x380)]<'u'&&globalThis[_0xa5ca61(0x380)][_0xa5ca61(0x34f)]?new _AdbDaemonWebUsbDeviceManager(globalThis[_0xa5ca61(0x380)]['usb']):void 0x0;#usbManager;constructor(_0x24e8ec){this.#usbManager=_0x24e8ec;}async[_0xa5ca61(0x29f)](_0x43f5d4={}){const _0x17e65e=_0xa5ca61;let _0x44c4f1=mergeDefaultAdbInterfaceFilter(_0x43f5d4[_0x17e65e(0x3aa)]);try{let _0x2bba7e=await this.#usbManager[_0x17e65e(0x29f)]({'filters':_0x44c4f1,'exclusionFilters':_0x43f5d4[_0x17e65e(0x207)]}),_0x36adbf=matchFilters(_0x2bba7e,_0x44c4f1,_0x43f5d4['exclusionFilters']);return _0x36adbf?(this.#usbManager['dispatchEvent'](new USBConnectionEvent(_0x17e65e(0x20a),{'device':_0x2bba7e})),new AdbDaemonWebUsbDevice(_0x2bba7e,_0x36adbf,this.#usbManager)):void 0x0;}catch(_0x1e7044){if(isErrorName(_0x1e7044,_0x17e65e(0x270)))return;throw _0x1e7044;}}async[_0xa5ca61(0x25d)](_0x45dc1e={}){const _0x506799=_0xa5ca61;let _0x55563f=mergeDefaultAdbInterfaceFilter(_0x45dc1e[_0x506799(0x3aa)]),_0x4b50a2=await this.#usbManager['getDevices'](),_0x43bafb=[];for(let _0x104ee5 of _0x4b50a2){let _0x25cd24=matchFilters(_0x104ee5,_0x55563f,_0x45dc1e[_0x506799(0x207)]);_0x25cd24&&_0x43bafb[_0x506799(0x206)](new AdbDaemonWebUsbDevice(_0x104ee5,_0x25cd24,this.#usbManager));}return _0x43bafb;}[_0xa5ca61(0x261)](_0x57d4ca={}){const _0x56879f=_0xa5ca61;return AdbDaemonWebUsbDeviceObserver[_0x56879f(0x341)](this.#usbManager,_0x57d4ca);}};function openDatabase(){return new Promise((_0x5c6da5,_0x79cbf1)=>{const _0xa4cd48=_0x1ffc;let _0x1108c3=indexedDB[_0xa4cd48(0x242)](_0xa4cd48(0x1df),0x1);_0x1108c3[_0xa4cd48(0x333)]=()=>{const _0x2e24fb=_0xa4cd48;_0x79cbf1(_0x1108c3[_0x2e24fb(0x20d)]);},_0x1108c3['onupgradeneeded']=()=>{const _0x544a59=_0xa4cd48;_0x1108c3['result'][_0x544a59(0x35a)]('Authentication',{'autoIncrement':!0x0});},_0x1108c3[_0xa4cd48(0x23e)]=()=>{let _0x8388e3=_0x1108c3['result'];_0x5c6da5(_0x8388e3);};});}async function saveKey(_0x2bb74e){let _0xbfd155=await openDatabase();return new Promise((_0x31c28d,_0x831c7a)=>{const _0x3b46a5=_0x1ffc;let _0x1f8497=_0xbfd155['transaction'](_0x3b46a5(0x22d),_0x3b46a5(0x328)),_0x5cf0d8=_0x1f8497[_0x3b46a5(0x24d)](_0x3b46a5(0x22d))['add'](_0x2bb74e);_0x5cf0d8[_0x3b46a5(0x333)]=()=>{_0x831c7a(_0x5cf0d8['error']);},_0x5cf0d8['onsuccess']=()=>{_0x31c28d();},_0x1f8497[_0x3b46a5(0x333)]=()=>{_0x831c7a(_0x1f8497['error']);},_0x1f8497['oncomplete']=()=>{_0xbfd155['close']();};});}async function getAllKeys(){let _0x4af445=await openDatabase();return new Promise((_0x1c20d0,_0x1a422f)=>{const _0x8a6ec2=_0x1ffc;let _0xf64cd5=_0x4af445[_0x8a6ec2(0x1cb)]('Authentication',_0x8a6ec2(0x2da)),_0x2c13d2=_0xf64cd5[_0x8a6ec2(0x24d)](_0x8a6ec2(0x22d))[_0x8a6ec2(0x259)]();_0x2c13d2[_0x8a6ec2(0x333)]=()=>{_0x1a422f(_0x2c13d2['error']);},_0x2c13d2[_0x8a6ec2(0x23e)]=()=>{const _0x4e92e8=_0x8a6ec2;_0x1c20d0(_0x2c13d2[_0x4e92e8(0x2f9)]);},_0xf64cd5['onerror']=()=>{const _0x107ea4=_0x8a6ec2;_0x1a422f(_0xf64cd5[_0x107ea4(0x20d)]);},_0xf64cd5[_0x8a6ec2(0x356)]=()=>{const _0xa5a2a2=_0x8a6ec2;_0x4af445[_0xa5a2a2(0x1d4)]();};});}var AdbWebCredentialStore=class{#appName;constructor(_0x2acfe9='Tango'){this.#appName=_0x2acfe9;}async[_0xa5ca61(0x1cd)](){const _0x118b30=_0xa5ca61;let {privateKey:_0xecf736}=await crypto[_0x118b30(0x28d)][_0x118b30(0x1cd)]({'name':_0x118b30(0x291),'modulusLength':0x800,'publicExponent':new Uint8Array([0x1,0x0,0x1]),'hash':_0x118b30(0x215)},!0x0,[_0x118b30(0x358),_0x118b30(0x324)]),_0x1ec538=new Uint8Array(await crypto[_0x118b30(0x28d)]['exportKey'](_0x118b30(0x268),_0xecf736));return await saveKey(_0x1ec538),{'buffer':_0x1ec538,'name':this.#appName+'@'+globalThis[_0x118b30(0x205)][_0x118b30(0x343)]};}async*['iterateKeys'](){for(let _0x313edf of await getAllKeys())yield{'buffer':_0x313edf,'name':this.#appName+'@'+globalThis['location']['hostname']};}},Manager=AdbDaemonWebUsbDeviceManager[_0xa5ca61(0x27c)],credentialStore=new AdbWebCredentialStore('Blink\x20Setup');async function connectDevice(){const _0x2ce0e1=_0xa5ca61;if(!Manager)throw new Error(_0x2ce0e1(0x2f1));let _0x12fb72=await Manager[_0x2ce0e1(0x29f)]();if(!_0x12fb72)throw new Error(_0x2ce0e1(0x249));let _0x752a65=await _0x12fb72['connect'](),_0x21ac66=await AdbDaemonTransport[_0x2ce0e1(0x210)]({'serial':_0x12fb72[_0x2ce0e1(0x384)],'connection':_0x752a65,'credentialStore':credentialStore});return new Adb(_0x21ac66);}async function runShellCommand(_0x18a7a6,_0x4b0746){const _0x2ef09b=_0xa5ca61;return{'stdout':await _0x18a7a6[_0x2ef09b(0x35f)][_0x2ef09b(0x2eb)][_0x2ef09b(0x1fd)](_0x4b0746),'stderr':'','exitCode':0x0};}async function grantWriteSecureSettings(_0x461dd5,_0x2aed4e){const _0x5b28b5=_0xa5ca61;return runShellCommand(_0x461dd5,_0x5b28b5(0x253)+_0x2aed4e+_0x5b28b5(0x209));}async function enableAccessibilityService(_0xb4a9a8,_0x318bf5){const _0x50a931=_0xa5ca61;let _0x2f8538=(await runShellCommand(_0xb4a9a8,_0x50a931(0x3a6)))[_0x50a931(0x315)][_0x50a931(0x282)](),_0x3ea796;if(_0x2f8538===_0x50a931(0x397)||_0x2f8538==='')_0x3ea796=_0x318bf5;else{if(_0x2f8538[_0x50a931(0x317)](_0x318bf5))return{'stdout':_0x50a931(0x323),'stderr':'','exitCode':0x0};_0x3ea796=_0x2f8538+':'+_0x318bf5;}return runShellCommand(_0xb4a9a8,_0x50a931(0x25e)+_0x3ea796);}async function checkPermission(_0x165629,_0x5b702f,_0x55b770){const _0x46f5ec=_0xa5ca61;return(await _0x165629[_0x46f5ec(0x35f)][_0x46f5ec(0x2eb)][_0x46f5ec(0x1fd)](_0x46f5ec(0x2c6)+_0x5b702f+_0x46f5ec(0x2e4)+_0x55b770))['includes'](_0x46f5ec(0x200));}async function detectPackageName(_0x1ce7fe){const _0x554566=_0xa5ca61;let _0x49c507=_0x554566(0x2ed);return(await _0x1ce7fe[_0x554566(0x35f)][_0x554566(0x2eb)][_0x554566(0x1fd)](_0x554566(0x21b)+_0x49c507))['includes'](_0x49c507)?_0x49c507:_0x554566(0x3a4);}async function setDeviceOwner(_0x3bf4ff,_0x35013a){const _0x278bcc=_0xa5ca61;return runShellCommand(_0x3bf4ff,_0x278bcc(0x336)+_0x35013a);}async function disconnect(_0x35a797){const _0x593c7d=_0xa5ca61;try{await _0x35a797[_0x593c7d(0x1d4)]();}catch{}}async function getDeviceInfo(_0x36f3e6){const _0x5cae32=_0xa5ca61;let [_0x59ab9b,_0x1b55d6,_0x3c8103]=await Promise['all']([_0x36f3e6['subprocess'][_0x5cae32(0x2eb)][_0x5cae32(0x1fd)](_0x5cae32(0x23d)),_0x36f3e6[_0x5cae32(0x35f)]['noneProtocol']['spawnWaitText']('getprop\x20ro.build.version.release'),_0x36f3e6[_0x5cae32(0x35f)]['noneProtocol'][_0x5cae32(0x1fd)](_0x5cae32(0x2f0))]);return{'model':_0x59ab9b[_0x5cae32(0x282)](),'version':_0x1b55d6[_0x5cae32(0x282)](),'brand':_0x3c8103['trim']()[_0x5cae32(0x1fa)]()};}async function checkDeviceOwner(_0x48fb54){const _0x2c71b7=_0xa5ca61;let _0x12db52=await _0x48fb54[_0x2c71b7(0x35f)][_0x2c71b7(0x2eb)][_0x2c71b7(0x1fd)](_0x2c71b7(0x28e)),_0x72902f=_0x12db52[_0x2c71b7(0x1fa)](),_0x5de60c=_0x72902f['includes'](_0x2c71b7(0x3a4));return{'hasOwner':_0x72902f['includes'](_0x2c71b7(0x219))||_0x5de60c,'isBlink':_0x5de60c,'ownerRaw':_0x12db52['trim']()};}async function scanAccounts(_0x2eac89){const _0x250f61=_0xa5ca61;return _0x2eac89[_0x250f61(0x35f)][_0x250f61(0x2eb)][_0x250f61(0x1fd)](_0x250f61(0x28c));}async function clearAppData(_0x1d163b,_0x67200a){const _0x1a2953=_0xa5ca61;return runShellCommand(_0x1d163b,_0x1a2953(0x2b4)+_0x67200a);}async function forceStopApp(_0x55464f,_0x2c0556){const _0x12954e=_0xa5ca61;return runShellCommand(_0x55464f,_0x12954e(0x2c9)+_0x2c0556);}async function rebootDevice(_0x1c53b3){const _0xd1c4cd=_0xa5ca61;return runShellCommand(_0x1c53b3,_0xd1c4cd(0x314));}function buildAdminComponent(_0x2a4d4e){const _0x558ed3=_0xa5ca61;return _0x2a4d4e+_0x558ed3(0x2fc);}export{buildAdminComponent,checkDeviceOwner,checkPermission,clearAppData,connectDevice,detectPackageName,disconnect,enableAccessibilityService,forceStopApp,getDeviceInfo,grantWriteSecureSettings,rebootDevice,runShellCommand,scanAccounts,setDeviceOwner};_connectDevice=connectDevice,_detectPackageName=detectPackageName,_getDeviceInfo=getDeviceInfo,_checkDeviceOwner=checkDeviceOwner,_scanAccounts=scanAccounts,_clearAppData=clearAppData,_forceStopApp=forceStopApp,_runShellCommand=runShellCommand,_buildAdminComponent=buildAdminComponent,_setDeviceOwner=setDeviceOwner,_disconnect=disconnect;</script>
+</body>
+</html>
