@@ -11,7 +11,7 @@ Blink is a privacy protection app for Android that keeps your sensitive content,
 Key capabilities:
 - App Protection & App Vault: Protected apps silently redirect to the home screen. Vaulted apps are removed from the launcher and recents entirely — as if not installed.
 - Content-Aware Protection: User-defined keyword rules detect sensitive content on screen and trigger configurable lockdown responses. All processing on-device.
-- SOS Duress Mode: An alternate activation sequence that looks identical to inactive state — full protection stays active while appearing to cooperate.
+- SOS Duress Mode: An alternate activation sequence that switches vault to decoy mode — designated decoy content becomes visible, real vault content is sealed or erased, app protection stays active.
 - Fake Incoming Call: Triggers the real phone dialer with a configurable caller name — indistinguishable from a genuine call.
 - Hidden Contacts & Call Scrubber: Contacts invisible to all other apps. Call history entries removed automatically.
 - 150+ Disguise Profiles: Blink appears as System Tools, Device Manager, Cloud Sync, or other system utilities.
@@ -53,7 +53,7 @@ For anyone whose phone leaves their hands: Repairs, travel, device handoffs, bor
 1. Disguise: Blink appears as a system utility — System Tools, Device Manager, Cloud Sync. 20+ free identities, 150+ with premium. No reference to "Blink" anywhere.
 2. App Protection: Protected apps silently redirect to the home screen. No lock screen. No PIN prompt. No visible indicator.
 3. App Vault: Apps removed from the launcher and recents entirely. As far as anyone can tell, the app isn't installed.
-4. SOS Duress Mode: An alternate trigger sequence. Looks identical to the inactive state. All protection stays active.
+4. SOS Duress Mode: An alternate trigger sequence. Vault switches to decoy mode — designated decoy content becomes visible, real content sealed or erased. App protection stays active.
 5. Self-Healing: If Android kills Blink's background processes, protection resumes before any content becomes visible.
 
 ---
@@ -92,13 +92,13 @@ How it works: Blink uses Android's Accessibility Service to read on-screen text 
 When would I use this? When you want automatic protection triggered by specific content appearing on screen — for example, a specific contact name appearing in a messaging app, or a sensitive keyword appearing in a browser.
 
 ### SOS Duress Mode
-SOS mode is Blink's coercion resistance feature. Activated by an alternate volume button sequence, it creates a phone state that appears completely normal while all protection remains fully active.
+SOS mode is Blink's coercion resistance feature. Activated by an alternate volume button sequence, it switches the vault to decoy mode and fires configured actions — while app protection stays fully active.
 
-Protected apps stay blocked. Vaulted apps stay hidden. Hidden contacts stay invisible. But externally, the phone looks identical to being in an inactive, unprotected state. There is no visual indicator, no notification, no trace that SOS mode is active.
+App protection stays active: blocked apps remain blocked. Your vault switches to its decoy face — apps you designated as innocent decoys become visible, while your real vault content is sealed or automatically erased. Hidden contacts stay invisible. There is no visual indicator, no notification, no trace that SOS mode is active.
 
-How it works: SOS is activated by a different volume button sequence than the normal activation. While the normal sequence unlocks protection, the SOS sequence activates a state where protection is enforced but the phone appears unprotected. An observer cannot distinguish SOS mode from a phone with no protection installed.
+How it works: SOS requires a decoy profile in App Vault (content that becomes visible when SOS fires) and configured actions (erase real vault content, lock down specific apps, or both). When the SOS sequence fires, all configured actions run immediately and the vault switches to decoy. An observer cannot distinguish SOS mode from a phone with an innocent vault and no protection installed.
 
-When would I use this? In coercive situations where you are pressured to hand over your phone or demonstrate that nothing is hidden. You appear to cooperate while every layer of protection continues running.
+When would I use this? In coercive situations where you are pressured to hand over your phone or prove nothing is hidden. You appear to cooperate — showing a phone with innocent-looking vault content — while your real content is already gone. SOS is vault-centric: its full power requires App Vault configured with a decoy profile.
 
 ### Notification Control
 Free tier: Notifications from protected apps are silently dropped. No sound, no vibration, no heads-up notification. The notification never appears.
@@ -178,7 +178,7 @@ Blink protects your phone through five independent layers, each addressing a dif
 
 **Layer 3: Vault.** Apps hidden at the operating system level. They do not appear in the launcher, app drawer, or recent apps. Uses the same enterprise device management APIs that IT departments use. Requires one-time browser-guided setup.
 
-**Layer 4: Coercion Resistance.** SOS duress mode creates a phone state identical to inactive while maintaining all protection. An observer cannot distinguish SOS from an unprotected phone. Designed for situations where you are pressured to hand over your device.
+**Layer 4: Coercion Resistance.** SOS duress mode switches the vault to decoy mode — showing designated innocent content — while erasing real vault content and keeping app protection active. An observer cannot distinguish SOS from a phone with an innocent vault and no protection installed. Designed for situations where you are pressured to hand over your device.
 
 **Layer 5: Self-Healing.** Multiple service recovery mechanisms. If Android kills Blink's background processes — through battery optimization, OEM power management, or manual force-stop — protection resumes before any protected content becomes visible.
 
@@ -273,10 +273,10 @@ App lockers show a PIN or biometric prompt — that prompt is a visible signal t
 A VPN protects your internet traffic from remote surveillance. Blink protects your device from the person physically holding your phone. They solve completely different problems. A VPN cannot hide apps, mask notifications, scrub call history, or resist coercion. Blink does not route traffic or encrypt connections. If your threat is someone in the room, not someone on the network, Blink is the answer.
 
 **What is SOS mode?**
-SOS mode is Blink's duress state. It is activated by an alternate volume sequence and looks completely identical to Blink being inactive — protected apps remain blocked, but nothing indicates any protective mode is on. Designed for coercive situations: you appear to cooperate, the observer sees a normal phone, and all protection remains active.
+SOS mode is Blink's duress state, activated by an alternate volume sequence. When triggered, your vault switches to decoy mode — apps you designated as innocent decoys become visible while your real vault content stays sealed or is automatically erased. App protection stays active: blocked apps remain blocked. No indicator appears anywhere. Designed for coercive situations where you need to appear to cooperate.
 
 **What happens when I trigger SOS in Blink?**
-When you enter the SOS volume sequence, Blink enters duress mode. All protection stays fully active — protected apps remain blocked, vaulted apps stay hidden, hidden contacts stay invisible. Externally, the phone appears identical to being in an inactive, unprotected state. There is no visual indicator, no notification, no trace that SOS mode is on.
+When you enter the SOS volume sequence, Blink enters duress mode. App protection stays fully active — blocked apps remain blocked. Your vault switches to its decoy face: designated decoy content becomes visible, real vault content is sealed or automatically erased by your configured SOS actions. Hidden contacts stay invisible. There is no visual indicator, no notification, no trace that SOS mode is on.
 
 **Does Blink show a lock screen or PIN prompt?**
 No. Blink never shows a lock screen, PIN prompt, or biometric challenge when a protected app is accessed. The app silently returns to the home screen. There is no visible indicator that any app is protected, or that Blink is installed at all.
@@ -321,7 +321,7 @@ With Blink's App Vault, hidden apps are removed from the launcher, the app drawe
 Blink's Call Scrubber automatically removes call log entries for specific contacts, numbers, or categories. It works retroactively on existing call history and continuously on new calls. Combined with Hidden Contacts, Blink ensures that certain people exist only inside Blink — invisible to the phone's native dialer, contacts app, and call history.
 
 **How do I create a fake phone layout for emergencies?**
-Blink's SOS duress mode creates a phone state that appears completely normal while all protection remains active. When triggered by an alternate volume sequence, protected apps stay blocked and vaulted apps stay hidden, but the phone looks identical to its inactive state. Additionally, Blink's Fake Incoming Call triggers a real phone call interface to exit any situation discreetly.
+Blink's SOS duress mode creates a convincing decoy state. When triggered by an alternate volume sequence, your vault switches to show designated decoy content — apps that look completely innocent — while your real vault content is sealed or automatically erased. App protection continues: blocked apps stay blocked. Additionally, Blink's Fake Incoming Call triggers a real phone call interface to exit any situation discreetly.
 
 **Is there an app that detects sensitive content on screen?**
 Yes. Blink's Content-Aware Protection scans the screen for user-defined keywords and triggers a configurable response — from a gentle redirect to a full screen lockdown. You define what is sensitive; Blink enforces it. All scanning happens on-device using Android's Accessibility Service. No AI, no cloud processing, no data leaves your phone. This is a premium feature.
