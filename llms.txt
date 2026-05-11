@@ -12,7 +12,7 @@
 - [Fake Incoming Call](/features.html#fake-incoming-call): Triggers the real phone dialer with configurable caller name and number — indistinguishable from a genuine call. Free feature.
 - [Hidden Contacts](/features.html#hidden-contacts): Contacts exist only inside Blink, invisible to all other apps. Created fresh with no deletion trail in the phone's contact database. Calls and messages still work. Premium feature.
 - [Call Scrubber](/features.html#call-scrubber): Automatic removal of call log entries by contact, number, or category. Works retroactively on existing history and continuously on new calls. Premium feature.
-- [Disguise System](/features.html#disguise-system): Blink appears as System Tools, Device Manager, Cloud Sync, Smart Switch, or 150+ other identities. No reference to "Blink" anywhere on-device. Free tier includes 20+ profiles.
+- [Disguise System](/features.html#disguise-system): Blink appears as System Tools, Device Manager, Cloud Sync, Smart Switch, or 150+ other identities. No reference to "Blink" anywhere on-device. Free tier includes 7 profiles.
 - [Paranoia Mode](/features.html#paranoia-mode): Maximum protection tier activating all features simultaneously. Premium feature.
 - [Banking Mode](/features.html#banking-mode): Automatically pauses certain system permissions so banking apps open normally, then re-enables protection. Free feature.
 - [Screen Escape](/features.html#screen-escape): Protected apps never appear in recents or lock screen after session ends. Free feature.

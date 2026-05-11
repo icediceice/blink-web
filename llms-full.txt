@@ -50,7 +50,7 @@ For anyone whose phone leaves their hands: Repairs, travel, device handoffs, bor
 
 ### Five layers of protection
 
-1. Disguise: Blink appears as a system utility — System Tools, Device Manager, Cloud Sync. 20+ free identities, 150+ with premium. No reference to "Blink" anywhere.
+1. Disguise: Blink appears as a system utility — System Tools, Device Manager, Cloud Sync. 7 free identities, 150+ with premium. No reference to "Blink" anywhere.
 2. App Protection: Protected apps silently redirect to the home screen. No lock screen. No PIN prompt. No visible indicator.
 3. App Vault: Apps removed from the launcher and recents entirely. As far as anyone can tell, the app isn't installed.
 4. SOS Duress Mode: An alternate trigger sequence. Vault switches to decoy mode — designated decoy content becomes visible, real content sealed or erased. App protection stays active.
@@ -145,7 +145,7 @@ Blink does not appear as "Blink" on your device. Instead, it masquerades as a sy
 
 The icon and app name change across your launcher, app drawer, and system settings. Notifications sent by Blink also use the disguise identity.
 
-Free tier includes 20+ disguise profiles. Premium unlocks 150+ profiles.
+Free tier includes 7 disguise profiles. Premium unlocks 150+ profiles.
 
 How it works: Blink uses Android's activity-alias system to swap the visible launcher entry. The actual app package remains the same, but the launcher icon, app name, and visible identity all change to match the selected disguise.
 
@@ -217,7 +217,7 @@ Blink solves one problem: protecting your phone from the person physically holdi
 
 ### Free — always.
 
-The core protection model is free and stays free. App protection. Notification silence. Screen escape. SOS mode. Your volume trigger. Twenty-plus disguise identities. Banking mode. Fake incoming call.
+The core protection model is free and stays free. App protection. Notification silence. Screen escape. SOS mode. Your volume trigger. Seven disguise identities. Banking mode. Fake incoming call.
 
 These are not trial features. There is no timer. There is no upgrade nag. Blink's fundamental purpose — making your protected apps unreachable and leaving no trace — is available to every user from day one.
 
@@ -239,7 +239,7 @@ All billing through Google Play. Cancel anytime.
 | Notification silence | Yes | Yes |
 | Screen escape | Yes | Yes |
 | SOS mode | Yes | Yes |
-| 20+ disguise identities | Yes | Yes |
+| 7 disguise identities | Yes | Yes |
 | Banking mode | Yes | Yes |
 | Quick Settings tile | Yes | Yes |
 | Fake incoming call | Yes | Yes |
@@ -288,7 +288,7 @@ Some banking apps detect certain system-level permissions and refuse to open. Ba
 Yes. Blink is tested and hardened for Samsung One UI, Xiaomi MIUI, OPPO, Vivo, and Huawei devices — environments known for aggressively managing background apps. Multiple layers of service recovery keep protection running even on the strictest OEM builds.
 
 **Is Blink detectable on the device?**
-Blink is designed to be inconspicuous. It appears in the launcher as a system utility — System Tools, Device Manager, Cloud Sync, Smart Switch, or any of 20+ identities — with no reference to Blink. 150+ notification disguise profiles are available with premium. Opening the app directly shows a minimal informational screen; actual protection requires the volume trigger sequence.
+Blink is designed to be inconspicuous. It appears in the launcher as a system utility — System Tools, Device Manager, Cloud Sync, Smart Switch, or any of 7 identities — with no reference to Blink. 150+ notification disguise profiles are available with premium. Opening the app directly shows a minimal informational screen; actual protection requires the volume trigger sequence.
 
 **What apps can Blink protect?**
 Any app installed on your device. Common choices include messaging apps (Signal, WhatsApp, Telegram, LINE), banking apps, email, contacts, gallery, and social media. You choose which apps to protect in Blink's settings. There is no limit on the number of protected apps.
